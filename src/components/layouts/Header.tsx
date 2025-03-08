@@ -6,6 +6,8 @@ import Images from "../common/Images";
 import styles from "./Header.module.scss";
 import { useMemo, useState } from "react";
 import { Navbar, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
+import type { MenuProps } from 'antd';
+import { Dropdown as DropdownAnt } from 'antd';
 
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -25,6 +27,18 @@ export default function Header() {
     { key: "oral", label: "Орал" },
     { key: "karaganda", label: "Қарағанды" },
   ];
+
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <Link href="/profile">Мой профиль</Link>,
+    },
+    {
+      key: '2',
+      label: <Link href="/logout">Выйти</Link>,
+    }
+  ];
+  
 
   return (
     <Container>
@@ -122,23 +136,11 @@ export default function Header() {
                 <Images.Plus size={16} />
               </Button>
 
-              {isOspan && (
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button className={styles.profileIcon} isIconOnly variant="bordered">
-                      <Images.User color="#1aa683" size={20} />
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu>
-                    <DropdownItem key="profile" textValue="Мой профиль">
-                      <Link href="/profile">Мой профиль</Link>
-                    </DropdownItem>
-                    <DropdownItem key="logout" textValue="Выйти" color="danger">
-                      <Link href="/logout">Выйти</Link>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              )}
+              <DropdownAnt menu={{ items }} placement="bottomRight">
+                <Button className={styles.profileIcon} isIconOnly variant="bordered">
+                  <Images.User color="#1aa683" size={20} />
+                </Button>
+              </DropdownAnt>
             </div>
           </div>
         </header>

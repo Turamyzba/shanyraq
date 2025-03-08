@@ -15,7 +15,11 @@ import {
   ChevronRight,
   ArrowRight,
   Receipt,
-  UsersRound
+  UsersRound,
+  ExternalLink,
+  Calendar1,
+  Building2,
+  VenusAndMars,
 } from "lucide-react";
 
 const Images = {
@@ -33,7 +37,11 @@ const Images = {
   ChevronRight: ChevronRight,
   ArrowRight: ArrowRight,
   Money: Receipt,
-  People: UsersRound
+  People: UsersRound,
+  Share: ExternalLink,
+  Calendar: Calendar1,
+  Apartment: Building2,
+  GenderBoth: VenusAndMars
 };
 
 export default Images;
