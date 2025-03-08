@@ -1,20 +1,20 @@
 "use client";
 
 import "./globals.scss";
-import { HeroUIProvider } from "@heroui/react";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/layouts/Footer";
+import {Providers} from "@/app/providers";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <HeroUIProvider>
+    <Providers>
       <html lang="ru">
         <body>
-          <Header />
+          {/*<Header />*/}
           {children}
           <Footer />
         </body>
       </html>
-    </HeroUIProvider>
+     </Providers>
   );
 }
