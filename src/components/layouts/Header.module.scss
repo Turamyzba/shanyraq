@@ -3,155 +3,154 @@
 }
 
 .header {
-    width: 100%;
-    background-color: #fff;
-    border-bottom: 1px solid #ebebeb;
-    padding: 15px 0;
-  }
-  
-  .topBar {
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #ebebeb;
+  padding: 15px 0;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+
+  .location {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-  
-    .location {
+    gap: 8px;
+    font-size: 14px;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .themeToggle {
+      width: auto !important;
+      padding: 0 !important;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .languageSwitch {
+      display: flex;
+      gap: 5px;
+
+      button {
+        // width: auto !important;
+        height: auto;
+        padding: 5px 10px !important;
+        border: 1px solid #b5b7c0;
+        background: none;
+        cursor: pointer;
+        font-size: 14px;
+        color: #555;
+        border-radius: 5px;
+        min-width: unset !important;
+        min-height: unset !important;
+
+        &.activeLang {
+          border-color: #1aa683;
+          color: #1aa683;
+        }
+      }
+    }
+  }
+}
+
+.mainNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #252525;
+    text-decoration: none;
+
+    .logoIcon {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  .searchBar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 7 10px;
+    border-radius: 5px;
+    gap: 15px;
+
+    .searchItem {
+      padding: 5px 15px;
+      border-right: 1px solid #ccc;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    .searchButton {
+      background: #1aa683;
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      min-width: unset !important;
+    }
+  }
+
+  .profileActions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .loginButton {
+      background: none;
+      min-width: unset !important;
+      border: 1px solid #1aa683;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .createAdButton {
+      background: #1aa683;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 14px;
-      padding: 0;
+    }
+
+    .profileIcon {
+      background: none;
+      min-width: unset !important;
+      border: 1px solid #1aa683;
+      padding: 8px 10px;
       cursor: pointer;
     }
-  
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-  
-      .themeToggle {
-        width: auto !important;
-        padding: 0 !important;
-        background: none;
-        border: none;
-        cursor: pointer;
-      }
-  
-      .languageSwitch {
-        display: flex;
-        gap: 5px;
-  
-        button {
-          // width: auto !important;
-          height: auto;
-          padding: 5px 10px !important;
-          border: 1px solid #b5b7c0;
-          background: none;
-          cursor: pointer;
-          font-size: 14px;
-          color: #555;
-          border-radius: 5px;
-          min-width: unset !important;
-          min-height: unset !important;
-  
-          &.activeLang {
-            border-color: #1aa683;
-            color: #1aa683;
-          }
-        }
-      }
-    }
   }
-  
-  .mainNav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #252525;
-      text-decoration: none;
-  
-      .logoIcon {
-        width: 50px;
-        height: 50px;
-      }
-    }
-  
-    .searchBar {
-      display: flex;
-      align-items: center;
-      border: 1px solid #ccc;
-      padding: 7 10px;
-      border-radius: 5px;
-      gap: 15px;
-  
-      .searchItem {
-        padding: 5px 15px;
-        border-right: 1px solid #ccc;
-        cursor: pointer;
-        font-size: 14px;
-        white-space: nowrap;
-  
-        &:last-child {
-          border-right: none;
-        }
-      }
-  
-      .searchButton {
-        background: #1aa683;
-        color: #fff;
-        border: none;
-        padding: 8px;
-        border-radius: 5px;
-        cursor: pointer;
-        min-width: unset !important;
-      }
-    }
-  
-    .profileActions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-
-      .loginButton {
-        background: none;
-        min-width: unset !important;
-        border: 1px solid #1aa683;
-        padding: 12px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-      }
-  
-      .createAdButton {
-        background: #1aa683;
-        color: #fff;
-        font-weight: bold;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-      }
-  
-      .profileIcon {
-        background: none;
-        min-width: unset !important;
-        border: 1px solid #1aa683;
-        padding: 8px 10px;
-        cursor: pointer;
-      }
-    }
-  }
-  
+}
