@@ -15,7 +15,6 @@
     justify-content: center;
     background-image: url("../../public/welcomeLanding.png");
 
-
     .heroContent {
       width: 910px;
       text-align: center;
@@ -55,7 +54,7 @@
       padding: 0 12px;
       cursor: pointer;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  
+
       p {
         flex: 1;
         text-indent: 20px;
@@ -67,12 +66,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-  
+
       svg {
         flex-shrink: 0;
       }
     }
-  
+
     .searchButton {
       width: 50px;
       height: 50px;
@@ -85,33 +84,32 @@
       border-radius: 5px;
       cursor: pointer;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }    
+    }
   }
-  
 
   /* Offers Section */
   .offers {
     width: 100%;
     max-width: 1300px;
     margin-top: 40px;
-  
+
     .offersHeader {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-  
+
       h2 {
         font-size: 36px;
         font-weight: bold;
         color: #252525;
       }
     }
-  
+
     .navButtons {
       display: flex;
       gap: 10px;
-  
+
       .navButton {
         width: 40px;
         height: 40px;
@@ -121,20 +119,20 @@
         align-items: center;
         justify-content: center;
         transition: background 0.3s ease;
-  
+
         &:hover {
           background: #bfbfbf;
         }
       }
     }
-  
+
     .offersList {
       display: flex;
       gap: 20px;
       overflow-x: auto;
       scroll-behavior: smooth;
       padding-bottom: 10px;
-      
+
       /* Hide scrollbar */
       &::-webkit-scrollbar {
         display: none;
@@ -226,7 +224,7 @@
         color: #666;
         padding: 0 15px;
       }
-    
+
       .advantageLink {
         font-size: 16px;
         font-weight: 500;

@@ -1,12 +1,12 @@
-import React from 'react';
-import { Carousel as CarouselAnt } from 'antd';
+import React from "react";
+import { Carousel as CarouselAnt } from "antd";
 
 const contentStyle: React.CSSProperties = {
-  height: '160px',
-  color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-  background: '#364d79',
+  height: "160px",
+  color: "#fff",
+  lineHeight: "160px",
+  textAlign: "center",
+  background: "#364d79",
 };
 
 const Carousel: React.FC = () => (

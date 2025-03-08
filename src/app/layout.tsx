@@ -3,7 +3,7 @@
 import "./globals.scss";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/layouts/Footer";
-import {Providers} from "@/app/providers";
+import { Providers } from "@/app/providers";
 import "@ant-design/v5-patch-for-react-19";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,6 +16,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
         </body>
       </html>
-     </Providers>
+    </Providers>
   );
 }

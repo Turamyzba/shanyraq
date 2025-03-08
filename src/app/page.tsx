@@ -216,16 +216,12 @@ export default function LandingPage() {
         <div className={styles.benefits}>
           <h2>Наши преимущества</h2>
           <div className={styles.benefitsContent}>
-            <Accordion selectionMode="multiple" >
+            <Accordion selectionMode="multiple" defaultExpandedKeys={["1"]}>
               {appAdvantages.map((advantage) => (
                 <AccordionItem
                   key={advantage.id}
                   aria-label={advantage.title}
-                  title={
-                    <span className={styles.advantageTitle}>
-                      {advantage.title}
-                    </span>
-                  }
+                  title={<span className={styles.advantageTitle}>{advantage.title}</span>}
                 >
                   <p className={styles.advantageDescription}>{advantage.description}</p>
                   <a href="#" className={styles.advantageLink}>

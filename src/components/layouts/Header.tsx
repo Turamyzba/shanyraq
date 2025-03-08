@@ -5,18 +5,22 @@ import Container from "./Container";
 import Images from "../common/Images";
 import styles from "./Header.module.scss";
 import { useMemo, useState } from "react";
-import { Navbar, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
-import type { MenuProps } from 'antd';
-import { Dropdown as DropdownAnt } from 'antd';
+import {
+  Navbar,
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/react";
+import type { MenuProps } from "antd";
+import { Dropdown as DropdownAnt } from "antd";
 
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [local, setLocal] = useState("kz");
   const [selectedKeys, setSelectedKeys] = useState(new Set(["astana"]));
-  const selectedCity = useMemo(
-    () => Array.from(selectedKeys).join(", "),
-    [selectedKeys]
-  );
+  const selectedCity = useMemo(() => Array.from(selectedKeys).join(", "), [selectedKeys]);
 
   const [isOspan, setIsOspan] = useState(true);
 
@@ -28,21 +32,20 @@ export default function Header() {
     { key: "karaganda", label: "Қарағанды" },
   ];
 
-  const items: MenuProps['items'] = [
+  const items: MenuProps["items"] = [
     {
-      key: '1',
+      key: "1",
       label: <Link href="/profile">Мой профиль</Link>,
     },
     {
-      key: '2',
+      key: "2",
       label: <Link href="/logout">Выйти</Link>,
-    }
+    },
   ];
-  
 
   return (
     <Container>
-      <Navbar shouldHideOnScroll maxWidth="full" height="auto" className={styles.navbar} >
+      <Navbar shouldHideOnScroll maxWidth="full" height="auto" className={styles.navbar}>
         <header className={styles.header}>
           <div className={styles.topBar}>
             <div className={styles.location}>
@@ -66,7 +69,9 @@ export default function Header() {
                   }}
                 >
                   {cities.map((city) => (
-                    <DropdownItem key={city.key} textValue={city.label}>{city.label}</DropdownItem>
+                    <DropdownItem key={city.key} textValue={city.label}>
+                      {city.label}
+                    </DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>
@@ -74,23 +79,27 @@ export default function Header() {
             </div>
 
             <div className={styles.actions}>
-              <Button size="sm" className={styles.themeToggle} onPress={() => setIsDarkMode(!isDarkMode)}>
+              <Button
+                size="sm"
+                className={styles.themeToggle}
+                onPress={() => setIsDarkMode(!isDarkMode)}
+              >
                 {isDarkMode ? <Images.Moon size={20} /> : <Images.Sun size={20} />}
               </Button>
 
               <div className={styles.languageSwitch}>
-              <Button
-                className={local === "ru" ? styles.activeLang : styles.inactiveLang}
-                onPress={() => setLocal("ru")}
-              >
-                Рус
-              </Button>
-              <Button
-                className={local === "kz" ? styles.activeLang : styles.inactiveLang}
-                onPress={() => setLocal("kz")}
-              >
-                Қаз
-              </Button>
+                <Button
+                  className={local === "ru" ? styles.activeLang : styles.inactiveLang}
+                  onPress={() => setLocal("ru")}
+                >
+                  Рус
+                </Button>
+                <Button
+                  className={local === "kz" ? styles.activeLang : styles.inactiveLang}
+                  onPress={() => setLocal("kz")}
+                >
+                  Қаз
+                </Button>
               </div>
             </div>
           </div>
@@ -121,12 +130,7 @@ export default function Header() {
 
             <div className={styles.profileActions}>
               {!isOspan && (
-                <Button
-                  className={styles.loginButton}
-                  as={Link}
-                  href="/login"
-                  variant="bordered"
-                >
+                <Button className={styles.loginButton} as={Link} href="/login" variant="bordered">
                   Войти
                 </Button>
               )}

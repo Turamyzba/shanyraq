@@ -5,7 +5,6 @@ import Container from "./Container";
 import styles from "./Footer.module.scss";
 import Images from "../common/Images";
 
-
 export default function Footer() {
   return (
     <footer className={styles.footer}>

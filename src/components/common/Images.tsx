@@ -41,7 +41,7 @@ const Images = {
   Share: ExternalLink,
   Calendar: Calendar1,
   Apartment: Building2,
-  GenderBoth: VenusAndMars
+  GenderBoth: VenusAndMars,
 };
 
 export default Images;
