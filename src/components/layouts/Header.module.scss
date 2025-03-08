@@ -1,10 +1,11 @@
+.navbar {
+  padding: 0;
+}
+
 .header {
     width: 100%;
     background-color: #fff;
     border-bottom: 1px solid #ebebeb;
-    position: sticky;
-    top: 0;
-    z-index: 100;
     padding: 15px 0;
   }
   
@@ -19,6 +20,7 @@
       align-items: center;
       gap: 8px;
       font-size: 14px;
+      padding: 0;
       cursor: pointer;
     }
   
@@ -28,8 +30,8 @@
       gap: 15px;
   
       .themeToggle {
-        width: 30px;
-        height: 30px;
+        width: auto !important;
+        padding: 0 !important;
         background: none;
         border: none;
         cursor: pointer;
@@ -40,13 +42,17 @@
         gap: 5px;
   
         button {
-          padding: 5px 10px;
+          // width: auto !important;
+          height: auto;
+          padding: 5px 10px !important;
           border: 1px solid #b5b7c0;
           background: none;
           cursor: pointer;
           font-size: 14px;
           color: #555;
           border-radius: 5px;
+          min-width: unset !important;
+          min-height: unset !important;
   
           &.activeLang {
             border-color: #1aa683;
@@ -80,12 +86,10 @@
     .searchBar {
       display: flex;
       align-items: center;
-      background: #fff;
       border: 1px solid #ccc;
-      padding: 10px;
+      padding: 7 10px;
       border-radius: 5px;
       gap: 15px;
-      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
   
       .searchItem {
         padding: 5px 15px;
@@ -106,6 +110,7 @@
         padding: 8px;
         border-radius: 5px;
         cursor: pointer;
+        min-width: unset !important;
       }
     }
   
@@ -113,6 +118,18 @@
       display: flex;
       gap: 10px;
       align-items: center;
+
+      .loginButton {
+        background: none;
+        min-width: unset !important;
+        border: 1px solid #1aa683;
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+      }
   
       .createAdButton {
         background: #1aa683;
@@ -130,9 +147,9 @@
   
       .profileIcon {
         background: none;
+        min-width: unset !important;
         border: 1px solid #1aa683;
-        padding: 8px;
-        border-radius: 50%;
+        padding: 8px 10px;
         cursor: pointer;
       }
     }

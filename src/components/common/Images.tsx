@@ -9,6 +9,8 @@ import {
   User,
   PlusCircle,
   ChevronDown,
+  Instagram,
+  Send
 } from "lucide-react";
 
 const Images = {
@@ -20,6 +22,8 @@ const Images = {
   User: User,
   Plus: PlusCircle,
   ChevronDown: ChevronDown,
+  Instagram: Instagram,
+  Telegram: Send
 };
 
 export default Images;
