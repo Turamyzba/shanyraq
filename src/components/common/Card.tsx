@@ -43,14 +43,6 @@ const Card: React.FC<CardProps> = ({ card, isLast }) => {
     }, 1000);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <div className={styles.cardWrapper}>
       <div className={styles.card}>
@@ -78,8 +70,6 @@ const Card: React.FC<CardProps> = ({ card, isLast }) => {
           <Modal
             title="Поделиться объявлением"
             open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
             onClose={handleClose}
             footer={null}
           >
