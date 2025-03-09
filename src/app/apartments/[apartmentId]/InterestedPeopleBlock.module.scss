@@ -1,0 +1,192 @@
+.interestedPeopleBlock {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* HEADER */
+  .interestedHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .interestedText {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .interestedCount {
+    font-weight: 600;
+    color: #000;
+  }
+  
+  .viewGroupsLink {
+    font-size: 14px;
+    color: #1aa683;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  /* NO GROUPS */
+  .noGroups {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+  
+  .noGroupsText {
+    margin: 0;
+    font-size: 14px;
+    color: #999;
+  }
+  
+  /* GROUPS WRAPPER */
+  .groupsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* INDIVIDUAL GROUP CONTAINER */
+  .groupContainer {
+    border: 1px solid #ddd;
+    background-color: #FBFAFD;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+
+  }
+  
+  /* GROUP HEADER */
+  .groupHeader {
+    width: 100%;
+    display: flex;
+    // justify-content: center;
+    // align-items: space-between;
+    gap: 10px;
+    flex-direction: column;
+  }
+  
+  .groupLeft {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .groupLeftFirst {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .groupName {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .avatarGroup {
+    display: flex;
+    align-items: center;
+  }
+  
+  .maxPeople {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .groupActions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  /* GROUP DETAILS */
+  .groupDetails {
+    margin-top: 5px;
+    padding: 5px 0;
+    border-top: 1px solid #eee;
+  }
+  
+  /* TABLE WRAPPER */
+  .tableWrapper {
+    margin-top: 10px;
+  }
+  
+  /* MORE INFO LINK */
+  .moreInfoLink {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #1aa683;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  /* CREATE GROUP BUTTON */
+  .createGroupButton {
+    background-color: #32343A !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  
+  /* MODALS */
+
+  .modalContent {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .modalSubText {
+    // margin: 15px 0 5px;
+    font-size: 16px;
+    width: 30%;
+    color: #555;
+  }
+  
+  .counterRow {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    gap: 15px;
+    font-size: 16px;
+    width: auto;
+
+  
+    span {
+      min-width: 24px;
+      text-align: center;
+    }
+  }
+  
+  .modalAnswer {
+    font-size: 14px;
+    color: #444;
+  }
+  
+  /* ACTION BUTTONS */
+  .confirmButton {
+    background-color: #1aa683 !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  
+  .applyButton {
+    background-color: #1aa683 !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  
