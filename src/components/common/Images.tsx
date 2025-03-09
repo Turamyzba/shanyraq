@@ -28,7 +28,7 @@ import {
   ChevronUp,
   Plus,
   Minus,
-  MinusIcon
+  MinusIcon,
 } from "lucide-react";
 
 const whatsappIcon = () => (

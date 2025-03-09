@@ -51,9 +51,7 @@ interface InterestedPeopleBlockProps {
   mockApartmentData: MockApartmentData;
 }
 
-export default function InterestedPeopleBlock({
-  mockApartmentData,
-}: InterestedPeopleBlockProps) {
+export default function InterestedPeopleBlock({ mockApartmentData }: InterestedPeopleBlockProps) {
   // Track which groups are expanded
   const [expandedGroups, setExpandedGroups] = useState<number[]>([]);
 
@@ -83,9 +81,7 @@ export default function InterestedPeopleBlock({
 
   const toggleGroup = (groupIndex: number) => {
     setExpandedGroups((prev) =>
-      prev.includes(groupIndex)
-        ? prev.filter((idx) => idx !== groupIndex)
-        : [...prev, groupIndex]
+      prev.includes(groupIndex) ? prev.filter((idx) => idx !== groupIndex) : [...prev, groupIndex]
     );
   };
 
@@ -94,8 +90,7 @@ export default function InterestedPeopleBlock({
       {/* Header: "Заинтересованы в объявлении: X человек" + "Количество групп: Y" */}
       <div className={styles.interestedHeader}>
         <p className={styles.interestedText}>
-          Заинтересованы в объявлении:{" "}
-          <br />
+          Заинтересованы в объявлении: <br />
           <strong className={styles.interestedCount}>
             {mockApartmentData.interestedPeopleCount} человек
           </strong>
@@ -108,9 +103,7 @@ export default function InterestedPeopleBlock({
       {/* If no groups yet */}
       {mockApartmentData.interestedGroupCount === 0 && (
         <div className={styles.noGroups}>
-          <p className={styles.noGroupsText}>
-            Пока нет групп. Создайте свою группу!
-          </p>
+          <p className={styles.noGroupsText}>Пока нет групп. Создайте свою группу!</p>
         </div>
       )}
 
@@ -125,45 +118,46 @@ export default function InterestedPeopleBlock({
                 <div className={styles.groupHeader}>
                   <div className={styles.groupLeft}>
                     <div className={styles.groupLeftFirst}>
-                        <p className={styles.groupName}>{group.name}</p>
-                        <AvatarGroup
+                      <p className={styles.groupName}>{group.name}</p>
+                      <AvatarGroup
                         isBordered
                         max={4}
                         total={group.people.length}
                         className={styles.avatarGroup}
-                        >
+                      >
                         {group.people.map((person, pIdx) => (
-                            <Avatar
+                          <Avatar
                             key={pIdx}
                             size="sm"
                             src={person.avatar || "https://i.pravatar.cc/150"}
-                            />
+                          />
                         ))}
-                        </AvatarGroup>
+                      </AvatarGroup>
                     </div>
                     {group.maxSize && (
-                      <span className={styles.maxPeople}>
-                        Количество людей {group.maxSize}
-                      </span>
+                      <span className={styles.maxPeople}>Количество людей {group.maxSize}</span>
                     )}
                   </div>
 
                   <div className={styles.groupActions}>
                     <Button
                       variant="light"
-                      className={`${styles.expandButton} ${
-                        isExpanded ? styles.rotated : ""
-                      }`}
-                      endContent={isExpanded ? <Images.ChevronUp size={20} /> : <Images.ChevronDown size={20} />}
+                      className={`${styles.expandButton} ${isExpanded ? styles.rotated : ""}`}
+                      endContent={
+                        isExpanded ? (
+                          <Images.ChevronUp size={20} />
+                        ) : (
+                          <Images.ChevronDown size={20} />
+                        )
+                      }
                       onPress={() => toggleGroup(idx)}
                     >
-                        Узнать больше
-                      
+                      Узнать больше
                     </Button>
                     <Button
                       color="primary"
                       className={styles.applyButton}
-                    //   onPress={() => alert(`Подать заявку в ${group.name}`)}
+                      //   onPress={() => alert(`Подать заявку в ${group.name}`)}
                     >
                       Подать заявку
                     </Button>
@@ -174,22 +168,24 @@ export default function InterestedPeopleBlock({
                 {isExpanded && (
                   <div className={styles.groupDetails}>
                     <div className={styles.tableWrapper}>
-                      <Table removeWrapper  aria-label="Group Members Table">
+                      <Table removeWrapper aria-label="Group Members Table">
                         <TableHeader>
                           <TableColumn>Имя</TableColumn>
                           <TableColumn>Роль</TableColumn>
-                          <TableColumn align={"end"} >{""}</TableColumn>
+                          <TableColumn align={"end"}>{""}</TableColumn>
                         </TableHeader>
                         <TableBody>
                           {group.people.map((person, pIdx) => (
                             <TableRow key={pIdx}>
                               <TableCell>
-                              <User
-                                avatarProps={{ src: person.avatar || "https://i.pravatar.cc/150"}}
-                                name={person.firstName}
-                            >
-                                {person.firstName}
-                            </User>
+                                <User
+                                  avatarProps={{
+                                    src: person.avatar || "https://i.pravatar.cc/150",
+                                  }}
+                                  name={person.firstName}
+                                >
+                                  {person.firstName}
+                                </User>
                               </TableCell>
                               <TableCell>{person.role}</TableCell>
                               <TableCell>
@@ -197,7 +193,7 @@ export default function InterestedPeopleBlock({
                                   variant="ghost"
                                   onPress={() => handleOpenProfileModal(person)}
                                 >
-                                    Анкета
+                                  Анкета
                                 </Button>
                               </TableCell>
                             </TableRow>
@@ -234,53 +230,45 @@ export default function InterestedPeopleBlock({
               <ModalHeader>Новая группа</ModalHeader>
               <ModalBody>
                 <div className={styles.modalContent}>
-                    <p className={styles.modalSubText}>Сколько вас человек?</p>
-                    <div className={styles.counterRow}>
+                  <p className={styles.modalSubText}>Сколько вас человек?</p>
+                  <div className={styles.counterRow}>
                     <Button
-                        variant="light"
-                        isIconOnly
-                        startContent={<Images.MinusIcon color="red" size={20} />}
-                        onPress={() =>
-                        setHowManyYouAre((prev) => Math.max(1, prev - 1))
-                        }
+                      variant="light"
+                      isIconOnly
+                      startContent={<Images.MinusIcon color="red" size={20} />}
+                      onPress={() => setHowManyYouAre((prev) => Math.max(1, prev - 1))}
                     />
                     <span>{howManyYouAre}</span>
                     <Button
-                        variant="light"
-                        isIconOnly
-                        startContent={<Images.PlusIcon color="#1aa683" size={20} />}
-                        onPress={() => setHowManyYouAre((prev) => prev + 1)}
+                      variant="light"
+                      isIconOnly
+                      startContent={<Images.PlusIcon color="#1aa683" size={20} />}
+                      onPress={() => setHowManyYouAre((prev) => prev + 1)}
                     />
-                    </div>
+                  </div>
                 </div>
 
                 <div className={styles.modalContent}>
-                    <p className={styles.modalSubText}>Сколько человек ищете?</p>
-                    <div className={styles.counterRow}>
+                  <p className={styles.modalSubText}>Сколько человек ищете?</p>
+                  <div className={styles.counterRow}>
                     <Button
-                        variant="light"
-                        isIconOnly
-                        startContent={<Images.MinusIcon color="red" size={20} />}
-                        onPress={() =>
-                            setHowManyYouNeed((prev) => Math.max(1, prev - 1))
-                        }
+                      variant="light"
+                      isIconOnly
+                      startContent={<Images.MinusIcon color="red" size={20} />}
+                      onPress={() => setHowManyYouNeed((prev) => Math.max(1, prev - 1))}
                     />
                     <span>{howManyYouNeed}</span>
                     <Button
-                        variant="light"
-                        isIconOnly
-                        startContent={<Images.PlusIcon color="#1aa683" size={20} />}
-                        onPress={() => setHowManyYouNeed((prev) => prev + 1)}
+                      variant="light"
+                      isIconOnly
+                      startContent={<Images.PlusIcon color="#1aa683" size={20} />}
+                      onPress={() => setHowManyYouNeed((prev) => prev + 1)}
                     />
-                    </div>
+                  </div>
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button
-                  variant="light"
-                  className={styles.closeButton}
-                  onPress={onClose}
-                >
+                <Button variant="light" className={styles.closeButton} onPress={onClose}>
                   Отмена
                 </Button>
                 <Button
@@ -288,9 +276,7 @@ export default function InterestedPeopleBlock({
                   className={styles.confirmButton}
                   onPress={() => {
                     // Example logic
-                    alert(
-                      `Группа создана! (Вы: ${howManyYouAre}, Ищете: ${howManyYouNeed})`
-                    );
+                    alert(`Группа создана! (Вы: ${howManyYouAre}, Ищете: ${howManyYouNeed})`);
                     onClose();
                   }}
                 >
@@ -315,35 +301,33 @@ export default function InterestedPeopleBlock({
               <ModalHeader>Анкета</ModalHeader>
               <ModalBody>
                 <User
-                    avatarProps={{ src: selectedUser?.avatar || "https://i.pravatar.cc/150"}}
-                    name={selectedUser?.firstName}
+                  avatarProps={{ src: selectedUser?.avatar || "https://i.pravatar.cc/150" }}
+                  name={selectedUser?.firstName}
                 />
 
                 <p>
-                  <strong>Вопрос 1:</strong> Какой ваш обычный распорядок дня и
-                  каковы ваши жизненные приоритеты?
+                  <strong>Вопрос 1:</strong> Какой ваш обычный распорядок дня и каковы ваши
+                  жизненные приоритеты?
                 </p>
                 <p className={styles.modalAnswer}>
-                  Я провожу весь день дома, работаю/учусь дистанционно. Мне важно
-                  иметь спокойную обстановку дома.
+                  Я провожу весь день дома, работаю/учусь дистанционно. Мне важно иметь спокойную
+                  обстановку дома.
                 </p>
                 <hr />
                 <p>
-                  <strong>Вопрос 2:</strong> Как вы относитесь к религиозным
-                  практикам и традициям?
+                  <strong>Вопрос 2:</strong> Как вы относитесь к религиозным практикам и традициям?
                 </p>
                 <p className={styles.modalAnswer}>
-                  Я соблюдаю религиозные практики и традиции. Хотел бы, чтобы мой
-                  сожитель с уважением относился к этому.
+                  Я соблюдаю религиозные практики и традиции. Хотел бы, чтобы мой сожитель с
+                  уважением относился к этому.
                 </p>
                 <hr />
                 <p>
-                  <strong>Вопрос 3:</strong> Какое у вас отношение к курению и
-                  алкогольным напиткам?
+                  <strong>Вопрос 3:</strong> Какое у вас отношение к курению и алкогольным напиткам?
                 </p>
                 <p className={styles.modalAnswer}>
-                  Я спокойно отношусь к курению и алкоголю, но хотел бы, чтобы это
-                  не переросло в проблему.
+                  Я спокойно отношусь к курению и алкоголю, но хотел бы, чтобы это не переросло в
+                  проблему.
                 </p>
               </ModalBody>
               <ModalFooter>

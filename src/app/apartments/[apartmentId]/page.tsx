@@ -21,8 +21,6 @@ import Images from "@/components/common/Images";
 import Link from "next/link";
 import InterestedPeopleBlock from "./InterestedPeopleBlock";
 
-
-
 // Mock data for demonstration (UI only)
 const mockApartmentData = {
   title: "Алтын ауыл дом 3, кв 15",
@@ -43,7 +41,14 @@ const mockApartmentData = {
   numberOfPeopleAreYouAccommodating: 2,
   apartmentsInfo:
     "Здесь будет подробное описание квартиры. Текст, детали, особенности, условия и прочее. Полностью статический пример без логики, только UI.",
-  qualities: ["Без вредных привычек", "Дружелюбие", "Аккуратность", "Без вредных привычек", "Дружелюбие", "Аккуратность"],
+  qualities: [
+    "Без вредных привычек",
+    "Дружелюбие",
+    "Аккуратность",
+    "Без вредных привычек",
+    "Дружелюбие",
+    "Аккуратность",
+  ],
   photos: [
     "https://i.pinimg.com/736x/74/75/09/74750988fed58890af4ef128fa3e670e.jpg", // Main image
     "https://i.pinimg.com/736x/2c/da/23/2cda231a0bee4a3a83cab51db9947f8f.jpg",
@@ -110,11 +115,9 @@ const mockApartmentData = {
 export default function ApartmentPage() {
   const [current, setCurrent] = useState(0);
 
-
   const onDownload = async () => {
     // const url: string = mockApartmentData.photos[current];
     // const proxyUrl: string = `/api/download?url=${encodeURIComponent(url)}`;
-  
     // // Redirect the browser to the proxy URL, triggering the download
     // window.location.href = proxyUrl;
   };
@@ -122,113 +125,139 @@ export default function ApartmentPage() {
     <div className={styles.apartmentPage}>
       <Container>
         <div className={styles.topSection}>
-            <Image.PreviewGroup
-                preview={{
-                toolbarRender: (
-                    _,
-                    {
-                    transform: { scale },
-                    actions: {
-                        onActive,
-                        onFlipY,
-                        onFlipX,
-                        onRotateLeft,
-                        onRotateRight,
-                        onZoomOut,
-                        onZoomIn,
-                        onReset,
-                    },
-                    }
-                ) => (
-                    <Space size={12} className={styles.toolbarWrapper}>
-                        <LeftOutlined onClick={() => onActive?.(-1)} />
-                        <RightOutlined onClick={() => onActive?.(1)} />
-                        <DownloadOutlined onClick={onDownload} />
-                        <SwapOutlined rotate={90} onClick={onFlipY} />
-                        <SwapOutlined onClick={onFlipX} />
-                        <RotateLeftOutlined onClick={onRotateLeft} />
-                        <RotateRightOutlined onClick={onRotateRight} />
-                        <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
-                        <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
-                        <UndoOutlined onClick={onReset} />
-                    </Space>
-                ),
-                onChange: (index) => {
-                    setCurrent(index);
-                },
-                }}
-            >
-                <div className={styles.mainImage}>
-                <Image
-                    src={mockApartmentData.photos[0]}
-                    alt="Main Image"
+          <Image.PreviewGroup
+            preview={{
+              toolbarRender: (
+                _,
+                {
+                  transform: { scale },
+                  actions: {
+                    onActive,
+                    onFlipY,
+                    onFlipX,
+                    onRotateLeft,
+                    onRotateRight,
+                    onZoomOut,
+                    onZoomIn,
+                    onReset,
+                  },
+                }
+              ) => (
+                <Space size={12} className={styles.toolbarWrapper}>
+                  <LeftOutlined onClick={() => onActive?.(-1)} />
+                  <RightOutlined onClick={() => onActive?.(1)} />
+                  <DownloadOutlined onClick={onDownload} />
+                  <SwapOutlined rotate={90} onClick={onFlipY} />
+                  <SwapOutlined onClick={onFlipX} />
+                  <RotateLeftOutlined onClick={onRotateLeft} />
+                  <RotateRightOutlined onClick={onRotateRight} />
+                  <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                  <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                  <UndoOutlined onClick={onReset} />
+                </Space>
+              ),
+              onChange: (index) => {
+                setCurrent(index);
+              },
+            }}
+          >
+            <div className={styles.mainImage}>
+              <Image
+                src={mockApartmentData.photos[0]}
+                alt="Main Image"
+                preview={true}
+                height={500}
+                width={"100%"}
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+
+            <div className={styles.sideImages}>
+              <div className={styles.sideImageGrid}>
+                {mockApartmentData.photos.slice(1, 4).map((photo, idx) => (
+                  <Image
+                    key={photo}
+                    src={photo}
+                    alt={`Side Image ${idx}`}
                     preview={true}
-                    height={500}
+                    height={245}
                     width={"100%"}
                     style={{ objectFit: "cover" }}
-                />
-                </div>
+                  />
+                ))}
 
-                <div className={styles.sideImages}>
-                <div className={styles.sideImageGrid}>
-                    {mockApartmentData.photos.slice(1, 4).map((photo, idx) => (
+                {mockApartmentData.photos[5] && (
+                  <div className={styles.moreImagesOverlay}>
                     <Image
-                        key={photo}
-                        src={photo}
-                        alt={`Side Image ${idx}`}
-                        preview={true}
-                        height={245}
-                        width={"100%"}
-                        style={{ objectFit: "cover" }}
+                      src={mockApartmentData.photos[5]}
+                      alt="Показать все фото"
+                      preview={true}
+                      height={245}
+                      width={"100%"}
+                      style={{ objectFit: "cover" }}
                     />
-                    ))}
-
-                    {mockApartmentData.photos[5] && (
-                    <div className={styles.moreImagesOverlay}>
-                        <Image
-                        src={mockApartmentData.photos[5]}
-                        alt="Показать все фото"
-                        preview={true}
-                        height={245}
-                        width={"100%"}
-                        style={{ objectFit: "cover" }}
-                        />
-                        <div className={styles.overlayText}>Показать все фото</div>
-                    </div>
-                    )}
-                </div>
-                </div>
-            </Image.PreviewGroup>
+                    <div className={styles.overlayText}>Показать все фото</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Image.PreviewGroup>
         </div>
-
 
         <div className={styles.bottomSection}>
           <div className={styles.leftColumn}>
             <h1 className={styles.apartmentTitle}>{mockApartmentData.title}</h1>
 
             <div className={styles.badges}>
-                <Chip size="lg" startContent={<Images.Rooms size={18} />} variant="flat" radius="sm" className={styles.badge}>
-                    {mockApartmentData.numberOfPeopleAreYouAccommodating} комнат
-                </Chip>  
+              <Chip
+                size="lg"
+                startContent={<Images.Rooms size={18} />}
+                variant="flat"
+                radius="sm"
+                className={styles.badge}
+              >
+                {mockApartmentData.numberOfPeopleAreYouAccommodating} комнат
+              </Chip>
 
-                <Chip size="lg" startContent={<Images.Area size={18} />} variant="bordered" radius="sm" className={styles.badge}>
-                    {mockApartmentData.areaOfTheApartment} м²
-                </Chip>  
+              <Chip
+                size="lg"
+                startContent={<Images.Area size={18} />}
+                variant="bordered"
+                radius="sm"
+                className={styles.badge}
+              >
+                {mockApartmentData.areaOfTheApartment} м²
+              </Chip>
 
-                <Chip size="lg" startContent={<Images.House size={18} />} variant="bordered" radius="sm" className={styles.badge}>
-                    {mockApartmentData.typeOfHousing}
-                </Chip>  
+              <Chip
+                size="lg"
+                startContent={<Images.House size={18} />}
+                variant="bordered"
+                radius="sm"
+                className={styles.badge}
+              >
+                {mockApartmentData.typeOfHousing}
+              </Chip>
 
-                <Chip size="lg" startContent={<Images.People size={18} />} variant="bordered" radius="sm" className={styles.badge}>
-                    До {mockApartmentData.numberOfPeopleAreYouAccommodating} человек
-                </Chip>  
+              <Chip
+                size="lg"
+                startContent={<Images.People size={18} />}
+                variant="bordered"
+                radius="sm"
+                className={styles.badge}
+              >
+                До {mockApartmentData.numberOfPeopleAreYouAccommodating} человек
+              </Chip>
             </div>
 
-
-            <Tabs aria-label="Tabs variants" variant="underlined" style={{ padding: 0, marginBottom: "40px" }}>
-                <Tab title="Описание" />
-                <Tab title="Информация"/>
-                <Tab title="Качества"/>
+            <Tabs
+              aria-label="Tabs variants"
+              variant="underlined"
+              style={{ padding: 0, marginBottom: "40px" }}
+            >
+              <Tab title="Описание" />
+              <Tab title="Информация" />
+              <Tab title="Качества" />
             </Tabs>
 
             <div className={styles.descriptionSection} id="description">
@@ -246,30 +275,21 @@ export default function ApartmentPage() {
                 </div>
 
                 <div className={styles.infoLabel}>Тип жилья:</div>
-                <div className={styles.infoValue}>
-                  {mockApartmentData.typeOfHousing}
-                </div>
+                <div className={styles.infoValue}>{mockApartmentData.typeOfHousing}</div>
 
                 <div className={styles.infoLabel}>Год постройки:</div>
-                <div className={styles.infoValue}>
-                  {mockApartmentData.yearOfHousing}
-                </div>
+                <div className={styles.infoValue}>{mockApartmentData.yearOfHousing}</div>
 
                 <div className={styles.infoLabel}>Этаж:</div>
                 <div className={styles.infoValue}>
-                  {mockApartmentData.numberOfFloor} из{" "}
-                  {mockApartmentData.maxFloorInTheBuilding}
+                  {mockApartmentData.numberOfFloor} из {mockApartmentData.maxFloorInTheBuilding}
                 </div>
 
                 <div className={styles.infoLabel}>Площадь:</div>
-                <div className={styles.infoValue}>
-                  {mockApartmentData.areaOfTheApartment} м²
-                </div>
+                <div className={styles.infoValue}>{mockApartmentData.areaOfTheApartment} м²</div>
 
                 <div className={styles.infoLabel}>Состояние:</div>
-                <div className={styles.infoValue}>
-                    {mockApartmentData.qualityOfTheApartment}
-                </div>
+                <div className={styles.infoValue}>{mockApartmentData.qualityOfTheApartment}</div>
 
                 <div className={styles.infoLabel}>Людей проживают:</div>
                 <div className={styles.infoValue}>
@@ -288,7 +308,9 @@ export default function ApartmentPage() {
               <h2>Качества</h2>
               <ul className={styles.qualitiesList}>
                 {mockApartmentData.qualities.map((q, idx) => (
-                  <li key={idx}><Images.Complete size={22} /> {q}</li>
+                  <li key={idx}>
+                    <Images.Complete size={22} /> {q}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -298,9 +320,7 @@ export default function ApartmentPage() {
           <div className={styles.rightColumn}>
             <div className={styles.priceBlock}>
               <div className={styles.priceRow}>
-                <h2 className={styles.price}>
-                  {mockApartmentData.cost.toLocaleString()} тг
-                </h2>
+                <h2 className={styles.price}>{mockApartmentData.cost.toLocaleString()} тг</h2>
                 <span className={styles.perMonth}>/ месяц</span>
               </div>
               <div className={styles.priceDetails}>
@@ -328,25 +348,40 @@ export default function ApartmentPage() {
               </p>
 
               <div className={styles.userInfo}>
-                <Avatar 
-                    src="https://i.pravatar.cc/150?u=a042581f4e29026024d" 
-                    alt="user"
-                    isBordered
-                    name={""}
+                <Avatar
+                  src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                  alt="user"
+                  isBordered
+                  name={""}
                 />
                 <div>
                   <p className={styles.userName}>
-                    {mockApartmentData.user.firstName}{" "}
-                    {mockApartmentData.user.lastName}
+                    {mockApartmentData.user.firstName} {mockApartmentData.user.lastName}
                   </p>
                   <p className={styles.userRole}>Житель</p>
                 </div>
 
-                <Button variant="light" as={Link} target="_blank" href={`tel:${mockApartmentData.user.phone}`} size="sm" startContent={<Images.Phone size={18} color={"#1aa683"} />} className={styles.callButton}>
-                    Позвонить
+                <Button
+                  variant="light"
+                  as={Link}
+                  target="_blank"
+                  href={`tel:${mockApartmentData.user.phone}`}
+                  size="sm"
+                  startContent={<Images.Phone size={18} color={"#1aa683"} />}
+                  className={styles.callButton}
+                >
+                  Позвонить
                 </Button>
-                <Button variant="light" as={Link} target="_blank" href={`https://wa.me/${mockApartmentData.user.whatsapp}`} size="sm" startContent={<Images.Whatsapp />} className={styles.callButton}>
-                Написать
+                <Button
+                  variant="light"
+                  as={Link}
+                  target="_blank"
+                  href={`https://wa.me/${mockApartmentData.user.whatsapp}`}
+                  size="sm"
+                  startContent={<Images.Whatsapp />}
+                  className={styles.callButton}
+                >
+                  Написать
                 </Button>
               </div>
             </div>
@@ -390,7 +425,6 @@ export default function ApartmentPage() {
 
               <Button className={styles.applyButton}>Подать заявку</Button>
             </div> */}
-            
 
             <InterestedPeopleBlock mockApartmentData={mockApartmentData} />
           </div>
