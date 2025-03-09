@@ -264,7 +264,6 @@
   
   .interestedPeopleBlock {
     border: 1px solid #ddd;
-    background-color: #FBFAFD;
     border-radius: 8px;
     padding: 20px;
     display: flex;
@@ -296,6 +295,16 @@
         text-decoration: underline;
         font-weight: 700;
       }
+    }
+
+    .interestedGroups {
+        background-color: #FBFAFD;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
   
     .applyPrompt {

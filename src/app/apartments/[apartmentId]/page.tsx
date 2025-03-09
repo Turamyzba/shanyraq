@@ -16,9 +16,10 @@ import {
   ZoomOutOutlined,
 } from "@ant-design/icons";
 import { Image, Space } from "antd";
-import { Chip, Tabs, Tab, Avatar, Button } from "@heroui/react";
+import { Chip, Tabs, Tab, Avatar, AvatarGroup, Button } from "@heroui/react";
 import Images from "@/components/common/Images";
 import Link from "next/link";
+import InterestedPeopleBlock from "./InterestedPeopleBlock";
 
 
 
@@ -58,7 +59,52 @@ const mockApartmentData = {
     phone: "+7 777 777 77 77",
     whatsapp: "+7 777 777 77 77",
   },
-  interestedPeopleCount: 3,
+  interestedPeopleCount: 5,
+  interestedGroupCount: 2,
+  groups: [
+    {
+      name: "Группа 1",
+      people: [
+        {
+          firstName: "Айсултан",
+          lastName: "User1",
+          role: "Хозяин жилья",
+          avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+        },
+        {
+          firstName: "Пано",
+          lastName: "User2",
+          role: "Уже проживает",
+          avatar: "https://i.pravatar.cc/150?u=a04258a2462d826712d",
+        },
+        {
+          firstName: "Бекош",
+          lastName: "User3",
+          role: "Уже проживает",
+          avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+        },
+      ],
+    },
+    {
+      name: "Группа 2",
+      people: [
+        {
+          firstName: "Айс",
+          lastName: "User4",
+          role: "Уже проживает",
+          avatar: "https://i.pravatar.cc/150?u=a04258114e29026708c",
+        },
+        {
+          firstName: "Султан",
+          lastName: "User5",
+          role: "Уже проживает",
+          avatar: "https://i.pravatar.cc/150?u=a04258a2462d826712d",
+        },
+      ],
+      maxSize: "7/7",
+      isFull: true,
+    },
+  ],
 };
 
 export default function ApartmentPage() {
@@ -285,6 +331,7 @@ export default function ApartmentPage() {
                 <Avatar 
                     src="https://i.pravatar.cc/150?u=a042581f4e29026024d" 
                     alt="user"
+                    isBordered
                     name={""}
                 />
                 <div>
@@ -295,22 +342,17 @@ export default function ApartmentPage() {
                   <p className={styles.userRole}>Житель</p>
                 </div>
 
-                <Button as={Link} href={`tel:${mockApartmentData.user.phone}`} size="sm" startContent={<Images.Phone />} className={styles.callButton}>
+                <Button variant="light" as={Link} target="_blank" href={`tel:${mockApartmentData.user.phone}`} size="sm" startContent={<Images.Phone size={18} color={"#1aa683"} />} className={styles.callButton}>
                     Позвонить
                 </Button>
-                <Button as={Link} href={`https://wa.me/${mockApartmentData.user.whatsapp}`} size="sm" startContent={<Images.Whatsapp />} className={styles.callButton}>
+                <Button variant="light" as={Link} target="_blank" href={`https://wa.me/${mockApartmentData.user.whatsapp}`} size="sm" startContent={<Images.Whatsapp />} className={styles.callButton}>
                 Написать
                 </Button>
-              </div>
-
-              <div className={styles.contactButtons}>
-                <button className={styles.callButton}>Позвонить</button>
-                <button className={styles.whatsappButton}>Написать</button>
               </div>
             </div>
 
             {/* Interested People Section */}
-            <div className={styles.interestedPeopleBlock}>
+            {/* <div className={styles.interestedPeopleBlock}>
               <div className={styles.interestedHeader}>
                 <p className={styles.interestedText}>
                   Заинтересованы в объявлении:
@@ -319,17 +361,38 @@ export default function ApartmentPage() {
                   </strong>
                 </p>
                 <a href="#" className={styles.viewGroupsLink}>
-                  посмотреть группы
+                    Количетсво групп: {mockApartmentData.interestedGroupCount}
                 </a>
               </div>
 
-              <p className={styles.applyPrompt}>
-                Понравилось помещение? <br />
-                Подайте заявку!
-              </p>
+            {mockApartmentData.interestedGroupCount < 0 ? (
+                <p className={styles.applyPrompt}>
+                    Понравилось помещение? <br />
+                    Подайте заявку!
+                </p>
+            ) :
+            (<div className={styles.interestedGroups} >
+                <div className={styles.interestedPeopleList}>
+                <AvatarGroup isBordered max={3} total={10}>
+                    <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                    <Avatar src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                    <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
+                    <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026302d" />
+                    <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026702d" />
+                    <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
+                </AvatarGroup>
+                </div>
+            </div>)
+            
+            }
 
-              <button className={styles.applyButton}>Подать заявку</button>
-            </div>
+
+
+              <Button className={styles.applyButton}>Подать заявку</Button>
+            </div> */}
+            
+
+            <InterestedPeopleBlock mockApartmentData={mockApartmentData} />
           </div>
         </div>
       </Container>

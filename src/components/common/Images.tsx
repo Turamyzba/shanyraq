@@ -24,7 +24,11 @@ import {
   House,
   Scaling,
   Check,
-  Phone
+  Phone,
+  ChevronUp,
+  Plus,
+  Minus,
+  MinusIcon
 } from "lucide-react";
 
 const whatsappIcon = () => (
@@ -66,7 +70,10 @@ const Images = {
   Area: Scaling,
   Complete: Check,
   Phone: Phone,
-  Whatsapp: whatsappIcon
+  Whatsapp: whatsappIcon,
+  ChevronUp: ChevronUp,
+  PlusIcon: Plus,
+  MinusIcon: Minus,
 };
 
 export default Images;
