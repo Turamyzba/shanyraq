@@ -14,7 +14,8 @@ type Props = {
     placeholder?: string,
     color?: NextUiColors,
     type?: "email" | "password" | "text" | "number",
-    variant?: "bordered"
+    variant?: "bordered",
+    className?: string
 }
 
 const MyInput = ({
@@ -29,6 +30,7 @@ const MyInput = ({
                      onChange,
                      variant = "bordered",
                      color = "primary",
+                     className
                  }: Props) => {
     return (
         <NextInput
@@ -43,8 +45,9 @@ const MyInput = ({
             value={value}
             onChange={onChange}
             variant={variant}
+            className={className}
             classNames={{
-                inputWrapper: "border-olive-500",
+                inputWrapper: "border-[#EBEBEB] border-1",
                 label: "text-foreground",
             }}
 

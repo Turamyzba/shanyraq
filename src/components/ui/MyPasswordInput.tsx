@@ -53,7 +53,7 @@ export const MyPasswordInput: React.FC<Props> = ({
             errorMessage={errorMessage}
             variant={variant}
             classNames={{
-                inputWrapper: "border-olive-500",
+                inputWrapper: "border-[#EBEBEB] border",
                 label: "text-foreground",
             }}
             endContent={
@@ -64,9 +64,9 @@ export const MyPasswordInput: React.FC<Props> = ({
                     onClick={toggleVisibility}
                 >
                     {isVisible ? (
-                        <EyeClosed className="text-xl text-default-400 pointer-events-none"/>
-                    ) : (
                         <Eye className="text-xl text-default-400 pointer-events-none"/>
+                    ) : (
+                        <EyeClosed className="text-xl text-default-400 pointer-events-none"/>
                     )}
                 </button>
 
