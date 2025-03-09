@@ -3,6 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
+$base-color: #c6538c;
+
 * {
   margin: 0;
   padding: 0;
@@ -86,16 +88,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Input Fields */
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
 
 input:focus,
 select:focus,
