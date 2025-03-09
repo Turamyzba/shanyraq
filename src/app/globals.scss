@@ -11,6 +11,10 @@ $base-color: #c6538c;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   font-family: "Inter", sans-serif;
