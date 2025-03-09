@@ -5,16 +5,17 @@ import type React from "react";
 import { Button as NextButton, CircularProgress } from "@heroui/react";
 
 type Props = {
-  children?: React.ReactNode;
-  className?: string;
-  icon?: JSX.Element | undefined;
-  isDisabled?: boolean;
-  isLoading?: boolean;
-  circularClass?: string;
-  onClick?: () => void;
-  size?: "sm" | "md" | "lg" | undefined;
-  type?: "button" | "submit" | "reset" | undefined;
-};
+    children?: React.ReactNode;
+    className?: string;
+    icon?: JSX.Element | undefined;
+    isDisabled?: boolean;
+    isLoading?: boolean;
+    circularClass?: string;
+    onClick?: () => void;
+    size?: "sm" | "md" | "lg" | undefined;
+    type?: 'button' | 'submit' | 'reset' | undefined;
+    variant?: "flat" | "solid" | "bordered" | "light" | "faded" | "shadow" | "ghost" | undefined;
+}
 
 const MyButton = ({
   children,
@@ -25,7 +26,8 @@ const MyButton = ({
   isDisabled,
   isLoading,
   circularClass,
-}: Props) => {
+  variant,
+}: Props) => {  
   const [startContent, setStartContent] = useState(icon);
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const MyButton = ({
       className={className}
       type={type}
       isDisabled={isDisabled || isLoading}
+      variant={variant}
     >
       {children}
     </NextButton>
