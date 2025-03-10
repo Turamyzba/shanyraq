@@ -1,12 +1,15 @@
 .navbar {
   padding: 0;
+  header {
+    padding: 0;
+  }
 }
 
 .header {
   width: 100%;
   background-color: #fff;
   border-bottom: 1px solid #ebebeb;
-  padding: 15px 0;
+  padding: 15px 0 !important;
 }
 
 .topBar {

@@ -6,7 +6,7 @@ import MySelect from "@/components/ui/MySelect";
 import MyInput from "@/components/ui/MyInput";
 import MySlider from "@/components/ui/MySlider";
 import MyCalendar from "@/components/ui/MyCalendar";
-import { Tabs, Tab, Checkbox, Switch, Button } from "@heroui/react";
+import { Tabs, Tab, Checkbox, addToast } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
@@ -104,6 +104,7 @@ export default function Filter() {
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [utilitiesIncluded, setUtilitiesIncluded] = useState(false);
   const [forStudents, setForStudents] = useState(false);
+  const [onlyEmptyApartments, setOnlyEmptyApartments] = useState(false);
   const [badHabitsAllowed, setBadHabitsAllowed] = useState(false);
 
   // Property Type selection (Apartment/House)
@@ -114,7 +115,7 @@ export default function Filter() {
 
   // Reset All Filters
   const resetFilters = () => {
-    setSelectedGender("Любой");
+    setSelectedGender("");
     setRegion("");
     setDistrict("");
     setMicroDistrict("");
@@ -125,7 +126,7 @@ export default function Filter() {
     setMoveInDate(parseDate("2024-03-07"));
     setIsToday(false);
     setIsTomorrow(false);
-    setRoomSize(["", "500"]);
+    setRoomSize(["", "60"]);
     setFloors(["", ""]);
     setIsNotFirstFloor(false);
     setIsNotLastFloor(false);
@@ -192,14 +193,21 @@ export default function Filter() {
       typeOfHousing: propertyType,
       autoUpdate,
     };
-    if (sessionStorage.getItem("savedFilter")) {
-      alert(
-        "Фильтр уже был сохранен ранее. Перезагрузите страницу или очистите, чтобы сохранить заново."
-      );
-      return;
-    }
-    sessionStorage.setItem("savedFilter", JSON.stringify(queryObject));
-    alert("Поиск сохранен!");
+    // if (sessionStorage.getItem("savedFilter")) {
+    //   alert(
+    //     "Фильтр уже был сохранен ранее. Перезагрузите страницу или очистите, чтобы сохранить заново."
+    //   );
+    //   return;
+    // }
+    // sessionStorage.setItem("savedFilter", JSON.stringify(queryObject));
+    addToast({
+      title: "Поиск сохранен!",
+      description: "Toast displayed successfully",
+      variant: "flat",
+      radius: "sm",
+      timeout: 2000,
+      color: "primary",
+    });
   };
 
   return (
@@ -346,7 +354,10 @@ export default function Filter() {
           <Tabs
             selectedKey={termType}
             variant={"light"}
+            className={styles.label}
             onSelectionChange={(key) => setTermType(key as string)}
+            size="sm"
+            radius="sm"
           >
             <Tab key="long" title="Долгосрочно" />
             <Tab key="short" title="Краткосрочно" />
@@ -446,21 +457,28 @@ export default function Filter() {
                 <MyCheckBox
                   checked={petsAllowed}
                   onChange={() => setPetsAllowed((prev) => !prev)}
-                  label="С животными"
+                  label="Разрешено ли с животными?"
                   labelClassName={styles.label}
                 />
 
                 <MyCheckBox
                   checked={utilitiesIncluded}
                   onChange={() => setUtilitiesIncluded((prev) => !prev)}
-                  label="Коммунальные услуги"
+                  label="Включены ли коммунальные услуги?"
                   labelClassName={styles.label}
                 />
 
                 <MyCheckBox
                   checked={forStudents}
                   onChange={() => setForStudents((prev) => !prev)}
-                  label="Для студентов"
+                  label="Можно ли студентам?"
+                  labelClassName={styles.label}
+                />
+
+                <MyCheckBox
+                  checked={onlyEmptyApartments}
+                  onChange={() => setOnlyEmptyApartments((prev) => !prev)}
+                  label="Только квартиры без жителей?"
                   labelClassName={styles.label}
                 />
 
