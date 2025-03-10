@@ -47,7 +47,6 @@ const Card: React.FC<CardProps> = ({ card }) => {
         timeout: 2000,
         color: "success",
       });
-
     }, 1000);
   };
 
@@ -133,8 +132,14 @@ const Card: React.FC<CardProps> = ({ card }) => {
 
         {/* Learn More Button */}
         <div className={styles.learnMore}>
-          <Button variant="light" as={Link} href={shareUrl} endContent={<Images.ArrowRight size={14} color="#999999" />} >
-          Узнать больше</Button>
+          <Button
+            variant="light"
+            as={Link}
+            href={shareUrl}
+            endContent={<Images.ArrowRight size={14} color="#999999" />}
+          >
+            Узнать больше
+          </Button>
         </div>
       </div>
     </div>

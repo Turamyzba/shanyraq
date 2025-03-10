@@ -30,7 +30,7 @@ import {
   Minus,
   MapPin as MapPinIcon,
   Filter,
-  Columns3
+  Columns3,
 } from "lucide-react";
 
 const whatsappIcon = () => (
@@ -73,7 +73,7 @@ const Images = {
   MinusIcon: Minus,
   MapPinIcon: MapPinIcon,
   Filter: Filter,
-  List: Columns3
+  List: Columns3,
 };
 
 export default Images;
