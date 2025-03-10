@@ -7,7 +7,7 @@ import MyInput from "@/components/ui/MyInput";
 import MySlider from "@/components/ui/MySlider";
 import MyCalendar from "@/components/ui/MyCalendar";
 import { Tabs, Tab, Checkbox, Switch, Button } from "@heroui/react";
-import {parseDate} from "@internationalized/date";
+import { parseDate } from "@internationalized/date";
 import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
 
@@ -56,36 +56,33 @@ export default function Filter() {
 
   const [isToday, setIsToday] = useState(false);
   const [isTomorrow, setIsTomorrow] = useState(false);
-//   const toggleToday = () => {
-//     setIsToday((prev) => !prev);
-//     if (!isToday) {
-//       setIsTomorrow(false);
-//       setMoveInDate(new Date().toISOString().split("T")[0]);
-//     } else {
-//       setMoveInDate("");
-//     }
-//   };
-//   const toggleTomorrow = () => {
-//     setIsTomorrow((prev) => !prev);
-//     if (!isTomorrow) {
-//       setIsToday(false);
-//       const tomorrow = new Date();
-//       tomorrow.setDate(tomorrow.getDate() + 1);
-//       setMoveInDate(tomorrow.toISOString().split("T")[0]);
-//     } else {
-//       setMoveInDate("");
-//     }
-//   };
+  //   const toggleToday = () => {
+  //     setIsToday((prev) => !prev);
+  //     if (!isToday) {
+  //       setIsTomorrow(false);
+  //       setMoveInDate(new Date().toISOString().split("T")[0]);
+  //     } else {
+  //       setMoveInDate("");
+  //     }
+  //   };
+  //   const toggleTomorrow = () => {
+  //     setIsTomorrow((prev) => !prev);
+  //     if (!isTomorrow) {
+  //       setIsToday(false);
+  //       const tomorrow = new Date();
+  //       tomorrow.setDate(tomorrow.getDate() + 1);
+  //       setMoveInDate(tomorrow.toISOString().split("T")[0]);
+  //     } else {
+  //       setMoveInDate("");
+  //     }
+  //   };
 
   // More Filters Toggle
   const [moreFilters, setMoreFilters] = useState(false);
 
   // Additional Filters
   const [roomSize, setRoomSize] = useState(["", "60"]);
-  const handleRoomSizeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handleRoomSizeChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newRoomSize = [...roomSize];
     newRoomSize[index] = e.target.value;
     setRoomSize(newRoomSize);
@@ -267,17 +264,13 @@ export default function Filter() {
               type="number"
               placeholder="Минимальный"
               value={priceRange[0].toString()}
-              onChange={(e) =>
-                setPriceRange([+e.target.value, priceRange[1]])
-              }
+              onChange={(e) => setPriceRange([+e.target.value, priceRange[1]])}
             />
             <MyInput
               type="number"
               placeholder="Максимальный"
               value={priceRange[1].toString()}
-              onChange={(e) =>
-                setPriceRange([priceRange[0], +e.target.value])
-              }
+              onChange={(e) => setPriceRange([priceRange[0], +e.target.value])}
             />
           </div>
           <div className={styles.relative}>
@@ -318,19 +311,11 @@ export default function Filter() {
         <div className={styles.section}>
           <p className={styles.label}>Количество комнат</p>
           <div className={styles.roomControls}>
-            <MyButton
-              className={styles.roomControlButton}
-              onClick={decrementRooms}
-              isIconOnly
-            >
+            <MyButton className={styles.roomControlButton} onClick={decrementRooms} isIconOnly>
               <Images.MinusIcon size={12} />
             </MyButton>
             <span className={styles.roomCount}>{rooms}</span>
-            <MyButton
-              className={styles.roomControlButton}
-              onClick={incrementRooms}
-              isIconOnly
-            >
+            <MyButton className={styles.roomControlButton} onClick={incrementRooms} isIconOnly>
               <Images.PlusIcon size={12} />
             </MyButton>
           </div>
@@ -357,45 +342,43 @@ export default function Filter() {
 
         {/* Long vs Short Term */}
         <div className={styles.section}>
-            <p className={styles.label}>Продолжительность</p>
-            <Tabs
+          <p className={styles.label}>Продолжительность</p>
+          <Tabs
             selectedKey={termType}
             variant={"light"}
             onSelectionChange={(key) => setTermType(key as string)}
-            >
-                <Tab key="long" title="Долгосрочно" />
-                <Tab key="short" title="Краткосрочно" />
-            </Tabs>
+          >
+            <Tab key="long" title="Долгосрочно" />
+            <Tab key="short" title="Краткосрочно" />
+          </Tabs>
         </div>
 
         {/* Move-in Date Section */}
         <div className={styles.section}>
           <p className={styles.label}>Дата начала заселения</p>
-            <MyCalendar
-              aria-label="Дата заселения"
-              value={moveInDate}
-              variant="bordered"
-              color={"primary"}
-              onChange={(date) => setMoveInDate(date ?? parseDate("2024-03-07"))}
-              size="md"
-              radius="sm"
-            />
+          <MyCalendar
+            aria-label="Дата заселения"
+            value={moveInDate}
+            variant="bordered"
+            color={"primary"}
+            onChange={(date) => setMoveInDate(date ?? parseDate("2024-03-07"))}
+            size="md"
+            radius="sm"
+          />
           <div className={styles.checkboxFloorGroup}>
             <Checkbox
               checked={isToday}
-            //   onChange={() => toggleToday()}
+              //   onChange={() => toggleToday()}
               aria-label="Сегодня"
             >
-                <p className={styles.label}>Сегодня</p>
-              
+              <p className={styles.label}>Сегодня</p>
             </Checkbox>
             <Checkbox
               checked={isTomorrow}
-            //   onChange={() => toggleTomorrow()}
+              //   onChange={() => toggleTomorrow()}
               aria-label="Завтра"
             >
-                <p className={styles.label}>Завтра</p>
-              
+              <p className={styles.label}>Завтра</p>
             </Checkbox>
           </div>
         </div>
@@ -445,16 +428,14 @@ export default function Filter() {
                   onChange={() => setIsNotFirstFloor((prev) => !prev)}
                   aria-label="Не первый этаж"
                 >
-                    <p className={styles.label}>Не первый этаж?</p>
-                  
+                  <p className={styles.label}>Не первый этаж?</p>
                 </Checkbox>
                 <Checkbox
                   checked={isNotLastFloor}
                   onChange={() => setIsNotLastFloor((prev) => !prev)}
                   aria-label="Не последний этаж"
                 >
-                    <p className={styles.label}>Не последний этаж?</p>
-                    
+                  <p className={styles.label}>Не последний этаж?</p>
                 </Checkbox>
               </div>
             </div>
@@ -493,7 +474,7 @@ export default function Filter() {
             </div>
 
             <div className={styles.section}>
-            {/* Property Type */}
+              {/* Property Type */}
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>Тип жилья</p>
                 <Checkbox
@@ -501,18 +482,18 @@ export default function Filter() {
                   onChange={() => setPropertyType("Квартира")}
                   aria-label="Квартира"
                 >
-                    <p className={styles.label}>Квартира</p>
+                  <p className={styles.label}>Квартира</p>
                 </Checkbox>
                 <Checkbox
                   checked={propertyType === "Дом"}
                   onChange={() => setPropertyType("Дом")}
                   aria-label="Дом"
                 >
-                    <p className={styles.label}>Дом</p>
+                  <p className={styles.label}>Дом</p>
                 </Checkbox>
               </div>
 
-            {/* From Owner? */}
+              {/* From Owner? */}
 
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>От кого?</p>
@@ -521,18 +502,17 @@ export default function Filter() {
                   onChange={() => setPropertyType("Квартира")}
                   aria-label="Квартира"
                 >
-                    <p className={styles.label}>От хозяев</p>
+                  <p className={styles.label}>От хозяев</p>
                 </Checkbox>
                 <Checkbox
                   checked={propertyType === "Дом"}
                   onChange={() => setPropertyType("Дом")}
                   aria-label="Дом"
                 >
-                    <p className={styles.label}>От жителей</p>
+                  <p className={styles.label}>От жителей</p>
                 </Checkbox>
               </div>
             </div>
-
           </>
         )}
 

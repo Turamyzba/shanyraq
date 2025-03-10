@@ -1,8 +1,8 @@
-import React from 'react';
-import Slider from '@mui/material/Slider';
+import React from "react";
+import Slider from "@mui/material/Slider";
 
 interface MySliderProps {
-    value: number | number[];
+  value: number | number[];
   handleSliderChange: (event: Event, value: number | number[]) => void;
   min?: number;
   max?: number;
@@ -11,12 +11,12 @@ interface MySliderProps {
 }
 
 const MySlider: React.FC<MySliderProps> = ({
-    value,
+  value,
   handleSliderChange,
   min = 0,
   max = 500000,
   step = 5000,
-    className,
+  className,
 }) => {
   return (
     <Slider

@@ -1,207 +1,205 @@
 .filter {
-    min-width: 450px;
-    max-width: 450px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    overflow-y: auto;
-    max-height: 90vh;
-    position: sticky;
-    top: 30px;
-    box-shadow: 0px 4px 9px 0px #98a0b440;
-    padding: 32px 16px;
-    overflow-x: hidden;
-  }
-  
-  .filterContent {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .header p {
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 30px;
-    color: #252525;
-  }
-  
-  .resetButton {
-    font-size: 14px;
-    padding: 6px 4px;
-    color: #1aa683;
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  
-  .section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .label {
-    font-size: 14px;
-    line-height: 17.5px;
-    color: #252525;
-  }
-  
-  .priceInputs {
-    display: flex;
-    width: 100%;
-    gap: 15px;
-    input {
-      flex: 1;
-      font-size: 14px;
-    }
-  }
-  
-  .relative {
-    position: relative;
-  }
-  
-  .sliderLabels {
-    display: flex;
-    justify-content: space-between;
-    color: #1aa683;
-    text-align: left;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 17px;
-  }
-  
-  .mySlider {
-    width: 100%;
-    display: flex;
-  }
-  
-  .housemates {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .housemateItem {
-    width: 48px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    background-color: #d1ede6;
-    color: #5c5c5c;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .housemateItem.selected {
-    background-color: #1aa683;
-    color: #ffffff;
-  }
-  
-  .roomControls {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 100px;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .roomControlButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .roomCount {
-    font-size: 14px;
-    color: #252525;
-  }
-  
-  .dateInput input {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ebebeb;
-    border-radius: 5px;
-    font-size: 14px;
-    color: #b5b7c0;
-  }
-  
-  .calendarWrapper {
-    border: 1px solid #ebebeb;
-    border-radius: 5px;
-    padding: 10px;
-  }
+  min-width: 450px;
+  max-width: 450px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow-y: auto;
+  max-height: 90vh;
+  position: sticky;
+  top: 30px;
+  box-shadow: 0px 4px 9px 0px #98a0b440;
+  padding: 32px 16px;
+  overflow-x: hidden;
+}
 
-  .checkboxFloorGroup {
-    display: flex;
-    gap: 30px;
-  }
-  
-  .checkboxGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 10px;
-  }
-  
-  .checkboxLabel {
-    font-size: 14px;
-    color: #252525;
-    cursor: pointer;
-  }
-  
-  .buttonGroup {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    margin-top: 30px;
-  }
-  
-  .moreFiltersButton,
-  .saveSearchButton {
+.filterContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header p {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+  color: #252525;
+}
+
+.resetButton {
+  font-size: 14px;
+  padding: 6px 4px;
+  color: #1aa683;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 17.5px;
+  color: #252525;
+}
+
+.priceInputs {
+  display: flex;
+  width: 100%;
+  gap: 15px;
+  input {
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
     font-size: 14px;
-    font-weight: 600;
-    color: #252525;
-    border: 1px solid #252525;
-    border-radius: 8px;
-    background-color: transparent;
-    cursor: pointer;
-    transition: background-color 0.2s;
   }
-  
-  .moreFiltersButton:hover,
-  .saveSearchButton:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .submitButton {
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: #32343a;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  
+}
+
+.relative {
+  position: relative;
+}
+
+.sliderLabels {
+  display: flex;
+  justify-content: space-between;
+  color: #1aa683;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.mySlider {
+  width: 100%;
+  display: flex;
+}
+
+.housemates {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.housemateItem {
+  width: 48px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background-color: #d1ede6;
+  color: #5c5c5c;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.housemateItem.selected {
+  background-color: #1aa683;
+  color: #ffffff;
+}
+
+.roomControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.roomControlButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.roomCount {
+  font-size: 14px;
+  color: #252525;
+}
+
+.dateInput input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ebebeb;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #b5b7c0;
+}
+
+.calendarWrapper {
+  border: 1px solid #ebebeb;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.checkboxFloorGroup {
+  display: flex;
+  gap: 30px;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  color: #252525;
+  cursor: pointer;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.moreFiltersButton,
+.saveSearchButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #252525;
+  border: 1px solid #252525;
+  border-radius: 8px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.moreFiltersButton:hover,
+.saveSearchButton:hover {
+  background-color: #f0f0f0;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #32343a;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

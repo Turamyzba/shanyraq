@@ -49,7 +49,7 @@ export default function MyHeroSelect({
           ${
             isOpen
               ? "border-[#1AA683]" // Green border when open
-              : "border-[#EBEBEB]"  // Gray border when closed
+              : "border-[#EBEBEB]" // Gray border when closed
           }
         `,
         value: `

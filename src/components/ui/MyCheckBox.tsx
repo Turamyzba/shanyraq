@@ -19,22 +19,14 @@ export default function MyCheckBox({
   checked,
   onChange,
   className = "",
-  labelClassName =""
+  labelClassName = "",
 }: MyCheckBoxProps) {
   return (
     <div className={`flex items-center justify-between w-full ${className}`}>
-      <span className={labelClassName}>
-        {label}
-      </span>
+      <span className={labelClassName}>{label}</span>
       <label className="flex items-center gap-2 cursor-pointer">
-        <Checkbox
-          checked={checked}
-          onChange={() => onChange(!checked)}
-          aria-label={label}
-        />
-        <span className={`${labelClassName} min-w-[30px]`}>
-          {checked ? "Да" : "Нет"}
-        </span>
+        <Checkbox checked={checked} onChange={() => onChange(!checked)} aria-label={label} />
+        <span className={`${labelClassName} min-w-[30px]`}>{checked ? "Да" : "Нет"}</span>
       </label>
     </div>
   );
