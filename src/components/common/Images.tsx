@@ -28,7 +28,8 @@ import {
   ChevronUp,
   Plus,
   Minus,
-  MinusIcon,
+  MapPin as MapPinIcon,
+  Filter,
 } from "lucide-react";
 
 const whatsappIcon = () => (
@@ -69,6 +70,8 @@ const Images = {
   ChevronUp: ChevronUp,
   PlusIcon: Plus,
   MinusIcon: Minus,
+  MapPinIcon: MapPinIcon,
+  Filter: Filter,
 };
 
 export default Images;

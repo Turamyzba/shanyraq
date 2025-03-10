@@ -15,6 +15,7 @@ type Props = {
   size?: "sm" | "md" | "lg" | undefined;
   type?: "button" | "submit" | "reset" | undefined;
   variant?: "flat" | "solid" | "bordered" | "light" | "faded" | "shadow" | "ghost" | undefined;
+  isIconOnly?: boolean;
 };
 
 const MyButton = ({
@@ -27,6 +28,7 @@ const MyButton = ({
   isLoading,
   circularClass,
   variant,
+  isIconOnly = false,
 }: Props) => {
   const [startContent, setStartContent] = useState(icon);
 
@@ -48,6 +50,7 @@ const MyButton = ({
       type={type}
       isDisabled={isDisabled || isLoading}
       variant={variant}
+      isIconOnly={isIconOnly}
     >
       {children}
     </NextButton>

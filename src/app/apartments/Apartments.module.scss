@@ -1,0 +1,40 @@
+/* Apartments.module.scss */
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 45px;
+  }
+  
+  .rightColumn {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  
+  .sortControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  
+  .sortText {
+    text-align: left;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 18px;
+    color: #5c5c5c;
+  }
+  
+  .gridContainer {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .cardGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  

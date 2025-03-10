@@ -47,7 +47,7 @@ const MyInput = ({
       variant={variant}
       className={className}
       classNames={{
-        inputWrapper: "border-[#EBEBEB] border-1",
+        inputWrapper: "border-[#EBEBEB] border-1 rounded-[5px]",
         label: "text-foreground",
       }}
     />
