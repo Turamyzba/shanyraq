@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Images from "./Images";
-import styles from "./Card.module.scss";
+import styles from "./LandingCard.module.scss";
 import { Carousel } from "antd";
-import { Button, Snippet, addToast } from "@heroui/react";
+import { Button, Snippet } from "@heroui/react";
 import { Modal } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -21,9 +21,10 @@ interface CardProps {
     roommates: number;
     arriveDate: string;
   };
+  isLast?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ card }) => {
+const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
   useEffect(() => {
@@ -39,15 +40,6 @@ const Card: React.FC<CardProps> = ({ card }) => {
   const handleClose = () => {
     setTimeout(() => {
       setIsModalOpen(false);
-      addToast({
-        title: "Ссылка на обявление скопировано!",
-        // description: "Ссылка на обявление скопировано",
-        variant: "flat",
-        radius: "sm",
-        timeout: 2000,
-        color: "success",
-      });
-
     }, 1000);
   };
 
@@ -56,19 +48,19 @@ const Card: React.FC<CardProps> = ({ card }) => {
       <div className={styles.card}>
         {/* Image Section */}
         <div className={styles.cardImage}>
-          <Carousel autoplay style={{ width: "240px", height: "130px" }}>
+          <Carousel autoplay style={{ width: "343px", height: "220px" }}>
             <Image
               src={"https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"}
               alt={card?.title || "Room Image"}
-              width={240}
-              height={130}
+              width={343}
+              height={220}
               className={styles.image}
             />
             <Image
               src={"https://i.pinimg.com/736x/a3/1f/b7/a31fb71819bd92f736b655b4411879c0.jpg"}
               alt={card?.title || "Room Image"}
-              width={240}
-              height={130}
+              width={343}
+              height={220}
               className={styles.image}
             />
           </Carousel>
@@ -93,7 +85,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
           {/* Title & Location */}
           <div className={styles.cardTitle}>
             <p>
-              {(card?.title ?? "").length > 22 ? `${card?.title.substring(0, 22)}...` : card?.title}
+              {(card?.title ?? "").length > 26 ? `${card?.title.substring(0, 26)}...` : card?.title}
             </p>
           </div>
           <div className={styles.cardLocation}>
@@ -133,12 +125,21 @@ const Card: React.FC<CardProps> = ({ card }) => {
 
         {/* Learn More Button */}
         <div className={styles.learnMore}>
-          <Button variant="light" as={Link} href={shareUrl} endContent={<Images.ArrowRight size={14} color="#999999" />} >
-          Узнать больше</Button>
+          <Link href={"/"}>Узнать больше</Link>
+          <Images.ArrowRight size={14} color="#999999" />
         </div>
       </div>
+
+      {/* If this is the last card, show full-screen button */}
+      {isLast && (
+        <div className={styles.lastOverlay}>
+          <Button as={Link} href="/" className={styles.viewAllButton}>
+            Смотреть все квартиры
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Card;
+export default LandingCard;

@@ -302,15 +302,16 @@ export default function Filter() {
           <p className={styles.label}>Количество сожителей</p>
           <ul className={styles.housemates}>
             {housematesOptions.map((option) => (
-              <li
+              <MyButton
                 key={option}
+                isIconOnly
                 className={`${styles.housemateItem} ${
                   selectedHousemate === option ? styles.selected : ""
                 }`}
                 onClick={() => setSelectedHousemate(option)}
               >
                 {option}
-              </li>
+              </MyButton>
             ))}
           </ul>
         </div>

@@ -6,8 +6,8 @@ import { Button, Accordion, AccordionItem } from "@heroui/react";
 import Images from "../components/common/Images";
 import Container from "../components/layouts/Container";
 import styles from "./page.module.scss";
-import Card from "../components/common/Card";
-import CardSkeleton from "../components/common/CardSkeleton";
+import Card from "../components/common/LandingCard";
+import CardSkeleton from "../components/common/LandingCardSkeleton";
 
 const appAdvantages = [
   {

@@ -3,16 +3,15 @@
 }
 
 .card {
-  min-height: 345px;
-  min-width: 267px;
+  min-height: 511px;
+  min-width: 375px;
   background: white;
   border-radius: 10px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-start;
-  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.2); // updated shadow from old version
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
 
   /* Image Section */
   .cardImage {
@@ -21,8 +20,8 @@
     .image {
       border-radius: 10px;
       object-fit: cover;
-      max-width: 240px;
-      max-height: 130px;
+      max-width: 343px;
+      max-height: 220px;
     }
 
     .modalText {
@@ -42,31 +41,28 @@
   .cardContent {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    width: 100%;
+    gap: 24px;
   }
 
   .cardTitle {
-    font-size: 16px; // updated from 20px
-    font-weight: 600; // matches Tailwind's font-semibold
+    font-size: 20px;
+    font-weight: 500;
     color: #252525;
     text-align: left;
-    margin-top: 10px;
   }
 
   .cardLocation {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px; // updated from 16px
+    font-size: 16px;
     color: #929292;
-    font-weight: 400; // updated from 500
+    font-weight: 500;
   }
 
   /* Room Info */
   .roomInfo {
     display: flex;
-    width: 100%;
     justify-content: space-between;
 
     .infoItem {
@@ -74,21 +70,18 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      font-size: 12px; // updated from 14px
-      font-weight: 400;
+      font-size: 14px;
       color: #929292;
-      line-height: 17.5px; // added to match old version
     }
   }
 
   /* Price */
   .price {
-    font-size: 16px; // updated from 24px
+    font-size: 24px;
     font-weight: 700;
     color: #252525;
     display: flex;
     align-items: center;
-    line-height: 20px; // added line-height
 
     .currency {
       text-decoration: underline;
@@ -101,11 +94,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 12px; // updated from 14px
-    font-weight: 500; // updated from 700
+    font-size: 14px;
+    font-weight: 700;
     color: #999999;
     cursor: pointer;
-    line-height: 17.5px; // added line-height
 
     &:hover {
       color: #1aa683;

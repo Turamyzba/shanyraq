@@ -2,7 +2,7 @@
 
 import { Card, CardHeader, CardBody, CardFooter, Skeleton, Divider } from "@heroui/react";
 
-export default function CardSkeleton() {
+export default function LandingCardkeleton() {
   return (
     <Card className="min-w-[375px] min-h-[511px] p-4 space-y-5 rounded-lg shadow-md">
       {/* Image Skeleton */}
