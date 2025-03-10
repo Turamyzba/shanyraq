@@ -1,61 +1,60 @@
 .mapContainer {
-    width: 100%;
-    height: 80vh; // Adjust height as needed
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  /* Popup Container */
-  .popup {
-    font-family: Arial, sans-serif;
-    padding: 8px;
-  }
-  
-  /* Link wrapper for the popup */
-  .popupLink {
-    text-decoration: none;
-    color: inherit;
-  }
-  
-  /* Popup Card Design */
-  .popupCard {
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  /* Popup Image */
-  .popupImage {
-    width: 100%;
-    max-width: 300px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-  
-  /* Popup Title */
-  .popupTitle {
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0 0 4px;
-    color: #252525;
-  }
-  
-  /* Popup Price */
-  .popupPrice {
-    font-size: 16px;
-    font-weight: 700;
-    margin: 10px 0 0;
-    color: #252525;
-  }
-  
-  .popupPrice span {
-    text-decoration: underline;
-  }
-  
+  width: 100%;
+  height: 80vh; // Adjust height as needed
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Popup Container */
+.popup {
+  font-family: Arial, sans-serif;
+  padding: 8px;
+}
+
+/* Link wrapper for the popup */
+.popupLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Popup Card Design */
+.popupCard {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Popup Image */
+.popupImage {
+  width: 100%;
+  max-width: 300px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Popup Title */
+.popupTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #252525;
+}
+
+/* Popup Price */
+.popupPrice {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 10px 0 0;
+  color: #252525;
+}
+
+.popupPrice span {
+  text-decoration: underline;
+}

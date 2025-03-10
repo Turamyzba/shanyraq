@@ -18,7 +18,7 @@ const CardSkeleton: React.FC = () => {
           <div className="w-3/5 h-5 rounded bg-[#E0E0E0]" />
           {/* Location Skeleton */}
           <div className="w-4/5 h-4 rounded bg-[#E0E0E0]" />
-          
+
           {/* Room Information Skeleton */}
           <div className="flex justify-between w-full">
             <div className="w-1/5 h-4 rounded bg-[#E0E0E0]" />

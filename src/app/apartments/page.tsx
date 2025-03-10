@@ -127,7 +127,7 @@ export default function ApartmentsPage() {
             </Dropdown>
 
             <div>
-              {isMap && 
+              {isMap && (
                 <MyButton
                   type="button"
                   onClick={() => setHideFilter(!hideFilter)}
@@ -137,7 +137,7 @@ export default function ApartmentsPage() {
                 >
                   <Images.Filter />
                 </MyButton>
-              }
+              )}
 
               <MyButton
                 type="button"
@@ -151,16 +151,18 @@ export default function ApartmentsPage() {
             </div>
           </div>
 
-          {!isMap ? 
-          <div className={styles.gridContainer}>
-            <div className={styles.cardGrid}>
-              {mockAnnouncements.map((announcement) => (
-                <Card key={announcement.id} card={announcement} />
-                // <CardSkeleton />
-              ))}
+          {!isMap ? (
+            <div className={styles.gridContainer}>
+              <div className={styles.cardGrid}>
+                {mockAnnouncements.map((announcement) => (
+                  <Card key={announcement.id} card={announcement} />
+                  // <CardSkeleton />
+                ))}
+              </div>
             </div>
-          </div>
-          : <Map update={hideFilter} />}
+          ) : (
+            <Map update={hideFilter} />
+          )}
         </div>
       </div>
     </Container>
