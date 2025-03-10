@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import Container from "@/components/layouts/Container";
 import Filter from "./Filter";
 import Card from "@/components/common/Card";
+import CardSkeleton from "@/components/common/CardSkeleton";
 import Images from "@/components/common/Images";
 import styles from "./Apartments.module.scss";
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import MyButton from "@/components/ui/MyButton";
-import MySelect from "@/components/ui/MySelect";
+import Map from "./Map";
 
 const sortItems = [
   { value: "1", label: "Самые подходящие" },
@@ -89,11 +90,12 @@ export default function ApartmentsPage() {
   // Static UI value (dropdown closed, no error, no loading)
   const [selectedSort, setSelectedSort] = useState("1");
   const [isMap, setIsMap] = useState(false);
+  const [hideFilter, setHideFilter] = useState(true);
 
   return (
     <Container>
       <div className={styles.wrapper}>
-        <Filter />
+        {hideFilter && <Filter />}
 
         <div className={styles.rightColumn}>
           <div className={styles.sortControls}>
@@ -124,24 +126,41 @@ export default function ApartmentsPage() {
               </DropdownMenu>
             </Dropdown>
 
-            <MyButton
-              type="button"
-              onClick={() => setIsMap(!isMap)}
-              isIconOnly
-              variant="bordered"
-              size="sm"
-            >
-              {isMap ? <Images.List /> : <Images.Map />}
-            </MyButton>
+            <div>
+              {isMap && 
+                <MyButton
+                  type="button"
+                  onClick={() => setHideFilter(!hideFilter)}
+                  isIconOnly
+                  variant="bordered"
+                  size="sm"
+                >
+                  <Images.Filter />
+                </MyButton>
+              }
+
+              <MyButton
+                type="button"
+                onClick={() => setIsMap(!isMap)}
+                isIconOnly
+                variant="bordered"
+                size="sm"
+              >
+                {isMap ? <Images.List /> : <Images.Map />}
+              </MyButton>
+            </div>
           </div>
 
+          {!isMap ? 
           <div className={styles.gridContainer}>
             <div className={styles.cardGrid}>
               {mockAnnouncements.map((announcement) => (
                 <Card key={announcement.id} card={announcement} />
+                // <CardSkeleton />
               ))}
             </div>
           </div>
+          : <Map update={hideFilter} />}
         </div>
       </div>
     </Container>

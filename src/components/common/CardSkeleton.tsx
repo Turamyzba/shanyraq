@@ -1,63 +1,43 @@
 "use client";
-import { Card, CardHeader, CardBody, CardFooter, Skeleton, Divider } from "@heroui/react";
 
-export default function CardSkeleton() {
+import React from "react";
+
+const CardSkeleton: React.FC = () => {
   return (
-    <Card className="min-h-[345px] min-w-[267px] rounded-[10px] p-[16px] gap-[26px] bg-white flex flex-col justify-between items-start shadow-md">
-      {/* Image section with share button skeleton */}
-      <CardHeader className="relative">
-        <Skeleton className="w-full rounded-[10px]">
-          <div className="h-[130px] w-full bg-default-300 rounded-[10px]" />
-        </Skeleton>
-        <Skeleton className="absolute top-2 right-2 rounded-full">
-          <div className="h-6 w-6 bg-default-300 rounded-full" />
-        </Skeleton>
-      </CardHeader>
-
-      <Divider />
-
-      {/* Text & details section */}
-      <CardBody className="flex flex-col gap-[16px] justify-start w-full">
-        {/* Title skeleton */}
-        <Skeleton className="w-3/5 rounded-lg">
-          <div className="h-4 w-3/5 bg-default-200 rounded-lg" />
-        </Skeleton>
-        {/* Address skeleton */}
-        <Skeleton className="w-4/5 rounded-lg">
-          <div className="h-3 w-4/5 bg-default-200 rounded-lg" />
-        </Skeleton>
-        {/* Row for calendar, room, gender, roommates skeletons */}
-        <div className="flex items-center justify-between w-full">
-          <Skeleton className="w-1/4 rounded-lg">
-            <div className="h-3 w-full bg-default-300 rounded-lg" />
-          </Skeleton>
-          <Skeleton className="w-1/4 rounded-lg">
-            <div className="h-3 w-full bg-default-300 rounded-lg" />
-          </Skeleton>
-          <Skeleton className="w-1/4 rounded-lg">
-            <div className="h-3 w-full bg-default-300 rounded-lg" />
-          </Skeleton>
-          <Skeleton className="w-1/4 rounded-lg">
-            <div className="h-3 w-full bg-default-300 rounded-lg" />
-          </Skeleton>
+    <div className="relative">
+      <div className="min-h-[345px] min-w-[267px] bg-white rounded-[10px] p-4 flex flex-col justify-between items-start shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+        {/* Image Section Skeleton */}
+        <div className="relative">
+          <div className="w-[240px] h-[130px] rounded-[10px] bg-[#E0E0E0]" />
+          <div className="absolute top-[10px] right-[10px] w-8 h-8 rounded-full bg-[#E0E0E0]" />
         </div>
-        {/* Price skeleton */}
-        <Skeleton className="w-2/5 rounded-lg">
-          <div className="h-4 w-2/5 bg-default-200 rounded-lg" />
-        </Skeleton>
-      </CardBody>
 
-      <Divider />
+        {/* Card Content Skeleton */}
+        <div className="flex flex-col gap-4 w-full">
+          {/* Title Skeleton */}
+          <div className="w-3/5 h-5 rounded bg-[#E0E0E0]" />
+          {/* Location Skeleton */}
+          <div className="w-4/5 h-4 rounded bg-[#E0E0E0]" />
+          
+          {/* Room Information Skeleton */}
+          <div className="flex justify-between w-full">
+            <div className="w-1/5 h-4 rounded bg-[#E0E0E0]" />
+            <div className="w-1/5 h-4 rounded bg-[#E0E0E0]" />
+            <div className="w-1/5 h-4 rounded bg-[#E0E0E0]" />
+            <div className="w-1/5 h-4 rounded bg-[#E0E0E0]" />
+          </div>
 
-      {/* Learn more section skeleton */}
-      <CardFooter className="flex items-center justify-between w-full">
-        <Skeleton className="w-1/3 h-5 rounded-lg">
-          <div className="h-5 w-full bg-default-300 rounded-lg" />
-        </Skeleton>
-        <Skeleton className="h-5 w-5 rounded-lg">
-          <div className="h-5 w-5 bg-default-300 rounded-full" />
-        </Skeleton>
-      </CardFooter>
-    </Card>
+          {/* Price Skeleton */}
+          <div className="w-2/5 h-5 rounded bg-[#E0E0E0]" />
+        </div>
+
+        {/* Learn More Button Skeleton */}
+        <div className="flex">
+          <div className="w-1/3 h-4 rounded bg-[#E0E0E0]" />
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default CardSkeleton;

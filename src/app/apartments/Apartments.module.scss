@@ -2,7 +2,7 @@
 .wrapper {
   display: flex;
   justify-content: space-between;
-  gap: 45px;
+  gap: 25px;
   margin-top: 20px;
 }
 
@@ -36,5 +36,5 @@
 .cardGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 10px;
 }
