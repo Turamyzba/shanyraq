@@ -10,16 +10,19 @@ import {
   Input as HeroInput,
   Button as HeroUIButton,
 } from "@heroui/react";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import styles from "./Profile.module.scss";
 import "./Profile.scss";
 
 export default function Page() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [oldPasswordVisible, setOldPasswordVisible] = useState(false);
+  const [newPasswordVisible, setNewPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   function handleEdit() {
     if (isEditing) {
-      // Здесь можно отправить данные на сервер, если нужно
       setIsEditing(false);
     } else {
       setIsEditing(true);
@@ -29,47 +32,61 @@ export default function Page() {
   return (
     <>
       <div className={styles.profileContainer}>
-        <Form layout="vertical">
-          <div className={styles.formRow}>
-            <Form.Item label="Имя">
-              <Input defaultValue="Алихан" disabled={!isEditing} />
-            </Form.Item>
-            <Form.Item label="Фамилия">
-              <Input defaultValue="Оспанов" disabled={!isEditing} />
-            </Form.Item>
-          </div>
+        <Form layout="vertical" className={styles.wrapper}>
+          <div className={styles.wrapperInner}>
+            <div className={styles.formRow}>
+              <Form.Item label="Имя" className={styles.formItem}>
+                <Input placeholder="Мейірман" disabled={!isEditing} className={styles.formInput} />
+              </Form.Item>
+              <Form.Item className={styles.formItem} label="Фамилия">
+                <Input placeholder="Сәрсенбай" disabled={!isEditing} className={styles.formInput} />
+              </Form.Item>
+            </div>
 
-          <div className={styles.formRow}>
-            <Form.Item label="Email">
-              <Input defaultValue="alikhaaaan96@gmail.com" disabled={!isEditing} />
-            </Form.Item>
-            <Form.Item label="Номер телефона">
-              <Input defaultValue="+7 747 447 54 40" disabled={!isEditing} />
-            </Form.Item>
-          </div>
+            <div className={styles.formRow}>
+              <Form.Item label="Email" className={styles.formItem}>
+                <Input
+                  placeholder="sarsenbaymeyirman@gmail.com"
+                  disabled={!isEditing}
+                  className={styles.formInput}
+                />
+              </Form.Item>
+              <Form.Item label="Номер телефона" className={styles.formItem}>
+                <Input
+                  placeholder="+7 707 707 70 70"
+                  disabled={!isEditing}
+                  className={styles.formInput}
+                />
+              </Form.Item>
+            </div>
 
-          <div className={styles.formRow}>
-            <Form.Item label="Дата рождения">
-              <Calendar
-                showMonthAndYearPickers
-                aria-label="Date (Show Month and Year Picker)"
-                className="hero-calendar"
-                isDisabled={!isEditing}
-              />
-            </Form.Item>
-            <Form.Item label="Гендер">
-              <Select placeholder="Выберите" defaultValue="male" disabled={!isEditing}>
-                <Select.Option value="male">Мужчина</Select.Option>
-                <Select.Option value="female">Женщина</Select.Option>
-              </Select>
-            </Form.Item>
+            <div className={styles.formRow}>
+              <Form.Item label="Гендер" className={styles.formItem}>
+                <Select
+                  placeholder="Выберите"
+                  defaultValue="female"
+                  className={styles.formSelect}
+                  disabled={!isEditing}
+                >
+                  <Select.Option value="male">Мужчина</Select.Option>
+                  <Select.Option value="female">Женщина</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="Дата рождения">
+                <Calendar
+                  showMonthAndYearPickers
+                  aria-label="Date (Show Month and Year Picker)"
+                  className="hero-calendar"
+                  isDisabled={!isEditing}
+                />
+              </Form.Item>
+            </div>
           </div>
 
           <div className={styles.btnRow}>
-            <Button onClick={() => setIsPasswordModalOpen(true)}>Изменить пароль</Button>
+            <Button className={styles.editPassword} onClick={() => setIsPasswordModalOpen(true)}>Изменить пароль</Button>
             <Button
-              type="primary"
-              style={isEditing ? { backgroundColor: "#1AA683", borderColor: "#1AA683" } : {}}
+              className={isEditing ? styles.saveBtn : styles.editBtn}
               onClick={handleEdit}
             >
               {isEditing ? "Сохранить" : "Редактировать"}
@@ -88,22 +105,65 @@ export default function Page() {
             <>
               <ModalBody>
                 <h3>Поменяйте свой пароль</h3>
-                <HeroInput
-                  label="Старый пароль"
-                  type="password"
-                  placeholder="Введите старый пароль"
-                />
-                <HeroInput
-                  label="Новый пароль"
-                  type="password"
-                  placeholder="Введите новый пароль"
-                />
-                <HeroInput
-                  label="Повторите пароль"
-                  type="password"
-                  placeholder="Повторите новый пароль"
-                />
+
+                <div className={styles.passwordField}>
+                  <HeroInput
+                    label="Старый пароль"
+                    type={oldPasswordVisible ? "text" : "password"}
+                    placeholder="Введите старый пароль"
+                  />
+                  {oldPasswordVisible ? (
+                    <EyeInvisibleOutlined
+                      className={styles.passwordToggleIcon}
+                      onClick={() => setOldPasswordVisible(false)}
+                    />
+                  ) : (
+                    <EyeOutlined
+                      className={styles.passwordToggleIcon}
+                      onClick={() => setOldPasswordVisible(true)}
+                    />
+                  )}
+                </div>
+
+                <div className={styles.passwordField}>
+                  <HeroInput
+                    label="Новый пароль"
+                    type={newPasswordVisible ? "text" : "password"}
+                    placeholder="Введите новый пароль"
+                  />
+                  {newPasswordVisible ? (
+                    <EyeInvisibleOutlined
+                      className={styles.passwordToggleIcon}
+                      onClick={() => setNewPasswordVisible(false)}
+                    />
+                  ) : (
+                    <EyeOutlined
+                      className={styles.passwordToggleIcon}
+                      onClick={() => setNewPasswordVisible(true)}
+                    />
+                  )}
+                </div>
+
+                <div className={styles.passwordField}>
+                  <HeroInput
+                    label="Повторите пароль"
+                    type={confirmPasswordVisible ? "text" : "password"}
+                    placeholder="Повторите новый пароль"
+                  />
+                  {confirmPasswordVisible ? (
+                    <EyeInvisibleOutlined
+                      className={styles.passwordToggleIcon}
+                      onClick={() => setConfirmPasswordVisible(false)}
+                    />
+                  ) : (
+                    <EyeOutlined
+                      className={styles.passwordToggleIcon}
+                      onClick={() => setConfirmPasswordVisible(true)}
+                    />
+                  )}
+                </div>
               </ModalBody>
+
               <ModalFooter>
                 <HeroUIButton color="primary" onPress={() => setIsPasswordModalOpen(false)}>
                   Подтвердить
