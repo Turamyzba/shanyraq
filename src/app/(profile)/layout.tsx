@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "@ant-design/v5-patch-for-react-19";
-import { Menu, Badge, Progress, Modal as AntModal, Spin, Button as AntButton } from "antd";
+import { Menu, Badge, Progress, Modal as AntModal, Spin } from "antd";
 import {
   UserOutlined,
   FileTextOutlined,
@@ -16,7 +16,6 @@ import {
 import {
   Modal as HeroModal,
   ModalContent,
-  ModalHeader,
   ModalBody,
   ModalFooter,
   Button as HeroButton,
@@ -28,6 +27,7 @@ import {
 import styles from "./layout.module.scss";
 import Container from "@/components/layouts/Container";
 
+// Тип для статуса
 type StatusKey =
   | "findingApartment"
   | "notFindingApartment"
@@ -46,12 +46,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [statusValue, setStatusValue] = useState<StatusKey>("findingApartment");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [pageLoaded, setPageLoaded] = useState(false);
+
   const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
 
   useEffect(() => {
-    function handleLoad() {
-      setPageLoaded(true);
-    }
+    const handleLoad = () => setPageLoaded(true);
     if (document.readyState === "complete") {
       setPageLoaded(true);
     } else {
@@ -104,6 +103,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Container>
       <div className={styles.container}>
+        {/* Верхняя часть страницы */}
         <div className={styles.topBar}>
           <div className={styles.iconCircle}>
             <ExclamationOutlined />
@@ -123,17 +123,70 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             />
           </div>
         </div>
+
         <div className={styles.mainWrapper}>
           <div className={styles.navbar}>
             <div className={styles.profileBlock}>
               <div className={styles.avatarWrapper}>
-                <Avatar src="/avatar/image.png" className="w-[120px] h-[120px] rounded-full" />
+                <div className={styles.photoCircle}>
+                  <img src="/avatar/image.png" alt="Profile Photo" />
+                  <svg
+                    viewBox="0 0 200 200"
+                    className={styles.circleSvg}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <defs>
+                      <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#1aa683" />
+                        <stop offset="100%" stopColor="#28a745" />
+                      </linearGradient>
+                    </defs>
+
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="82"
+                      fill="none"
+                      stroke="url(#ringGradient)"
+                      strokeWidth="5"
+                    />
+
+                    <path
+                      id="circlePath"
+                      fill="none"
+                      d="
+                        M 100,100
+                        m -70,0
+                        a 70,70 0 1,0 140,0
+                        a 70,70 0 1,0 -140,0
+                      "
+                    />
+
+                    
+                    <text
+                      fill="#fff"
+                      fontSize="20"
+                      fontWeight="bold"
+                      stroke="#000000"
+                      strokeWidth="4"
+                      paintOrder="stroke"
+                      
+                    >
+                      <textPath href="#circlePath" startOffset="100" textAnchor="middle">
+                        #ИЩУ КВАРТИРУ
+                      </textPath>
+                    </text>
+                  </svg>
+                </div>
                 <EditOutlined className={styles.editIcon} onClick={onOpen} />
               </div>
+
               <div className={styles.userName}>Алихан Оспанов</div>
             </div>
+
             <Menu mode="vertical" defaultSelectedKeys={["profile"]} items={menuItems} />
           </div>
+
           <div className={styles.content}>{children}</div>
         </div>
       </div>
@@ -142,7 +195,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <ModalContent className={styles.darkModalContent}>
           {(onClose) => (
             <>
-              <ModalHeader className={styles.darkModalHeader}>Редактировать фото</ModalHeader>
               <ModalBody className={styles.darkModalBody}>
                 <Avatar src="/avatar/image.png" className="w-40 h-40 rounded-full" />
               </ModalBody>
@@ -156,25 +208,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <HomeFilled style={{ fontSize: 20 }} />
                   {statusLabels[statusValue]}
                 </HeroButton>
-                <HeroButton variant="ghost" className={styles.footerButton}>
-                  <CameraOutlined style={{ fontSize: 20 }} />
-                  Добавить фото
-                </HeroButton>
-                <HeroButton variant="ghost" className={styles.footerButton} color="danger">
-                  <DeleteOutlined style={{ fontSize: 20 }} />
-                  Удалить
-                </HeroButton>
+                <div className={styles.footerButton__edit}>
+                  <HeroButton variant="ghost" className={styles.footerButton}>
+                    <CameraOutlined style={{ fontSize: 20 }} />
+                    Добавить фото
+                  </HeroButton>
+                  <HeroButton variant="ghost" className={styles.footerButton} color="danger">
+                    <DeleteOutlined style={{ fontSize: 20 }} />
+                    Удалить
+                  </HeroButton>
+                </div>
               </ModalFooter>
             </>
           )}
         </ModalContent>
       </HeroModal>
 
+      {/* Модальное окно выбора статуса (AntDesign) */}
       <AntModal
         open={statusModalOpen}
         footer={null}
         title="Твой статус"
-        closable={true}
+        closable
         maskClosable={false}
         mask
         className={styles.statusModal}
