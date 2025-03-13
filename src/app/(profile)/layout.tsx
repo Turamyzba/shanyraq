@@ -193,7 +193,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
                 <EditOutlined className={styles.editIcon} onClick={onOpen} />
               </div>
-              <div className={styles.userName}>Алихан Оспанов</div>
+              <div className={styles.userName}>creator is meyirman</div>
             </div>
             <CustomMenu currentTab={currentTab} onMenuClick={handleMenuClick} />
           </div>
