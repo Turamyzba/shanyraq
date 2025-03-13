@@ -6,28 +6,22 @@
   width: 100%;
   height: 750px !important;
 }
-
 .formRow {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-
-  > .ant-form-item {
-    flex: 1;
-  }
+  gap: 20px;
 }
-
+.formRow > .ant-form-item {
+  flex: 1;
+}
 .btnRow {
   margin-top: 24px;
   display: flex;
   gap: 12px;
   justify-content: flex-end;
 }
-
 .ant-form-item-label {
   font-weight: bold;
 }
-
 .ant-input,
 .ant-picker,
 .ant-select-selector {
@@ -35,57 +29,145 @@
   border: 1px solid #d9d9d9;
   padding: 8px;
 }
-
 .ant-btn {
   border-radius: 4px;
   padding: 8px 16px;
 }
-
 .ant-btn-primary {
   background-color: #32343a;
   border-color: #32343a;
 }
-
 .ant-btn-default {
   border-color: #d9d9d9;
 }
-
 .hero-calendar {
   border: 1px solid #d9d9d9;
-  border-radius: 10px;
+  border-radius: 4px;
   box-shadow: none;
 }
-
 .hero-calendar .header {
   background-color: #f0f2f5;
   border-bottom: 1px solid #d9d9d9;
 }
-
 .hero-calendar .day {
   padding: 8px;
 }
-
 .hero-calendar .selected {
   background-color: #1890ff;
   color: #fff;
 }
-
 .passwordField {
   position: relative;
   margin-bottom: 16px;
 }
-
 .passwordToggleIcon {
   position: absolute;
-  top: 52px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 12px;
   cursor: pointer;
   color: #999;
   font-size: 18px;
 }
-.ant-col.ant-form-item-label label{
+.formItem {
+  width: 440px !important;
   font-size: 14px !important;
   font-weight: 400 !important;
   color: #25252580 !important;
   line-height: 18px !important;
+  margin: 0 !important;
+}
+.formInput {
+  border-radius: 10px !important;
+  border: 1px solid #ebebeb !important;
+  padding: 15px 16px !important;
+}
+.formSelect {
+  height: 54px !important;
+}
+.wrapperInner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.editBtn {
+  border-radius: 5px;
+  background-color: #32343a;
+  height: 45px;
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  width: 175px;
+}
+.editBtn:hover {
+  background-color: #35373e !important;
+  color: #fff !important;
+}
+.saveBtn {
+  border-radius: 5px;
+  background-color: #1aa683 !important;
+  height: 45px;
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff !important;
+  width: 175px;
+}
+.saveBtn:hover {
+  color: #fff !important;
+}
+.editPassword {
+  border-radius: 5px !important;
+  background-color: transparent !important;
+  color: #252525 !important;
+  border: 1px solid #252525 !important;
+  height: 45px;
+  font-weight: 700;
+  font-size: 14px;
+  width: 175px;
+}
+.modalPassword {
+  border-radius: 10px !important;
+  padding: 30px !important;
+  width: 600px !important;
+}
+.modalBodyPassword {
+  gap: 0 !important;
+  padding: 0 !important;
+}
+.modalTitle {
+  font-weight: 600 !important;
+  margin-bottom: 30px  !important;
+  color: #32343A !important;
+}
+.inputStyle{
+  font-weight: 400 !important;
+  font-size: 16px !important;
+  border:1px solid #EBEBEB !important;
+  border-radius: 10px !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+.inputStyle:first-child {
+  background: transparent !important;
+}
+.modalFooter{
+  display: block;
+  padding: 0;
+}
+.confirmPassword{
+  display: block;
+}
+.cancelPassword{
+
+}
+.transition-background{
+  background: none !important;
 }

@@ -8,7 +8,7 @@ import {
   ModalBody,
   ModalFooter,
   Input as HeroInput,
-  Button as HeroUIButton,
+  Button as HeroUIButton
 } from "@heroui/react";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import styles from "./Profile.module.scss";
@@ -22,11 +22,7 @@ export default function Page() {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   function handleEdit() {
-    if (isEditing) {
-      setIsEditing(false);
-    } else {
-      setIsEditing(true);
-    }
+    setIsEditing(!isEditing);
   }
 
   return (
@@ -42,32 +38,17 @@ export default function Page() {
                 <Input placeholder="Сәрсенбай" disabled={!isEditing} className={styles.formInput} />
               </Form.Item>
             </div>
-
             <div className={styles.formRow}>
               <Form.Item label="Email" className={styles.formItem}>
-                <Input
-                  placeholder="sarsenbaymeyirman@gmail.com"
-                  disabled={!isEditing}
-                  className={styles.formInput}
-                />
+                <Input placeholder="sarsenbaymeyirman@gmail.com" disabled={!isEditing} className={styles.formInput} />
               </Form.Item>
               <Form.Item label="Номер телефона" className={styles.formItem}>
-                <Input
-                  placeholder="+7 707 707 70 70"
-                  disabled={!isEditing}
-                  className={styles.formInput}
-                />
+                <Input placeholder="+7 707 707 70 70" disabled={!isEditing} className={styles.formInput} />
               </Form.Item>
             </div>
-
             <div className={styles.formRow}>
               <Form.Item label="Гендер" className={styles.formItem}>
-                <Select
-                  placeholder="Выберите"
-                  defaultValue="female"
-                  className={styles.formSelect}
-                  disabled={!isEditing}
-                >
+                <Select placeholder="Выберите" defaultValue="female" className={styles.formSelect} disabled={!isEditing}>
                   <Select.Option value="male">Мужчина</Select.Option>
                   <Select.Option value="female">Женщина</Select.Option>
                 </Select>
@@ -82,95 +63,60 @@ export default function Page() {
               </Form.Item>
             </div>
           </div>
-
           <div className={styles.btnRow}>
             <Button className={styles.editPassword} onClick={() => setIsPasswordModalOpen(true)}>Изменить пароль</Button>
-            <Button
-              className={isEditing ? styles.saveBtn : styles.editBtn}
-              onClick={handleEdit}
-            >
+            <Button className={isEditing ? styles.saveBtn : styles.editBtn} onClick={handleEdit}>
               {isEditing ? "Сохранить" : "Редактировать"}
             </Button>
           </div>
         </Form>
       </div>
-
-      <HeroModal
-        isOpen={isPasswordModalOpen}
-        onOpenChange={setIsPasswordModalOpen}
-        isDismissable={false}
-      >
+      <HeroModal isOpen={isPasswordModalOpen} className={styles.modalPassword} onOpenChange={setIsPasswordModalOpen} isDismissable={false}>
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
-              <ModalBody>
-                <h3>Поменяйте свой пароль</h3>
-
+              <ModalBody className={styles.modalBodyPassword}>
+                <h3 className={styles.modalTitle}>Поменяйте свой пароль</h3>
                 <div className={styles.passwordField}>
                   <HeroInput
                     label="Старый пароль"
                     type={oldPasswordVisible ? "text" : "password"}
-                    placeholder="Введите старый пароль"
+                    className={styles.inputStyle}
                   />
                   {oldPasswordVisible ? (
-                    <EyeInvisibleOutlined
-                      className={styles.passwordToggleIcon}
-                      onClick={() => setOldPasswordVisible(false)}
-                    />
+                    <EyeInvisibleOutlined className={styles.passwordToggleIcon} onClick={() => setOldPasswordVisible(false)} />
                   ) : (
-                    <EyeOutlined
-                      className={styles.passwordToggleIcon}
-                      onClick={() => setOldPasswordVisible(true)}
-                    />
+                    <EyeOutlined className={styles.passwordToggleIcon} onClick={() => setOldPasswordVisible(true)} />
                   )}
                 </div>
-
                 <div className={styles.passwordField}>
                   <HeroInput
                     label="Новый пароль"
                     type={newPasswordVisible ? "text" : "password"}
-                    placeholder="Введите новый пароль"
+                    className={styles.inputStyle}
                   />
                   {newPasswordVisible ? (
-                    <EyeInvisibleOutlined
-                      className={styles.passwordToggleIcon}
-                      onClick={() => setNewPasswordVisible(false)}
-                    />
+                    <EyeInvisibleOutlined className={styles.passwordToggleIcon} onClick={() => setNewPasswordVisible(false)} />
                   ) : (
-                    <EyeOutlined
-                      className={styles.passwordToggleIcon}
-                      onClick={() => setNewPasswordVisible(true)}
-                    />
+                    <EyeOutlined className={styles.passwordToggleIcon} onClick={() => setNewPasswordVisible(true)} />
                   )}
                 </div>
-
                 <div className={styles.passwordField}>
                   <HeroInput
                     label="Повторите пароль"
                     type={confirmPasswordVisible ? "text" : "password"}
-                    placeholder="Повторите новый пароль"
+                    className={styles.inputStyle}
                   />
                   {confirmPasswordVisible ? (
-                    <EyeInvisibleOutlined
-                      className={styles.passwordToggleIcon}
-                      onClick={() => setConfirmPasswordVisible(false)}
-                    />
+                    <EyeInvisibleOutlined className={styles.passwordToggleIcon} onClick={() => setConfirmPasswordVisible(false)} />
                   ) : (
-                    <EyeOutlined
-                      className={styles.passwordToggleIcon}
-                      onClick={() => setConfirmPasswordVisible(true)}
-                    />
+                    <EyeOutlined className={styles.passwordToggleIcon} onClick={() => setConfirmPasswordVisible(true)} />
                   )}
                 </div>
               </ModalBody>
-
-              <ModalFooter>
-                <HeroUIButton color="primary" onPress={() => setIsPasswordModalOpen(false)}>
-                  Подтвердить
-                </HeroUIButton>
-                <HeroUIButton variant="ghost" onPress={() => setIsPasswordModalOpen(false)}>
-                  Отменить
-                </HeroUIButton>
+              <ModalFooter className={styles.modalFooter}>
+                <HeroUIButton color="primary" onPress={() => setIsPasswordModalOpen(false)} className={styles.confirmPassword}>Подтвердить</HeroUIButton>
+                <HeroUIButton variant="ghost" onPress={() => setIsPasswordModalOpen(false)}  className={styles.cancelPassword}>Отменить</HeroUIButton>
               </ModalFooter>
             </>
           )}
