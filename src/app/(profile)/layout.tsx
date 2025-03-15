@@ -23,7 +23,7 @@ import {
   RadioGroup,
   Radio
 } from "@heroui/react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./layout.module.scss";
 import Container from "@/components/layouts/Container";
 import "./layout.scss";
@@ -66,12 +66,7 @@ const menuItems = [
   { key: "questionnaire", icon: <FormOutlined />, label: "Анкета" }
 ];
 
-interface CustomMenuProps {
-  currentTab: string;
-  onMenuClick: (e: { key: string }) => void;
-}
-
-function CustomMenu({ currentTab, onMenuClick }: CustomMenuProps) {
+function CustomMenu({ currentTab, onMenuClick }: { currentTab: string; onMenuClick: (e: { key: string }) => void }) {
   return (
     <ul className={styles.customMenu}>
       {menuItems.map(item => (
@@ -93,13 +88,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<StatusKey>("findingApartment");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [pageLoaded, setPageLoaded] = useState(false);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const searchParams = useSearchParams();
   const router = useRouter();
-
+  const pathname = usePathname();
   const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
-  const currentTab = searchParams.get("tab") || "profile";
+
+  let currentTab = "profile";
+  if (pathname.includes("/my-responses")) currentTab = "my-responses";
+  else if (pathname.includes("/my-announcements")) currentTab = "my-announcements";
+  else if (pathname.includes("/questionnaire")) currentTab = "questionnaire";
 
   function handleMenuClick(e: { key: string }) {
     router.push(`/${e.key}`);
@@ -202,7 +199,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
       <HeroModal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent className={styles.darkModalContent}>
-          {(onClose) => (
+          {() => (
             <>
               <ModalBody className={styles.darkModalBody}>
                 <div className={styles.photoCircle}>

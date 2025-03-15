@@ -161,12 +161,24 @@
 .modalFooter{
   display: block;
   padding: 0;
+  
 }
 .confirmPassword{
   display: block;
+  width: 100%;
+  height: 60px;
+  color: #fff;
+  font-size: 18px !important;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 .cancelPassword{
-
+  display: block;
+  width: 100%;
+  height: 60px;
+  color: #252525;
+  font-size: 18px !important;
+  font-weight: 700;
 }
 .transition-background{
   background: none !important;
