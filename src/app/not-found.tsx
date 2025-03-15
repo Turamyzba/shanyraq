@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import Link from "next/link";
 import Container from "@/components/layouts/Container";
 import styles from "./not-found.module.scss";
 import gsap from "gsap";
 import { Button } from "@heroui/react";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function NotFound() {
-  useEffect(() => {
+  const [pageLoaded, setPageLoaded] = useState(false);
+  const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
+
+  useLayoutEffect(() => {
     // Reveal the SVG
     gsap.set("svg", { visibility: "visible" });
     gsap.to("#headStripe", {
@@ -86,8 +91,30 @@ export default function NotFound() {
       repeatDelay: 8,
       delay: 2,
     });
+  }, [pageLoaded]);
 
+  useEffect(() => {
+    const handleLoad = () => {
+      setTimeout(() => setPageLoaded(true), 500);
+    };
+  
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
   }, []);
+  
+
+  if (!pageLoaded) {
+    return (
+      <div className={styles.loadingScreen}>
+        <Spin indicator={antIcon} />
+      </div>
+    );
+  }
+
 
   return (
     <Container>

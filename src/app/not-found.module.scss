@@ -6,6 +6,12 @@
   --green: #1aa683;
 }
 
+.loadingScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* 404 Content */
 .contentContainer {
   display: flex;
