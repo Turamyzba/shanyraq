@@ -1,7 +1,15 @@
-/* Reset default styles */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "globals.css";
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  flex: 1;
+  align-content: center;
+}
 
 $base-color: #c6538c;
 
@@ -30,18 +38,6 @@ body {
   height: 100%;
 }
 
-.app-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.content-wrapper {
-  flex: 1;
-  align-content: center;
-}
-
-/* Headings */
 h1,
 h2,
 h3,
@@ -76,17 +72,14 @@ h6 {
   font-size: 16px;
 }
 
-/* Links */
 a {
   text-decoration: none;
   color: inherit;
 }
-
 a:hover {
   color: #1aa683;
 }
 
-/* Buttons */
 button {
   display: flex;
   align-items: center;
@@ -99,11 +92,9 @@ button {
   cursor: pointer;
   transition: 0.3s;
 }
-
 button:hover {
   opacity: 0.9;
 }
-
 button:disabled {
   background-color: #b5b7c0;
   cursor: not-allowed;

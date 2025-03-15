@@ -1,5 +1,6 @@
-"use client";
 
+import React from "react";
+import "./globals.css";
 import "./globals.scss";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/layouts/Footer";
@@ -11,9 +12,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <Providers>
       <html lang="ru">
         <body>
-          <Header />
-          {children}
-          <Footer />
+          <div className="app-wrapper">
+            <Header />
+            <main className="content-wrapper">{children}</main>
+            <Footer />
+          </div>
         </body>
       </html>
     </Providers>

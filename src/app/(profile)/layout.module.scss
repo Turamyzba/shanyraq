@@ -1,0 +1,266 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+.loadingScreen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.topBar {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+.iconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1aa683;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 30px;
+  color: #111;
+  font-size: 18px;
+}
+.progressInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.infoRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.percent {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+.description {
+  font-size: 14px;
+  color: #9ca3af;
+}
+.progressBar {
+  margin-top: 6px;
+}
+.mainWrapper {
+  display: flex;
+  gap: 40px;
+}
+.navbar {
+  width: 300px;
+  padding: 20px 0 30px;
+  border: 1px solid #EBEBEB;
+  border-radius: 10px;
+  background-color: #fff;
+}
+.profileBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.avatarWrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+.editIcon {
+  z-index: 1;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color:#252525;
+  color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.userName {
+  margin-top: 12px;
+  font-weight: 500;
+  font-size: 16px;
+}
+.content {
+  flex: 1;
+  border-radius: 10px;  
+}
+.customMenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.customMenuItem {
+  padding: 12px 26px;
+  font-size: 16px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  cursor: pointer;
+}
+.customMenuItem:hover {
+  background-color: #f0f0f0;
+}
+.customMenuItemSelected {
+  color: #252525;
+  font-weight: bold;
+  position: relative;
+}
+.customMenuItemSelected::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 40px;
+  border-radius: 0 10px 10px 0;
+  background-color: #1AA683;
+}
+.customMenuIcon {
+  margin-right: 16px;
+  font-size: 18px;
+}
+.menuBadgeItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+}
+.darkModalContent {
+  background-color: #252525 !important;
+  color: #fff;
+  border-radius: 8px;
+  width: 600px;
+  max-width: 90vw;
+  margin: 0 auto;
+}
+.darkModalBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  gap: 12px;
+}
+.modalDivider {
+  width: 100%;
+  height: 1px;
+  background-color: #4a4a4a;
+}
+.darkModalFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+}
+.footerButton,
+.footerButtonDelete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff !important;
+  font-size: 12px;
+  gap: 2px;
+  background: none !important;
+  transition: color 0.2s ease;
+  border: none !important;
+  padding: 6px 12px !important;
+  cursor: pointer;
+}
+.footerButton:hover {
+  color: #1aa683 !important;
+}
+.footerButtonDelete:hover {
+  color: #c41512 !important;
+}
+.statusModal {
+  padding: 0;
+}
+.statusModal .ant-modal-header {
+  border-bottom: none;
+  padding: 16px 24px 0 24px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+}
+.statusModal .ant-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+}
+.statusModalSubhead {
+  font-size: 14px;
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.4;
+}
+.statusModalDivider {
+  width: 100%;
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 16px 0;
+}
+.statusModal .ant-modal-body {
+  padding-top: 0;
+  padding-bottom: 24px;
+}
+.heroRadioGroup label {
+  font-size: 16px;
+  color: #1aa683 !important;
+}
+.statusModal .ant-modal-content {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.photoCircle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+.circleSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+}
+.photoCircle img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  object-fit: cover;
+}
+.darkModalBody .photoCircle {
+  width: 220px;
+  height: 220px;
+}
+.darkModalBody .circleSvg {
+  width: 220px;
+  height: 220px;
+}
+.darkModalBody .photoCircle img {
+  width: 180px;
+  height: 180px;
+}
+.footerButtonEdit {
+  display: flex;
+}
