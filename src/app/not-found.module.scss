@@ -28,10 +28,9 @@
 .textContainer {
   flex: 1 1 50%;
   max-width: 500px;
-  margin: 20px auto;
+  margin: 20px auto 100px;
   h1 {
-    font-size: 6.5em;
-    margin: 15px 0;
+    font-size: 5.5em;
     font-weight: bold;
     color: var(--green);
   }
@@ -41,7 +40,7 @@
   p {
     font-size: 1em;
     color: var(--blue);
-    margin: 15px 0;
+    margin: 10px 0 30px;
   }
 }
 
