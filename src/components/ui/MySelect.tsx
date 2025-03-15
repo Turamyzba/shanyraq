@@ -68,7 +68,7 @@ export default function MyHeroSelect({
     >
       {options.map((option) => (
         <SelectItem key={option.value} title={option.label}>
-          {option.label}
+          {option.label} hi
         </SelectItem>
       ))}
     </NextSelect>

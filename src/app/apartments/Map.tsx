@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./Map.module.scss";
+
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import * as turf from "@turf/turf";
 
 interface MapProps {
   update?: boolean;
@@ -41,6 +45,7 @@ const Map: React.FC<MapProps> = ({ update }) => {
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const [calculatedArea, setCalculatedArea] = useState("");
 
   // Initialize the map on mount
   useEffect(() => {
@@ -72,6 +77,38 @@ const Map: React.FC<MapProps> = ({ update }) => {
         .setPopup(popup)
         .addTo(mapRef.current!);
     });
+
+    const draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        trash: true,
+      },
+      defaultMode: "draw_polygon",
+    });
+    mapRef.current.addControl(draw);
+
+    // 4) Set up draw event handlers
+    mapRef.current.on("draw.create", handleDraw);
+    mapRef.current.on("draw.delete", handleDraw);
+    mapRef.current.on("draw.update", handleDraw);
+
+    function handleDraw(e: any) {
+      const data = draw.getAll();
+      if (data.features.length > 0) {
+        // Use Turf.js to calculate area (square meters by default)
+        const area = turf.area(data);
+        // Restrict the area to 2 decimal points
+        const rounded = Math.round(area * 100) / 100;
+        setCalculatedArea(`${rounded} square meters`);
+      } else {
+        setCalculatedArea("");
+        // If not deleting, show an alert prompting user to draw
+        if (e.type !== "draw.delete") {
+          alert("Click the map to draw a polygon.");
+        }
+      }
+    }
 
     return () => {
       mapRef.current?.remove();

@@ -10,6 +10,23 @@ import { Tabs, Tab, Checkbox, addToast } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
+import result from "../../../result.json"
+
+interface AddressNode {
+  Id: number;
+  ParentId?: number;
+  AteTypeId?: number;
+  GeonimTypeId?: number;
+  NameRus: string;
+  NameKaz: string;
+  HasChild: boolean;
+  AteTypeNameKaz: string;
+  AteTypeNameRus: string;
+  GeonimTypeNameKaz?: string;
+  GeonimTypeNameRus?: string;
+  Children: AddressNode[];
+}
+
 
 export default function Filter() {
   // Basic Filter States
@@ -20,15 +37,11 @@ export default function Filter() {
     { value: "Любой", label: "Любой" },
   ];
 
-  const [region, setRegion] = useState("");
-  const [district, setDistrict] = useState("");
-  const [microDistrict, setMicroDistrict] = useState("");
-  const regions = [
-    { value: "Весь Казахстан", label: "Весь Казахстан" },
-    { value: "Шымкент", label: "Шымкент" },
-    { value: "Астана", label: "Астана" },
-    { value: "Алматы", label: "Алматы" },
-  ];
+  const [selectedRegion, setSelectedRegion] = useState<AddressNode | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<AddressNode | null>(null);
+  const [selectedMicroDistrict, setSelectedMicroDistrict] = useState<AddressNode | null>(null);
+  const [selectedStreet, setSelectedStreet] = useState<AddressNode | null>(null);
+  const regions: AddressNode[] = result as AddressNode[];
 
   // Price Range & Slider
   const [priceRange, setPriceRange] = useState([0, 500000]);
@@ -116,9 +129,9 @@ export default function Filter() {
   // Reset All Filters
   const resetFilters = () => {
     setSelectedGender("");
-    setRegion("");
-    setDistrict("");
-    setMicroDistrict("");
+    // setRegion("");
+    // setDistrict("");
+    // setMicroDistrict("");
     setPriceRange([0, 500000]);
     setSelectedHousemate("1");
     setRooms(1);
@@ -143,9 +156,9 @@ export default function Filter() {
   const handleSubmit = () => {
     const queryObject = {
       selectedGender,
-      region,
-      district,
-      microDistrict,
+      // region,
+      // district,
+      // microDistrict,
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
       numberOfPeopleAreYouAccommodating: parseInt(selectedHousemate),
@@ -171,9 +184,9 @@ export default function Filter() {
   const saveFilter = () => {
     const queryObject = {
       selectedGender,
-      region,
-      district,
-      microDistrict,
+      // region,
+      // district,
+      // microDistrict,
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
       numberOfPeopleAreYouAccommodating: selectedHousemate,
@@ -231,38 +244,92 @@ export default function Filter() {
           />
         </div>
 
-        {/* Region Section */}
-        <div className={styles.section}>
-          <MySelect
-            options={regions}
-            label="Регион"
-            value={region}
-            placeholder="Выберите регион"
-            onChange={(option) => setRegion(option)}
-          />
-        </div>
+          {/* Region Section */}
+          <div className={styles.section}>
+            <MySelect
+              label="Регион"
+              placeholder="Выберите регион"
+              // Notice we use `region.Id` and `region.NameKaz` instead of `region.id` / `region.nameKaz`.
+              options={regions.map((region) => ({
+                value: region.HasChild ? region.Id.toString() : `${region.Id}$`,
+                label: region.NameKaz || "",
+              }))}
+              value={selectedRegion?.Id ? selectedRegion.Id.toString() : ""}
+              onChange={(optionValue) => {
+                const selected = regions.find(
+                  (region) => region.Id?.toString() === optionValue
+                );
+                setSelectedRegion(selected || null);
+                // Reset district & microdistrict
+                setSelectedDistrict(null);
+                setSelectedMicroDistrict(null);
+              }}
+            />
+          </div>
 
-        {/* District Section */}
-        <div className={styles.section}>
-          <MySelect
-            options={regions}
-            label="Район"
-            value={district}
-            placeholder="Выберите район"
-            onChange={(option) => setDistrict(option)}
-          />
-        </div>
+          {/* District Section */}
+            {selectedRegion && selectedRegion.HasChild && (
+          <div className={styles.section}>
+              <MySelect
+                label="Район"
+                placeholder="Выберите район"
+                options={selectedRegion.Children.map((district) => ({
+                  value: district.HasChild ? district.Id.toString() : `${district.Id}$`,
+                  label: district.NameKaz || "",
+                }))}
+                value={selectedDistrict?.Id ? selectedDistrict.Id.toString() : ""}
+                onChange={(optionValue) => {
+                  const selected = selectedRegion.Children.find(
+                    (district) => district.Id?.toString() === optionValue
+                  );
+                  setSelectedDistrict(selected || null);
+                  // Reset microdistrict
+                  setSelectedMicroDistrict(null);
+                }}
+              />
+          </div>
+            )}
+
+
 
         {/* Microdistrict Section */}
+          {selectedDistrict && selectedDistrict.HasChild && (
         <div className={styles.section}>
-          <MySelect
-            options={regions}
-            label="Микрорайон"
-            value={microDistrict}
-            placeholder="Выберите микрорайон"
-            onChange={(option) => setMicroDistrict(option)}
-          />
+            <MySelect
+              label="Микрорайон"
+              placeholder="Выберите микрорайон"
+              options={selectedDistrict.Children.map((micro) => ({
+                value: micro.HasChild ? micro.Id.toString() : `${micro.Id}$`,
+                label: micro.NameKaz,
+              }))}
+              value={selectedMicroDistrict?.Id?.toString() || ""}
+              onChange={(option) => {
+                const selected = selectedDistrict.Children.find(micro => micro.Id.toString() === option);
+                setSelectedMicroDistrict(selected || null);
+                setSelectedStreet(null);
+              }}
+            />
         </div>
+          )}
+
+          {/* Microdistrict Section */}
+          {selectedMicroDistrict && selectedMicroDistrict.HasChild && (
+        <div className={styles.section}>
+            <MySelect
+              label="Улицы"
+              placeholder="Выберите Улицы"
+              options={selectedMicroDistrict.Children.map((street) => ({
+                value: street.Id.toString(),
+                label: street.NameKaz,
+              }))}
+              value={selectedStreet?.Id?.toString() || ""}
+              onChange={(option) => {
+                const selected = selectedMicroDistrict.Children.find(street => street.Id.toString() === option);
+                setSelectedStreet(selected || null);
+              }}
+            />
+        </div>
+          )}
 
         {/* Price Section */}
         <div className={styles.section}>
