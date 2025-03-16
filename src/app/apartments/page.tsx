@@ -108,7 +108,6 @@ export default function ApartmentsPage() {
     }
   }, []);
 
-
   if (!pageLoaded) {
     return (
       <Container>
@@ -118,14 +117,13 @@ export default function ApartmentsPage() {
       </Container>
     );
   }
-    
+
   const handleIsMap = () => {
-    setPageLoaded(false)
+    setPageLoaded(false);
     handleLoad();
-    if(isMap)
-      setHideFilter(true)
-    setIsMap(!isMap)
-  }
+    if (isMap) setHideFilter(true);
+    setIsMap(!isMap);
+  };
 
   return (
     <Container>
@@ -174,13 +172,7 @@ export default function ApartmentsPage() {
                 </MyButton>
               )}
 
-              <MyButton
-                type="button"
-                onClick={handleIsMap}
-                isIconOnly
-                variant="bordered"
-                size="sm"
-              >
+              <MyButton type="button" onClick={handleIsMap} isIconOnly variant="bordered" size="sm">
                 {isMap ? <Images.List /> : <Images.Map />}
               </MyButton>
             </div>

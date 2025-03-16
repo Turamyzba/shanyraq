@@ -144,13 +144,13 @@
 }
 .modalTitle {
   font-weight: 600 !important;
-  margin-bottom: 30px  !important;
-  color: #32343A !important;
+  margin-bottom: 30px !important;
+  color: #32343a !important;
 }
-.inputStyle{
+.inputStyle {
   font-weight: 400 !important;
   font-size: 16px !important;
-  border:1px solid #EBEBEB !important;
+  border: 1px solid #ebebeb !important;
   border-radius: 10px !important;
   background-color: transparent !important;
   background: transparent !important;
@@ -158,12 +158,11 @@
 .inputStyle:first-child {
   background: transparent !important;
 }
-.modalFooter{
+.modalFooter {
   display: block;
   padding: 0;
-  
 }
-.confirmPassword{
+.confirmPassword {
   display: block;
   width: 100%;
   height: 60px;
@@ -172,7 +171,7 @@
   font-weight: 700;
   margin-bottom: 10px;
 }
-.cancelPassword{
+.cancelPassword {
   display: block;
   width: 100%;
   height: 60px;
@@ -180,6 +179,6 @@
   font-size: 18px !important;
   font-weight: 700;
 }
-.transition-background{
+.transition-background {
   background: none !important;
 }

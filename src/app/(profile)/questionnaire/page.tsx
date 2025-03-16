@@ -93,7 +93,8 @@ export default function QuestionnairePage() {
   };
   const questionsPerPage = 4;
   const startIndex = (step - 1) * questionsPerPage;
-  const currentQuestions = step < 3 ? questions.slice(startIndex, startIndex + questionsPerPage) : [];
+  const currentQuestions =
+    step < 3 ? questions.slice(startIndex, startIndex + questionsPerPage) : [];
 
   const handleAnswerChange = (questionId: number, answer: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
@@ -104,7 +105,9 @@ export default function QuestionnairePage() {
       {isModalOpen && step < 3 && (
         <div className={styles.overlay}>
           <div className={styles.modalBox}>
-            <ExclamationCircleOutlined style={{ fontSize: 40, color: "#1AA683", marginBottom: 16 }} />
+            <ExclamationCircleOutlined
+              style={{ fontSize: 40, color: "#1AA683", marginBottom: 16 }}
+            />
             <h3 className={styles.modelTitleNot}>Вы еще не прошли анкету</h3>
             <p className={styles.modelSubtitleNot}>Чтобы продолжить, нажмите «Пройти анкету».</p>
             <Button className={styles.anketaStart} onClick={handleStartQuestionnaire}>
@@ -120,7 +123,9 @@ export default function QuestionnairePage() {
               <p className={styles.question}>{q.text}</p>
               <RadioGroup
                 value={answers[q.id] || ""}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleAnswerChange(q.id, e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleAnswerChange(q.id, e.target.value)
+                }
                 className={styles.radioGroup}
               >
                 {q.answers.map((answer, idx) => (
@@ -152,7 +157,9 @@ export default function QuestionnairePage() {
       {step === 3 && (
         <div className={styles.successContainer}>
           <h2>Поздравляем! Анкета успешно отправлена!</h2>
-          <p>Данные успешно отправлены на сервер. Вы можете пересмотреть или заполнить анкету заново.</p>
+          <p>
+            Данные успешно отправлены на сервер. Вы можете пересмотреть или заполнить анкету заново.
+          </p>
           <div className={styles.btnRow}>
             <Button onClick={handleRetake}>Заполнить заново</Button>
           </div>

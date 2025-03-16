@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-} from "@heroui/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
 import styles from "./AddApartmentModal.module.scss";
 import { useForm, FormProvider } from "react-hook-form";
 
@@ -20,41 +13,41 @@ import StepApartmentDetails from "../AddApartmentSteps/StepApartmentDetails";
 // import StepSuccess from "../AddApartmentSteps/StepSuccess";
 
 const defaultValues = {
-    role: UserRole.TENANT,
-    title: "",
-    gender: "",
-    roommates: 1,
-    peopleInApartment: 0,
-    region: "",
-    district: "",
-    microDistrict: "",
-    address: "",
-    moveInDate: "",
-    monthlyPayment: "",
-    livingInHome: true,
-    ageRange: [18, 50],
-    deposit: false,
-    depositAmount: 0,
-    apartmentDetails: {
-      petsAllowed: false,
-      utilitiesIncluded: false,
-      utilitiesAmount: [0, 5000],
-      forStudents: false,
-      badHabitsAllowed: false,
-      description: "",
-      photos: [],
-      rooms: "1",
-      propertyType: "",
-      floorsFrom: 1,
-      floorsTo: 3,
-      ownerPhone: "",
-      longTerm: false,
-      roomSize: 0,
-    },
-    selectedAdjectives: [],
-  };  
+  role: UserRole.TENANT,
+  title: "",
+  gender: "",
+  roommates: 1,
+  peopleInApartment: 0,
+  region: "",
+  district: "",
+  microDistrict: "",
+  address: "",
+  moveInDate: "",
+  monthlyPayment: "",
+  livingInHome: true,
+  ageRange: [18, 50],
+  deposit: false,
+  depositAmount: 0,
+  apartmentDetails: {
+    petsAllowed: false,
+    utilitiesIncluded: false,
+    utilitiesAmount: [0, 5000],
+    forStudents: false,
+    badHabitsAllowed: false,
+    description: "",
+    photos: [],
+    rooms: "1",
+    propertyType: "",
+    floorsFrom: 1,
+    floorsTo: 3,
+    ownerPhone: "",
+    longTerm: false,
+    roomSize: 0,
+  },
+  selectedAdjectives: [],
+};
 
-const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
+const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   // Form state shared across all steps
   const methods = useForm({ defaultValues });
 
@@ -123,13 +116,11 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             <Button className={styles.backButton} onPress={handleBack}>
               Назад
             </Button>
-          ):
-          (
+          ) : (
             <Button className={styles.cancelButton} onPress={onClose}>
-                Отмена
+              Отмена
             </Button>
-          )
-          }
+          )}
         </div>
         <div className={styles.rightButtons}>
           {currentStep < steps.length && (
@@ -145,32 +136,27 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         </div>
       </div>
     );
-  };  
+  };
 
   return (
     <FormProvider {...methods}>
-        <Modal
+      <Modal
         backdrop="blur"
         onClose={onClose}
         size="4xl"
         isOpen={isOpen}
         isDismissable={false}
-        scrollBehavior="outside" 
-        >
+        scrollBehavior="outside"
+      >
         <ModalContent className={styles.modalContent}>
-            <ModalHeader className={styles.modalHeader}>
+          <ModalHeader className={styles.modalHeader}>
             <h2>{steps[currentStep - 1].name}</h2>
-            </ModalHeader>
-            <ModalBody className={styles.modalBody}>
-            {steps[currentStep - 1].component}
-            </ModalBody>
-            <ModalFooter className={styles.modalFooter}>
-            {renderFooterButtons()}
-            </ModalFooter>
+          </ModalHeader>
+          <ModalBody className={styles.modalBody}>{steps[currentStep - 1].component}</ModalBody>
+          <ModalFooter className={styles.modalFooter}>{renderFooterButtons()}</ModalFooter>
         </ModalContent>
-        </Modal>
+      </Modal>
     </FormProvider>
-
   );
 };
 

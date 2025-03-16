@@ -11,7 +11,7 @@ import {
   CameraOutlined,
   DeleteOutlined,
   HomeFilled,
-  LoadingOutlined
+  LoadingOutlined,
 } from "@ant-design/icons";
 import {
   Modal as HeroModal,
@@ -21,7 +21,7 @@ import {
   Button as HeroButton,
   useDisclosure,
   RadioGroup,
-  Radio
+  Radio,
 } from "@heroui/react";
 import { usePathname, useRouter } from "next/navigation";
 import styles from "./layout.module.scss";
@@ -38,7 +38,7 @@ const statusLabels: Record<StatusKey, string> = {
   findingApartment: "#ИЩУ КВАРТИРУ",
   notFindingApartment: "#НЕ ИЩУ КВАРТИРУ",
   findingRoommate: "#ИЩУ СОЖИТЕЛЯ",
-  notFindingRoommate: "#НЕ ИЩУ СОЖИТЕЛЯ"
+  notFindingRoommate: "#НЕ ИЩУ СОЖИТЕЛЯ",
 };
 
 const menuItems = [
@@ -51,7 +51,7 @@ const menuItems = [
         <span>Мои отклики</span>
         <Badge count={28} style={{ backgroundColor: "#1AA683", color: "#fff" }} />
       </div>
-    )
+    ),
   },
   {
     key: "my-announcements",
@@ -61,15 +61,21 @@ const menuItems = [
         <span>Мои объявления</span>
         <Badge count={1} style={{ backgroundColor: "#1AA683", color: "#fff" }} />
       </div>
-    )
+    ),
   },
-  { key: "questionnaire", icon: <FormOutlined />, label: "Анкета" }
+  { key: "questionnaire", icon: <FormOutlined />, label: "Анкета" },
 ];
 
-function CustomMenu({ currentTab, onMenuClick }: { currentTab: string; onMenuClick: (e: { key: string }) => void }) {
+function CustomMenu({
+  currentTab,
+  onMenuClick,
+}: {
+  currentTab: string;
+  onMenuClick: (e: { key: string }) => void;
+}) {
   return (
     <ul className={styles.customMenu}>
-      {menuItems.map(item => (
+      {menuItems.map((item) => (
         <li
           key={item.key}
           className={`${styles.customMenuItem} ${item.key === currentTab ? styles.customMenuItemSelected : ""}`}
@@ -149,14 +155,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className={styles.progressInfo}>
             <div className={styles.infoRow}>
               <span className={styles.percent}>25%</span>
-              <span className={styles.description}>Заполните полностью профиль и получите доступ к функции “Поделиться профилем”</span>
+              <span className={styles.description}>
+                Заполните полностью профиль и получите доступ к функции “Поделиться профилем”
+              </span>
             </div>
             <Progress
               percent={25}
               showInfo={false}
               strokeColor={{
                 "0%": "#1AA68380",
-                "100%": "#33958D"
+                "100%": "#33958D",
               }}
               className={styles.progressBar}
             />
@@ -168,20 +176,38 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <div className={styles.avatarWrapper}>
                 <div className={styles.photoCircle}>
                   <img src="/avatar/image.png" alt="Profile Photo" />
-                  <svg viewBox="0 0 200 200" className={styles.circleSvg} xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    viewBox="0 0 200 200"
+                    className={styles.circleSvg}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <defs>
                       <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="#1aa683" />
                         <stop offset="100%" stopColor="#28a745" />
                       </linearGradient>
                     </defs>
-                    <circle cx="100" cy="100" r="82" fill="none" stroke="url(#ringGradient)" strokeWidth="5" />
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="82"
+                      fill="none"
+                      stroke="url(#ringGradient)"
+                      strokeWidth="5"
+                    />
                     <path
                       id="circlePath"
                       fill="none"
                       d="M 100,100 m -70,0 a 70,70 0 1,0 140,0 a 70,70 0 1,0 -140,0"
                     />
-                    <text fill="#fff" fontSize="20" fontWeight="bold" stroke="#000" strokeWidth="4" paintOrder="stroke">
+                    <text
+                      fill="#fff"
+                      fontSize="20"
+                      fontWeight="bold"
+                      stroke="#000"
+                      strokeWidth="4"
+                      paintOrder="stroke"
+                    >
                       <textPath href="#circlePath" startOffset="110" textAnchor="middle">
                         {statusLabels[status]}
                       </textPath>
@@ -204,20 +230,38 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <ModalBody className={styles.darkModalBody}>
                 <div className={styles.photoCircle}>
                   <img src="/avatar/image.png" alt="Profile Photo" />
-                  <svg viewBox="0 0 200 200" className={styles.circleSvg} xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    viewBox="0 0 200 200"
+                    className={styles.circleSvg}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <defs>
                       <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="#1aa683" />
                         <stop offset="100%" stopColor="#28a745" />
                       </linearGradient>
                     </defs>
-                    <circle cx="100" cy="100" r="82" fill="none" stroke="url(#ringGradient)" strokeWidth="5" />
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="82"
+                      fill="none"
+                      stroke="url(#ringGradient)"
+                      strokeWidth="5"
+                    />
                     <path
                       id="circlePath"
                       fill="none"
                       d="M 100,100 m -70,0 a 70,70 0 1,0 140,0 a 70,70 0 1,0 -140,0"
                     />
-                    <text fill="#fff" fontSize="20" fontWeight="bold" stroke="#000" strokeWidth="4" paintOrder="stroke">
+                    <text
+                      fill="#fff"
+                      fontSize="20"
+                      fontWeight="bold"
+                      stroke="#000"
+                      strokeWidth="4"
+                      paintOrder="stroke"
+                    >
                       <textPath href="#circlePath" startOffset="110" textAnchor="middle">
                         {statusLabels[status]}
                       </textPath>
@@ -264,7 +308,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         onCancel={closeStatusModal}
         centered
       >
-        <p className={styles.statusModalSubhead}>Укажите ваш статус для поиска квартиры или сожителя</p>
+        <p className={styles.statusModalSubhead}>
+          Укажите ваш статус для поиска квартиры или сожителя
+        </p>
         <div className={styles.statusModalDivider} />
         <RadioGroup
           label=""

@@ -1,143 +1,143 @@
 // StepBasicInfo.module.scss
 
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
-  }
-  
-  .header {
-    font-size: 24px;
-    font-family: 'Circular', sans-serif;
-    font-weight: 600;
-    line-height: 30px;
-    color: #252525;
-    text-align: left;
-    margin-bottom: 14px;
-  }
-  
-  .inputGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-  
-  .label {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 20px;
-    color: #252525;
-  }
-  
-  .errorText {
-    margin-top: 4px;
-    font-size: 14px;
-    font-weight: normal;
-    color: red;
-  }
-  
-  .inputField {
-    width: 100%;
-    font-size: 16px;
-    color: #252525;
-    outline: none;
-  }
-  
-  .inputField:focus {
-    border-color: #1aa683;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
 
-  .genderContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 16px; /* adjust as needed */
-  }
-  
-  .radioRow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .radioInput {
-    display: none;
-  }
-  
-  .radioLabel {
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    color: #b5b7c0;
-  
-    &.selected {
-      color: #1aa683;
-    }
-  }
+.header {
+  font-size: 24px;
+  font-family: "Circular", sans-serif;
+  font-weight: 600;
+  line-height: 30px;
+  color: #252525;
+  text-align: left;
+  margin-bottom: 14px;
+}
 
-  .housemates {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }  
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
 
-  .housemateItem {
-    width: 48px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    background-color: #d1ede6;
-    color: #5c5c5c;
-    font-size: 14px;
-    cursor: pointer;
+.label {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #252525;
+}
+
+.errorText {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: normal;
+  color: red;
+}
+
+.inputField {
+  width: 100%;
+  font-size: 16px;
+  color: #252525;
+  outline: none;
+}
+
+.inputField:focus {
+  border-color: #1aa683;
+}
+
+.genderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px; /* adjust as needed */
+}
+
+.radioRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.radioInput {
+  display: none;
+}
+
+.radioLabel {
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #b5b7c0;
+
+  &.selected {
+    color: #1aa683;
   }
-  
-  .housemateItem.selected {
-    background-color: #1aa683;
-    color: #ffffff;
-  }
-  .roomControls {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 100px;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .roomControlButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .roomCount {
-    font-size: 14px;
-    color: #252525;
-  }
-  
-  .slider {
-    width: 100%;
-  }
-  
-  .sliderValues {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  
-  .sliderValue {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-    color: #b5b7c0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+}
+
+.housemates {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.housemateItem {
+  width: 48px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background-color: #d1ede6;
+  color: #5c5c5c;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.housemateItem.selected {
+  background-color: #1aa683;
+  color: #ffffff;
+}
+.roomControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.roomControlButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.roomCount {
+  font-size: 14px;
+  color: #252525;
+}
+
+.slider {
+  width: 100%;
+}
+
+.sliderValues {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.sliderValue {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  color: #b5b7c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

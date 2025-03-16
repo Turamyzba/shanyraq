@@ -7,37 +7,35 @@ import { Button } from "@heroui/react";
 import { useFormContext } from "react-hook-form";
 
 export enum UserRole {
-    OWNER = "OWNER",
-    TENANT = "TENANT",
-  }
+  OWNER = "OWNER",
+  TENANT = "TENANT",
+}
 
-  const roleOptions = [
-    {
-      code: UserRole.OWNER,
-      name: "Я хозяин",
-      description: "Эта опция для вас, если вы сдаёте жильё или предлагаете услуги",
-      image: Images.roleOwner,
-    },
-    {
-      code: UserRole.TENANT,
-      name: "Я житель",
-      description: "Эта опция для вас, если вы ищете сожителей",
-      image: Images.roleTenant,
-    },
-  ];
-  
-  
+const roleOptions = [
+  {
+    code: UserRole.OWNER,
+    name: "Я хозяин",
+    description: "Эта опция для вас, если вы сдаёте жильё или предлагаете услуги",
+    image: Images.roleOwner,
+  },
+  {
+    code: UserRole.TENANT,
+    name: "Я житель",
+    description: "Эта опция для вас, если вы ищете сожителей",
+    image: Images.roleTenant,
+  },
+];
 
-  const StepRole: React.FC = () => {
-    const { setValue, watch } = useFormContext();
-    const selectedRole = watch("role");
-      
+const StepRole: React.FC = () => {
+  const { setValue, watch } = useFormContext();
+  const selectedRole = watch("role");
+
   const [error, setError] = useState<boolean>(false);
 
   const handleSelect = (role: UserRole) => {
     setValue("role", role);
   };
-  
+
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Кем вы являетесь?</h2>
@@ -46,7 +44,6 @@ export enum UserRole {
       </p>
 
       <div className={styles.optionsContainer}>
-
         {roleOptions.map((option) => (
           <Button
             key={option.code}
@@ -69,11 +66,7 @@ export enum UserRole {
         ))}
       </div>
 
-      {error && (
-        <p className={styles.errorMessage}>
-          Пожалуйста, выберите роль перед продолжением
-        </p>
-      )}
+      {error && <p className={styles.errorMessage}>Пожалуйста, выберите роль перед продолжением</p>}
     </div>
   );
 };

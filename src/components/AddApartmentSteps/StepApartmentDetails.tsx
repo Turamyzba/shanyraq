@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import styles from "./StepApartmentDetails.module.scss";
 import Images from "@/components/common/Images";
 import MySelect from "../ui/MySelect";
-import result from "../../../result.json"
+import result from "../../../result.json";
 import MyCalendar from "../ui/MyCalendar";
 import { Checkbox } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
@@ -55,7 +55,6 @@ const StepApartmentDetails: React.FC = () => {
   };
   return (
     <div className={styles.container}>
-
       {/* Region Selection */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Регион</label>
@@ -114,9 +113,7 @@ const StepApartmentDetails: React.FC = () => {
             }))}
             value={selectedMicroDistrict?.Id?.toString() || ""}
             onChange={(option) => {
-              const foundMicro = selectedDistrict.Children.find(
-                (m) => m.Id.toString() === option
-              );
+              const foundMicro = selectedDistrict.Children.find((m) => m.Id.toString() === option);
               setSelectedMicroDistrict(foundMicro || null);
               setValue("microDistrict", foundMicro?.NameKaz || "");
             }}
@@ -138,17 +135,17 @@ const StepApartmentDetails: React.FC = () => {
 
       {/* Move-in Date */}
       <div className={styles.inputGroup}>
-          <p className={styles.label}>Дата начала заселения</p>
-          <MyCalendar
-            aria-label="Дата заселения"
-            value={moveInDate}
-            variant="bordered"
-            color={"primary"}
-            onChange={handleCalendarChange}
-            size="md"
-            radius="sm"
-          />
-        </div>
+        <p className={styles.label}>Дата начала заселения</p>
+        <MyCalendar
+          aria-label="Дата заселения"
+          value={moveInDate}
+          variant="bordered"
+          color={"primary"}
+          onChange={handleCalendarChange}
+          size="md"
+          radius="sm"
+        />
+      </div>
 
       {/* Monthly Payment */}
       <div className={styles.inputGroup}>
@@ -168,18 +165,18 @@ const StepApartmentDetails: React.FC = () => {
         <ul className={styles.roomsList}>
           <div className={styles.roomsList}>
             {roomOptions.map((option) => (
-            <MyButton
+              <MyButton
                 key={option}
                 isIconOnly
                 className={`${styles.roomsItem} ${
-                    rooms === option ? styles.roomsItemSelected : ""
+                  rooms === option ? styles.roomsItemSelected : ""
                 }`}
                 onClick={() => setValue("rooms", option)}
-            >
+              >
                 {option}
-            </MyButton>
+              </MyButton>
             ))}
-        </div>
+          </div>
         </ul>
       </div>
 
@@ -187,10 +184,7 @@ const StepApartmentDetails: React.FC = () => {
       <div className={styles.inputGroup}>
         <label className={styles.label}>Есть ли депозит?</label>
         <div className={styles.depositRow}>
-          <MyCheckBox
-            checked={deposit}
-            onChange={(checked) => setValue("deposit", checked)}
-            />
+          <MyCheckBox checked={deposit} onChange={(checked) => setValue("deposit", checked)} />
           <div className={`${styles.depositAmountWrapper} ${deposit ? "" : styles.hidden}`}>
             <MyInput
               type="number"
