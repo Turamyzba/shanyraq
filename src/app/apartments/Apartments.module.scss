@@ -6,6 +6,12 @@
   margin-top: 20px;
 }
 
+.loadingScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .rightColumn {
   display: flex;
   flex-direction: column;

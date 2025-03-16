@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@/components/layouts/Container";
 import Filter from "./Filter";
 import Card from "@/components/common/Card";
@@ -9,6 +9,8 @@ import styles from "./Apartments.module.scss";
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import MyButton from "@/components/ui/MyButton";
 import Map from "./Map";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const sortItems = [
   { value: "1", label: "Самые подходящие" },
@@ -87,10 +89,43 @@ const mockAnnouncements = [
 ];
 
 export default function ApartmentsPage() {
-  // Static UI value (dropdown closed, no error, no loading)
   const [selectedSort, setSelectedSort] = useState("1");
   const [isMap, setIsMap] = useState(false);
   const [hideFilter, setHideFilter] = useState(true);
+  const [pageLoaded, setPageLoaded] = useState(false);
+  const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
+
+  const handleLoad = () => {
+    setTimeout(() => setPageLoaded(true), 500);
+  };
+
+  useEffect(() => {
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
+  }, []);
+
+
+  if (!pageLoaded) {
+    return (
+      <Container>
+        <div className={styles.loadingScreen}>
+          <Spin indicator={antIcon} />
+        </div>
+      </Container>
+    );
+  }
+    
+  const handleIsMap = () => {
+    setPageLoaded(false)
+    handleLoad();
+    if(isMap)
+      setHideFilter(true)
+    setIsMap(!isMap)
+  }
 
   return (
     <Container>
@@ -141,7 +176,7 @@ export default function ApartmentsPage() {
 
               <MyButton
                 type="button"
-                onClick={() => setIsMap(!isMap)}
+                onClick={handleIsMap}
                 isIconOnly
                 variant="bordered"
                 size="sm"

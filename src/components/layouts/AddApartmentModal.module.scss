@@ -1,0 +1,130 @@
+.modalContent {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .modalHeader {
+    padding: 16px;
+    border-bottom: 1px solid #eaeaea;
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #333;
+    }
+  }
+  
+  .modalBody {
+    padding: 24px;
+    overflow-y: auto;
+  }
+  
+  .modalFooter {
+    padding: 16px;
+    border-top: 1px solid #eaeaea;
+  }
+
+  .footerContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 25px;
+  }
+  
+  .rightButtons {
+    display: flex;
+    gap: 16px;
+  }
+
+  .backButton,
+  .cancelButton {
+    padding: 15px 38px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    outline: none;
+    letter-spacing: 0.2px;
+    color: #252525;
+    border: 1px solid #252525;
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .nextButton,
+  .finishButton {
+    padding: 15px 38px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+    border-radius: 5px;
+    background-color: #32343a;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  
+  /* Step styling */
+  .step {
+    & .stepTitle {
+      font-size: 20px;
+      margin-bottom: 12px;
+      color: #222;
+    }
+  
+    & .inputField {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      color: #333;
+    }
+  
+    & .textAreaField {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #333;
+      resize: vertical;
+      min-height: 100px;
+      margin-bottom: 12px;
+    }
+  
+    & .stepOptions {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+  
+      .optionBtn {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        transition: background-color 0.2s;
+  
+        &:hover {
+          background-color: #e6f8f2;
+        }
+      }
+    }
+  
+    & .stepNav {
+      display: none;
+    }
+  
+    & .successMessage {
+      font-size: 18px;
+      text-align: center;
+      color: #1aa683;
+    }
+  }
+  

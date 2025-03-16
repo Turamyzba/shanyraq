@@ -109,9 +109,11 @@ export default function NotFound() {
 
   if (!pageLoaded) {
     return (
+      <Container>
       <div className={styles.loadingScreen}>
         <Spin indicator={antIcon} />
       </div>
+      </Container>
     );
   }
 

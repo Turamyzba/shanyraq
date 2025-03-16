@@ -1,0 +1,104 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  
+  .heading {
+    font-size: 24px;
+    font-family: "Circular", sans-serif;
+    font-weight: 600;
+    line-height: 30px;
+    color: #252525;
+    text-align: left;
+    margin-bottom: 14px;
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  
+    .label {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 20px;
+      color: #252525;
+    }
+
+    .secondLabel {
+        font-size: 16px;
+      font-weight: 400 !important;
+      line-height: 18px;
+      color: #252525;
+    }
+  }
+  
+  .inputField {
+    width: 100%;
+    font-size: 16px;
+    color: #252525;
+    outline: none;
+  
+    &:focus {
+      border-color: #1aa683;
+    }
+  
+    &::placeholder {
+      color: #b5b7c0;
+    }
+  }
+  
+  /* Dropdown Wrappers */
+  .checkboxFloorGroup {
+    display: flex;
+    gap: 30px;
+  }
+  
+  /* Rooms List */
+  .roomsList {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .roomsItem {
+    width: 48px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background-color: #d1ede6;
+    color: #5c5c5c;
+    font-size: 14px;
+    cursor: pointer;
+  
+    &.roomsItemSelected {
+        background-color: #1aa683;
+        color: #ffffff;
+    }
+  }
+  
+  /* Deposit Row */
+  .depositRow {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    gap: 20px;
+  }
+  
+  .depositAmountWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
