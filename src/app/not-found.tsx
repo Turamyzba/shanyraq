@@ -17,7 +17,7 @@ export default function NotFound() {
       yoyo: true,
       repeat: -1,
       ease: "sine.inOut",
-      duration: 1,
+      duration: 1, 
     });
     gsap.to("#spaceman", {
       y: 0.5,

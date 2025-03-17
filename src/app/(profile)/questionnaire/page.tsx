@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, ChangeEvent } from "react";
-import { Button } from "antd";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { Button, Modal } from "antd";
+import { ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { RadioGroup, Radio } from "@heroui/react";
 import styles from "./Questionnaire.module.scss";
 import "./Questionnaire.scss";
@@ -73,16 +73,22 @@ const questions = [
   },
 ];
 
+const userData = {
+  name: "Айсултан",
+  avatarUrl: "https://via.placeholder.com/60?text=User",
+};
+
 export default function QuestionnairePage() {
   const [step, setStep] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [viewModalOpen, setViewModalOpen] = useState<boolean>(false);
 
   const handleStartQuestionnaire = () => setIsModalOpen(false);
   const handleNext = () => setStep(2);
   const handleBack = () => setStep(1);
   const handleSubmit = () => {
-    console.log(answers);
+    console.log("Ответы пользователя:", answers);
     setStep(3);
   };
   const handleCancel = () => setIsModalOpen(true);
@@ -91,6 +97,9 @@ export default function QuestionnairePage() {
     setAnswers({});
     setIsModalOpen(false);
   };
+  const openViewModal = () => setViewModalOpen(true);
+  const closeViewModal = () => setViewModalOpen(false);
+
   const questionsPerPage = 4;
   const startIndex = (step - 1) * questionsPerPage;
   const currentQuestions = step < 3 ? questions.slice(startIndex, startIndex + questionsPerPage) : [];
@@ -104,12 +113,10 @@ export default function QuestionnairePage() {
       {isModalOpen && step < 3 && (
         <div className={styles.overlay}>
           <div className={styles.modalBox}>
-            <ExclamationCircleOutlined style={{ fontSize: 40, color: "#1AA683", marginBottom: 16 }} />
+            <ExclamationCircleOutlined style={{ fontSize: 40, color: "#1AA683", marginBottom: 16 }}/>
             <h3 className={styles.modelTitleNot}>Вы еще не прошли анкету</h3>
             <p className={styles.modelSubtitleNot}>Чтобы продолжить, нажмите «Пройти анкету».</p>
-            <Button className={styles.anketaStart} onClick={handleStartQuestionnaire}>
-              Пройти анкету
-            </Button>
+            <Button className={styles.anketaStart} onClick={handleStartQuestionnaire}>Пройти анкету</Button>
           </div>
         </div>
       )}
@@ -133,31 +140,46 @@ export default function QuestionnairePage() {
           ))}
           <div className={styles.btnRow}>
             {step === 1 ? (
-              <Button onClick={handleCancel}>Отменить</Button>
+              <Button className={styles.previousBtn} onClick={handleCancel}>Отменить</Button>
             ) : (
-              <Button onClick={handleBack}>Назад</Button>
+              <Button className={styles.previousBtn} onClick={handleBack}>Назад</Button>
             )}
             {step === 1 ? (
-              <Button type="primary" onClick={handleNext}>
-                Следующие
-              </Button>
+              <Button className={styles.nextBtn} type="primary" onClick={handleNext}>Следующие</Button>
             ) : (
-              <Button type="primary" onClick={handleSubmit}>
-                Отправить
-              </Button>
+              <Button className={styles.nextBtn} type="primary" onClick={handleSubmit}>Сохранить и выйти</Button>
             )}
           </div>
         </>
       )}
       {step === 3 && (
         <div className={styles.successContainer}>
-          <h2>Поздравляем! Анкета успешно отправлена!</h2>
-          <p>Данные успешно отправлены на сервер. Вы можете пересмотреть или заполнить анкету заново.</p>
-          <div className={styles.btnRow}>
-            <Button onClick={handleRetake}>Заполнить заново</Button>
+          <CheckCircleOutlined className={styles.iconSuccess}/>
+          <h2>Вы уже заполнили анкету!</h2>
+          <p>Ваши данные успешно отправлены на сервер.</p>
+          <div className={styles.btnSuccess}>
+            <Button className={styles.reinput} onClick={handleRetake}>Заполнить заново</Button>
+            <Button className={styles.preview} type="primary" onClick={openViewModal}>Посмотреть</Button>
           </div>
         </div>
       )}
+      <Modal open={viewModalOpen} onCancel={closeViewModal} footer={null} title="Анкета">
+        <div className={styles.answersContainer}>
+          <div className={styles.userInfo}>
+            <img src={userData.avatarUrl} alt="avatar" className={styles.userAvatar}/>
+            <h3 className={styles.userName}>{userData.name}</h3>
+          </div>
+          {Object.keys(answers).map((questionId) => {
+            const question = questions.find((q) => q.id === Number(questionId));
+            return question ? (
+              <div key={question.id} className={styles.answerBlock}>
+                <p className={styles.questionText}>{question.text}</p>
+                <p className={styles.answerText}>{answers[question.id]}</p>
+              </div>
+            ) : null;
+          })}
+        </div>
+      </Modal>
     </div>
   );
 }
