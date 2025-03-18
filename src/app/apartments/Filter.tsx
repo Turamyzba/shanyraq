@@ -10,7 +10,7 @@ import { Tabs, Tab, Checkbox, addToast } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
-import result from "../../../result.json"
+// import result from "../../../result.json"
 
 interface AddressNode {
   Id: number;
@@ -41,7 +41,7 @@ export default function Filter() {
   const [selectedDistrict, setSelectedDistrict] = useState<AddressNode | null>(null);
   const [selectedMicroDistrict, setSelectedMicroDistrict] = useState<AddressNode | null>(null);
   const [selectedStreet, setSelectedStreet] = useState<AddressNode | null>(null);
-  const regions: AddressNode[] = result as AddressNode[];
+  const regions: AddressNode[] = [];
 
   // Price Range & Slider
   const [priceRange, setPriceRange] = useState([0, 500000]);
