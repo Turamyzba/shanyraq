@@ -1,0 +1,54 @@
+.mobileHeader {
+  display: none;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ebebeb;
+  width: 100%;
+  padding: 12px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  @media (max-width: 767px) {
+    display: block;
+  }
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  .logoImage {
+    height: 32px;
+    width: 32px;
+    margin-right: 8px;
+  }
+
+  .logoText {
+    font-size: 20px;
+    font-weight: 600;
+    color: #252525;
+  }
+}
+
+.citySelector {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #252525;
+  padding: 4px 8px;
+  gap: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #1aa683;
+  }
+}
