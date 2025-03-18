@@ -28,7 +28,7 @@
     "framer-motion": "^12.4.10",
     "gsap": "^3.12.7",
     "heroui-cli": "^1.1.0",
-    "lucide-react": "^0.479.0",
+    "lucide-react": "^0.483.0",
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^3.10.0",
     "next": "15.2.0",
