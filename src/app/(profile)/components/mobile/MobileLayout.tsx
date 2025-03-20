@@ -1,43 +1,31 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Badge, Progress } from "antd";
+import { useRouter } from "next/navigation";
+import { Button as HeroButton } from "@heroui/react";
 import {
   UserOutlined,
-  FileTextOutlined,
   FormOutlined,
-  EditOutlined,
-  ExclamationOutlined,
-  HomeFilled,
   SearchOutlined,
   SettingOutlined,
   LockOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Button as HeroButton, useDisclosure } from "@heroui/react";
-import { useRouter, usePathname } from "next/navigation";
-import styles from "./layout.module.scss";
 import Container from "@/components/layouts/Container";
-import MobileProfileMenu from "./components/MobileProfileMenu";
-import StatusModal from "./components/StatusModal";
-import PhotoEditModal from "./components/PhotoEditModal";
-import SettingsModal from "./components/SettingsModal";
-import PasswordModal from "./components/PasswordModal";
-import SavedFilterModal from "./components/SavedFilterModal";
+import styles from "./MobileLayout.module.scss";
+import ProgressBar from "../common/ProgressBar";
+import UserAvatar from "../common/UserAvatar";
+import { StatusKey } from "../common/StatusLabels";
 
-type StatusKey =
-  | "findingApartment"
-  | "notFindingApartment"
-  | "findingRoommate"
-  | "notFindingRoommate";
-
-const statusLabels: Record<StatusKey, string> = {
-  findingApartment: "#ИЩУ КВАРТИРУ",
-  notFindingApartment: "#НЕ ИЩУ КВАРТИРУ",
-  findingRoommate: "#ИЩУ СОЖИТЕЛЯ",
-  notFindingRoommate: "#НЕ ИЩУ СОЖИТЕЛЯ",
-};
+// Import modals
+import MobileProfileMenu from "./Modals/MobileProfileMenu";
+import StatusModal from "./Modals/StatusModal";
+import PhotoEditModal from "./Modals/PhotoEditModal";
+import PasswordModal from "./Modals/PasswordModal";
+import SettingsModal from "./Modals/SettingsModal";
+import SavedFilterModal from "./Modals/SavedFilterModal";
 
 const MobileLayout = ({ children }: { children: React.ReactNode }) => {
+  // State for all modals
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
@@ -45,11 +33,11 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
   const [savedFilterModalOpen, setSavedFilterModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [status, setStatus] = useState<StatusKey>("findingApartment");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const pathname = usePathname();
 
+  // Event handlers
   function handleOpenStatusModal() {
     setStatusModalOpen(true);
     setMobileMenuOpen(false);
@@ -115,75 +103,12 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
       <div className={styles.mobileContainer}>
         <div className={styles.mobileHeader}>
           <div className={styles.warningBar}>
-            <div className={styles.iconCircle}>
-              <ExclamationOutlined />
-            </div>
-            <div className={styles.progressInfo}>
-              <div className={styles.infoRow}>
-                <span className={styles.percent}>25%</span>
-                <span className={styles.description}>Заполните профиль</span>
-              </div>
-              <Progress
-                percent={25}
-                showInfo={false}
-                strokeColor={{
-                  "0%": "#1AA68380",
-                  "100%": "#33958D",
-                }}
-                className={styles.progressBar}
-              />
-            </div>
+            <ProgressBar percent={25} compact />
           </div>
 
           <div className={styles.profileSection}>
             <div className={styles.profilePhoto} onClick={toggleMobileMenu}>
-              <div className={styles.photoCircle}>
-                <img src="/avatar/image.png" alt="Profile Photo" />
-                <svg
-                  viewBox="0 0 200 200"
-                  className={styles.circleSvg}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#1aa683" />
-                      <stop offset="100%" stopColor="#28a745" />
-                    </linearGradient>
-                  </defs>
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="82"
-                    fill="none"
-                    stroke="url(#ringGradient)"
-                    strokeWidth="5"
-                  />
-                  <path
-                    id="circlePath"
-                    fill="none"
-                    d="M 100,100 m -70,0 a 70,70 0 1,0 140,0 a 70,70 0 1,0 -140,0"
-                  />
-                  <text
-                    fill="#fff"
-                    fontSize="18"
-                    fontWeight="bold"
-                    stroke="#000"
-                    strokeWidth="3"
-                    paintOrder="stroke"
-                  >
-                    <textPath href="#circlePath" startOffset="110" textAnchor="middle">
-                      {statusLabels[status]}
-                    </textPath>
-                  </text>
-                </svg>
-              </div>
-              <EditOutlined
-                className={styles.editIcon}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpen();
-                }}
-              />
+              <UserAvatar status={status} />
             </div>
             <h2 className={styles.userName}>Алихан Оспанов</h2>
             <div className={styles.statusButton} onClick={handleOpenStatusModal}>
@@ -234,7 +159,7 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
 
         {children}
 
-        {/* Мобильное меню при нажатии на аватар */}
+        {/* Mobile Modals */}
         <MobileProfileMenu
           isOpen={mobileMenuOpen}
           onClose={() => setMobileMenuOpen(false)}
@@ -243,7 +168,6 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
           onChangeStatus={handleOpenStatusModal}
         />
 
-        {/* Модальные окна */}
         <StatusModal
           isOpen={statusModalOpen}
           onClose={closeStatusModal}
@@ -269,7 +193,7 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Дополнительные иконки для мобильного интерфейса
+// Icons for mobile interface
 function CheckCircleIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

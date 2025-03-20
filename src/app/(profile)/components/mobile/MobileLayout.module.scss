@@ -1,0 +1,101 @@
+.mobileContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: 70px;
+}
+
+.mobileHeader {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.warningBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0 20px;
+}
+
+.profilePhoto {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+.userName {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.statusButton {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ebebeb;
+  border-radius: 30px;
+  padding: 6px 16px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statusIconButton {
+  min-width: unset !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+.statusText {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chevronIcon {
+  display: flex;
+  align-items: center;
+}
+
+.mobileMenuItems {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #ebebeb;
+  cursor: pointer;
+}
+
+.menuIcon {
+  margin-right: 16px;
+  font-size: 20px;
+  color: #252525;
+}
+
+.menuText {
+  font-size: 16px;
+  color: #252525;
+}

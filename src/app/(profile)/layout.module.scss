@@ -1,9 +1,3 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 50px;
-}
-
 .loadingScreen {
   width: 100vw;
   height: 100vh;
@@ -12,6 +6,7 @@
   justify-content: center;
 }
 
+/* Shared top bar / progress styles */
 .topBar {
   display: flex;
   align-items: center;
@@ -60,26 +55,7 @@
   margin-top: 6px;
 }
 
-.mainWrapper {
-  display: flex;
-  gap: 40px;
-}
-
-.navbar {
-  width: 300px;
-  padding: 20px 0 30px;
-  border: 1px solid #EBEBEB;
-  border-radius: 10px;
-  background-color: #fff;
-}
-
-.profileBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
+/* Shared avatar styles */
 .avatarWrapper {
   position: relative;
   width: 120px;
@@ -91,7 +67,7 @@
   position: absolute;
   bottom: 8px;
   right: 8px;
-  background-color:#252525;
+  background-color: #252525;
   color: #fff;
   border-radius: 50%;
   padding: 4px;
@@ -99,125 +75,47 @@
   cursor: pointer;
 }
 
-.userName {
-  margin-top: 12px;
-  font-weight: 500;
-  font-size: 16px;
-}
-
-.content {
-  flex: 1;
-  border-radius: 10px;  
-}
-
-.customMenu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background-color: #fff;
-  border-radius: 8px;
-}
-
-.customMenuItem {
-  padding: 12px 26px;
-  font-size: 16px;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  font-weight: 400;
-  cursor: pointer;
-}
-
-.customMenuItem:hover {
-  background-color: #f0f0f0;
-}
-
-.customMenuItemSelected {
-  color: #252525;
-  font-weight: bold;
+.photoCircle {
   position: relative;
+  width: 120px;
+  height: 120px;
 }
 
-.customMenuItemSelected::before {
-  content: "";
+.circleSvg {
   position: absolute;
+  top: 0;
   left: 0;
+  width: 120px;
+  height: 120px;
+}
+
+.photoCircle img {
+  position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 40px;
-  border-radius: 0 10px 10px 0;
-  background-color: #1AA683;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.customMenuIcon {
-  margin-right: 16px;
-  font-size: 18px;
+.largeAvatar .photoCircle {
+  width: 220px;
+  height: 220px;
 }
 
-.menuBadgeItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 6px;
+.largeAvatar .circleSvg {
+  width: 220px;
+  height: 220px;
 }
 
-.darkModalContent {
-  background-color: #252525 !important;
-  color: #fff;
-  border-radius: 8px;
-  width: 600px;
-  max-width: 90vw;
-  margin: 0 auto;
+.largeAvatar .photoCircle img {
+  width: 180px;
+  height: 180px;
 }
 
-.darkModalBody {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  gap: 12px;
-}
-
-.modalDivider {
-  width: 100%;
-  height: 1px;
-  background-color: #4a4a4a;
-}
-
-.darkModalFooter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 30px;
-}
-
-.footerButton,
-.footerButtonDelete {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #fff !important;
-  font-size: 12px;
-  gap: 2px;
-  background: none !important;
-  transition: color 0.2s ease;
-  border: none !important;
-  padding: 6px 12px !important;
-  cursor: pointer;
-}
-
-.footerButton:hover {
-  color: #1aa683 !important;
-}
-
-.footerButtonDelete:hover {
-  color: #c41512 !important;
-}
-
+/* Status modal styles (desktop) */
 .statusModal {
   padding: 0;
 }
@@ -263,151 +161,4 @@
 .statusModal .ant-modal-content {
   border-radius: 8px;
   overflow: hidden;
-}
-
-.photoCircle {
-  position: relative;
-  width: 120px;
-  height: 120px;
-}
-
-.circleSvg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 120px;
-  height: 120px;
-}
-
-.photoCircle img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100px;
-  height: 100px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.darkModalBody .photoCircle {
-  width: 220px;
-  height: 220px;
-}
-
-.darkModalBody .circleSvg {
-  width: 220px;
-  height: 220px;
-}
-
-.darkModalBody .photoCircle img {
-  width: 180px;
-  height: 180px;
-}
-
-.footerButtonEdit {
-  display: flex;
-}
-
-/* Мобильные стили */
-.mobileContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding-bottom: 70px;
-}
-
-.mobileHeader {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  background-color: #fff;
-  border-bottom: 1px solid #ebebeb;
-}
-
-.warningBar {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.profileSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 0 20px;
-}
-
-.profilePhoto {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin-bottom: 10px;
-}
-
-.userName {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 8px 0;
-}
-
-.statusButton {
-  display: flex;
-  align-items: center;
-  background-color: #f9f9f9;
-  border: 1px solid #ebebeb;
-  border-radius: 30px;
-  padding: 6px 16px;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.statusIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.statusIconButton {
-  min-width: unset !important;
-  width: auto !important;
-  height: auto !important;
-  padding: 0 !important;
-  background: none !important;
-}
-
-.statusText {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.chevronIcon {
-  display: flex;
-  align-items: center;
-}
-
-.mobileMenuItems {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0 16px;
-}
-
-.menuItem {
-  display: flex;
-  align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid #ebebeb;
-  cursor: pointer;
-}
-
-.menuIcon {
-  margin-right: 16px;
-  font-size: 20px;
-  color: #252525;
-}
-
-.menuText {
-  font-size: 16px;
-  color: #252525;
 }

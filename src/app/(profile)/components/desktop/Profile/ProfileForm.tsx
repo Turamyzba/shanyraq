@@ -11,9 +11,9 @@ import {
   Button as HeroUIButton,
 } from "@heroui/react";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-import styles from "./DesktopLayout.module.scss";
-import './DesktopLayout.scss'
-export default function DesktopLayout() {
+import styles from "./ProfileForm.module.scss";
+import './ProfileForm.scss'
+export default function DesktopProfileForm() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [oldPasswordVisible, setOldPasswordVisible] = useState(false);
@@ -24,8 +24,13 @@ export default function DesktopLayout() {
     setIsEditing(!isEditing);
   }
 
+  function handleSave() {
+    // Save logic would go here
+    setIsEditing(false);
+  }
+
   return (
-    <div className={styles.desktopContainer}>
+    <div className={styles.container}>
       <Form layout="vertical" className={styles.wrapper}>
         <div className={styles.wrapperInner}>
           <div className={styles.formRow}>
@@ -78,13 +83,16 @@ export default function DesktopLayout() {
           <Button className={styles.editPassword} onClick={() => setIsPasswordModalOpen(true)}>
             Изменить пароль
           </Button>
-          <Button className={isEditing ? styles.saveBtn : styles.editBtn} onClick={handleEdit}>
+          <Button
+            className={isEditing ? styles.saveBtn : styles.editBtn}
+            onClick={isEditing ? handleSave : handleEdit}
+          >
             {isEditing ? "Сохранить" : "Редактировать"}
           </Button>
         </div>
       </Form>
 
-      {/* Модальное окно для смены пароля */}
+      {/* Password Change Modal */}
       <HeroModal
         isOpen={isPasswordModalOpen}
         className={styles.modalPassword}

@@ -1,12 +1,7 @@
 import React from "react";
 import { Modal, Radio, RadioGroup } from "@heroui/react";
+import { StatusKey } from "../../common/StatusLabels";
 import styles from "./StatusModal.module.scss";
-
-type StatusKey =
-  | "findingApartment"
-  | "notFindingApartment"
-  | "findingRoommate"
-  | "notFindingRoommate";
 
 interface StatusModalProps {
   isOpen: boolean;

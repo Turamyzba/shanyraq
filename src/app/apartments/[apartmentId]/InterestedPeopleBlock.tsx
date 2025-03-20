@@ -288,7 +288,6 @@ export default function InterestedPeopleBlock({ mockApartmentData }: InterestedP
         </ModalContent>
       </Modal>
 
-      {/* "Profile" (Анкета) Modal */}
       <Modal
         isOpen={isProfileModalOpen && !!selectedUser}
         onOpenChange={onCloseProfileModal}

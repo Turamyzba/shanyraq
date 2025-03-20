@@ -10,6 +10,7 @@
   flex-direction: column;
   gap: 24px;
 }
+
 .overlay {
   position: absolute;
   top: 0;
@@ -22,6 +23,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .modalBox {
   background-color: #fff;
   border: 1px solid #b5b7c0 !important;
@@ -31,45 +33,53 @@
   padding: 36px;
   padding-top: 24px;
 }
+
 .modalBox h3 {
   margin: 16px 0 8px;
   font-size: 18px;
   font-weight: 700;
   color: #32343a;
 }
+
 .questionBlock {
   display: flex;
   flex-direction: column;
 }
+
 .questionBlock h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #32343a;
 }
+
 .questionBlock p {
   margin: 0;
   font-size: 14px;
   color: #252525;
 }
+
 .radioItem {
   display: flex;
   gap: 5px !important;
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
 .btnSuccess {
   margin-top: auto;
   display: flex;
   gap: 12px;
   justify-content: center;
 }
+
 .btnRow {
   margin-top: auto;
   display: flex;
   gap: 12px;
   justify-content: end;
 }
+
 .successContainer {
   display: flex;
   flex-direction: column;
@@ -78,18 +88,21 @@
   margin: auto 0;
   text-align: center;
 }
+
 .successContainer h2 {
   font-size: 18px;
   font-weight: 700;
   color: #32343a;
   margin-bottom: 16px;
 }
+
 .successContainer p {
   font-size: 14px;
   color: #252525;
   margin-bottom: 24px;
   max-width: 600px;
 }
+
 .modelTitleNot {
   font-size: 16px !important;
   font-weight: 700 !important;
@@ -97,12 +110,14 @@
   margin: 0 !important;
   margin-bottom: 16px !important;
 }
+
 .modelSubtitleNot {
   font-weight: 400 !important;
   font-size: 14px !important;
   color: #252525 !important;
   margin-bottom: 20px !important;
 }
+
 .anketaStart {
   width: 280px;
   height: 40px;
@@ -110,20 +125,24 @@
   color: #fff !important;
   border: none !important;
 }
+
 .anketaStart:hover {
   background-color: #137f64 !important;
   color: #fff !important;
   border: none !important;
 }
+
 .question {
   font-size: 16px !important;
   font-weight: 600 !important;
   margin-bottom: 20px !important;
 }
+
 .label {
   font-size: 14px !important;
   font-weight: 400 !important;
 }
+
 .nextBtn {
   background-color: #32343a !important;
   border-radius: 5px !important;
@@ -132,6 +151,7 @@
   font-weight: 700;
   padding: 0 40px;
 }
+
 .previousBtn {
   border-radius: 5px !important;
   height: 40px;
@@ -140,14 +160,17 @@
   border: none;
   box-shadow: none;
 }
+
 .previousBtn:hover {
   color: #4d5059 !important;
 }
+
 .iconSuccess {
-  font-size: 48;
+  font-size: 48px;
   color: #1aa683;
   margin: 0 auto 16px;
 }
+
 .reinput {
   height: 40px;
   padding: 0 20px;
@@ -158,23 +181,69 @@
   border: none;
   box-shadow: none;
 }
+
 .reinput:hover {
   color: #fff !important;
   background-color: #313339 !important;
   border: none;
 }
+
 .preview {
   height: 40px;
   padding: 0 20px;
-  background-color: #1AA683 !important;
+  background-color: #1aa683 !important;
   color: #fff;
   font-size: 14px !important;
   font-weight: 700;
   border: none;
   box-shadow: none;
 }
+
 .preview:hover {
   color: #fff !important;
   background-color: #179475 !important;
   border: none;
+}
+
+.answersContainer {
+  padding: 20px 0;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #252525;
+  margin: 0;
+}
+
+.answerBlock {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.questionText {
+  font-size: 14px;
+  font-weight: 600;
+  color: #252525;
+  margin-bottom: 8px;
+}
+
+.answerText {
+  font-size: 14px;
+  color: #6b7280;
 }

@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./MobileProfileMenu.module.scss";
 import { HomeFilled, CameraOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/react";
+import styles from "./MobileProfileMenu.module.scss";
 
 interface MobileProfileMenuProps {
   isOpen: boolean;

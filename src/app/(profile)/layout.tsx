@@ -5,10 +5,9 @@ import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./layout.module.scss";
 import dynamic from "next/dynamic";
-import "./layout.scss";
 
-const MobileLayout = dynamic(() => import("./MobileLayout"), { ssr: false });
-const DesktopLayout = dynamic(() => import("./DesktopLayout"), { ssr: false });
+const MobileLayout = dynamic(() => import("./components/mobile/MobileLayout"), { ssr: false });
+const DesktopLayout = dynamic(() => import("./components/desktop/DesktopLayout"), { ssr: false });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -34,12 +33,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
-      {isMobile ? (
-        <MobileLayout>{children}</MobileLayout>
-      ) : (
-        <DesktopLayout>{children}</DesktopLayout>
-      )}
-    </>
+    <>{isMobile ? <MobileLayout>{children}</MobileLayout> : <DesktopLayout>{children}</DesktopLayout>}</>
   );
 }
