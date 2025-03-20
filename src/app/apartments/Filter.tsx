@@ -43,17 +43,13 @@ export default function Filter() {
   const [selectedStreet, setSelectedStreet] = useState<AddressNode | null>(null);
   const regions: AddressNode[] = [];
 
-  // Price Range & Slider
   const [priceRange, setPriceRange] = useState([0, 500000]);
   const handlePriceSliderChange = (event: any, newValue: number | number[]) => {
     setPriceRange(newValue as number[]);
   };
-
-  // Housemates
   const housematesOptions = ["1", "2", "3", "4", "5+"];
   const [selectedHousemate, setSelectedHousemate] = useState("1");
 
-  // Rooms
   const [rooms, setRooms] = useState(1);
   const incrementRooms = () => setRooms((prev) => Math.min(prev + 1, 10));
   const decrementRooms = () => setRooms((prev) => Math.max(prev - 1, 1));
