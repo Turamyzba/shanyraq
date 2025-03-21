@@ -1,48 +1,161 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Form } from "@heroui/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MyPasswordInput } from "@/components/ui/MyPasswordInput";
 import MyButton from "@/components/ui/MyButton";
+import { updatePassword } from "@/lib/api/authService";
+import { addToast } from "@heroui/react";
+import styles from "./ResetPassword.module.scss";
 
-export default function Page() {
+export default function ResetPasswordPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Get email from URL parameters
+  const email = searchParams.get('email') || "";
+  const token = searchParams.get('token') || "";
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Check if we have required parameters
+  useEffect(() => {
+    if (!email || !token) {
+      addToast({
+        title: "Ошибка",
+        description: "Отсутствуют необходимые параметры для сброса пароля",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+    }
+  }, [email, token]);
+
+  const validateForm = () => {
+    if (!password || !passwordConfirm) {
+      addToast({
+        title: "Ошибка",
+        description: "Все поля обязательны для заполнения",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    if (password !== passwordConfirm) {
+      addToast({
+        title: "Ошибка",
+        description: "Пароли не совпадают",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    if (password.length < 6) {
+      addToast({
+        title: "Ошибка",
+        description: "Пароль должен содержать минимум 6 символов",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({
-      password: password,
-      passwordConfirm: passwordConfirm,
-    });
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      
+      await updatePassword({
+        email: email,
+        password: password
+      });
+
+      addToast({
+        title: "Пароль успешно обновлен!",
+        description: "Теперь вы можете войти в систему с новым паролем",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "success"
+      });
+
+      // Redirect to login page
+      router.push("/login");
+    } catch (err: any) {
+      addToast({
+        title: "Ошибка",
+        description: err.message || "Произошла ошибка при сбросе пароля",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
-      <div className="max-w-[720px] rounded-2xl py-[70px] px-[100px]">
-        <div className="mb-5">
-          <h2 className="text-3xl mb-3">Восстановление пароля</h2>
+    <div className={styles.container}>
+      <div className={styles.formWrapper}>
+        <div className={styles.header}>
+          <h2>Восстановление пароля</h2>
           <p>Пожалуйста, установите новый пароль для своей учетной записи.</p>
         </div>
 
-        <Form onSubmit={handleSubmit} className={"gap-3.5"}>
-          <MyPasswordInput
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            label="Создайте новый пароль"
-            isRequired
-          />
+        <Form onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <MyPasswordInput
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              label="Создайте новый пароль"
+              isRequired
+            />
 
-          <MyPasswordInput
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-            label="Потвердите новый пароль"
-            isRequired
-          />
+            <MyPasswordInput
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              label="Потвердите новый пароль"
+              isRequired
+            />
+          </div>
 
-          <MyButton type={"submit"} className={"bg-primary text-white w-full rounded font-bold"}>
-            Продолжить
-          </MyButton>
-          <MyButton className={"bg-white text-black w-full rounded font-bold"}>Назад</MyButton>
+          <div className={styles.buttonGroup}>
+            <MyButton 
+              type={"submit"} 
+              className={styles.continueButton}
+              isLoading={isLoading}
+              isDisabled={!email || !token}
+            >
+              Продолжить
+            </MyButton>
+            <MyButton 
+              className={styles.backButton}
+              onClick={() => router.push('/login')}
+            >
+              Назад
+            </MyButton>
+          </div>
         </Form>
       </div>
     </div>

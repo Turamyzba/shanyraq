@@ -1,37 +1,139 @@
 "use client";
 
-import MyInput from "@/components/ui/MyInput";
+import { useState } from "react";
 import { Form } from "@heroui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import MyInput from "@/components/ui/MyInput";
 import MyButton from "@/components/ui/MyButton";
 import { MyPasswordInput } from "@/components/ui/MyPasswordInput";
+import { register } from "@/lib/api/authService";
+import { addToast } from "@heroui/react";
+import styles from "./Register.module.scss";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const validateForm = () => {
+    if (!name || !lastname || !email || !password || !passwordConfirm) {
+      addToast({
+        title: "Ошибка",
+        description: "Пожалуйста, заполните все поля",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    if (password.length < 6) {
+      addToast({
+        title: "Ошибка",
+        description: "Пароль должен содержать минимум 6 символов",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    if (password !== passwordConfirm) {
+      addToast({
+        title: "Ошибка",
+        description: "Пароли не совпадают",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      addToast({
+        title: "Ошибка",
+        description: "Пожалуйста, введите корректный email",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({
-      name: name,
-      lastname: lastname,
-      email: email,
-      password: password,
-      passwordConfirm: passwordConfirm,
-    });
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      
+      // Use the variables directly instead of shorthand properties
+      const result = await register({
+        firstName: name,
+        lastName: lastname,
+        email: email,
+        password: password
+      });
+
+      if(result)
+        addToast({
+          title: "Успешная регистрация!",
+          description: "Пожалуйста, проверьте вашу электронную почту для подтверждения",
+          variant: "flat",
+          radius: "sm",
+          timeout: 5000,
+          color: "success"
+        });
+      else
+        addToast({
+          title: "Ошибка",
+          description: result || "Произошла ошибка при регистрации",
+          variant: "flat",
+          radius: "sm",
+          timeout: 5000,
+          color: "danger"
+        });
+      // Redirect to verification page or login page depending on your flow
+      router.push("/verification?email=" + encodeURIComponent(email));
+    } catch (err: any) {
+      addToast({
+        title: "Ошибка",
+        description: err.message || "Произошла ошибка при регистрации",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
-      <div className="max-w-[600px] rounded-2xl py-[70px] px-[100px]">
-        <h2 className="text-3xl text-center mb-10">Присоединяйтесь к Shanyraq! </h2>
+    <div className={styles.container}>
+      <div className={styles.formWrapper}>
+        <div className={styles.header}>
+          <h2>Присоединяйтесь к Shanyraq!</h2>
+        </div>
 
         <Form onSubmit={handleSubmit}>
-          <div className="w-full flex flex-col gap-3.5">
+          <div className={styles.formGroup}>
             <MyInput
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -69,17 +171,16 @@ export default function RegisterPage() {
 
           <MyButton
             type={"submit"}
-            className={"bg-primary text-white w-full rounded font-bold py-6"}
+            className={styles.submitButton}
+            isLoading={isLoading}
           >
             Зарегистрироваться
           </MyButton>
         </Form>
-        <p className={"text-center mt-5"}>
+        <div className={styles.footer}>
           Уже есть учетная запись?
-          <Link className={"hover:underline text-primary"} href={"#"}>
-            Войдите
-          </Link>
-        </p>
+          <Link href={"/login"}>Войдите</Link>
+        </div>
       </div>
     </div>
   );
