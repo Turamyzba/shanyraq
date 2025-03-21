@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import styles from "./StepApartmentDetails.module.scss";
 import Images from "@/components/common/Images";
 import MySelect from "../ui/MySelect";
-import result from "../../../result.json";
 import MyCalendar from "../ui/MyCalendar";
 import { Checkbox } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
@@ -44,7 +43,7 @@ const StepApartmentDetails: React.FC = () => {
   const [selectedRegion, setSelectedRegion] = useState<AddressNode | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<AddressNode | null>(null);
   const [selectedMicroDistrict, setSelectedMicroDistrict] = useState<AddressNode | null>(null);
-  const regions: AddressNode[] = result as AddressNode[];
+  const regions: AddressNode[] = [];
 
   const [moveInDate, setMoveInDate] = useState(parseDate("2024-03-07"));
   // Called when the calendar date is changed.

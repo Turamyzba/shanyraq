@@ -12,16 +12,18 @@ import MobileHeader from "@/components/layouts/mobile/MobileHeader";
 import { Providers } from "@/app/providers";
 import "@ant-design/v5-patch-for-react-19";
 import { useDisclosure } from "@heroui/react";
+import AddApartmentModal from "@/components/layouts/AddApartmentModal";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <html lang="ru">
       <body>
         <Providers>
           <div className="app-wrapper">
-            {isMobile ? <MobileHeader /> : <Header />}
+            {isMobile ? <MobileHeader /> : <Header handleOpenModal={onOpen} />}
             <main className="content-wrapper">{children}</main>
             {!isMobile && <Footer />}
             {isMobile && <MobileNavigation />}
