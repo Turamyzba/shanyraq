@@ -8,10 +8,10 @@ import { Checkbox } from "@heroui/react";
 
 const StepSuccess: React.FC = () => {
   const { watch, setValue } = useFormContext();
-  
+
   // Watch form values
   const selectedAdjectives = watch("selectedAdjectives") || [];
-  
+
   // List of adjectives
   const adjectives = [
     "Платежеспособная/ный",
@@ -28,7 +28,7 @@ const StepSuccess: React.FC = () => {
     const updatedAdjectives = selectedAdjectives.includes(adj)
       ? selectedAdjectives.filter((item: string) => item !== adj)
       : [...selectedAdjectives, adj];
-    
+
     setValue("selectedAdjectives", updatedAdjectives);
   };
 
@@ -36,15 +36,11 @@ const StepSuccess: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.successWrapper}>
         <Images.Finish size={100} color="#1aa683" />
-        <h2 className={styles.successTitle}>
-          Поздравляем! Ваше объявление успешно загружено
-        </h2>
+        <h2 className={styles.successTitle}>Поздравляем! Ваше объявление успешно загружено</h2>
       </div>
 
       <div className={styles.adjectivesSection}>
-        <h3 className={styles.adjectivesTitle}>
-          Каким вы предпочитаете видеть своего соседа?
-        </h3>
+        <h3 className={styles.adjectivesTitle}>Каким вы предпочитаете видеть своего соседа?</h3>
 
         <ul className={styles.adjectivesList}>
           {adjectives.map((adj, index) => (

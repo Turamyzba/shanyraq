@@ -159,7 +159,7 @@ const Images = {
   closeIcon: X,
   radioSelected: radioSelected,
   radioNotSelected: radioNotSelected,
-  Finish: CircleCheckBig
+  Finish: CircleCheckBig,
 };
 
 export default Images;

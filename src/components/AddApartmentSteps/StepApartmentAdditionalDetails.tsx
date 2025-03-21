@@ -28,7 +28,6 @@ const StepApartmentAdditionalDetails: React.FC = () => {
 
   return (
     <div className={styles.container}>
-        
       {/* Pets Allowed */}
       <div className={styles.inputGroup}>
         <MyCheckBox
@@ -45,7 +44,7 @@ const StepApartmentAdditionalDetails: React.FC = () => {
           checked={utilitiesIncluded}
           onChange={(checked) => setValue("apartmentDetails.utilitiesIncluded", checked)}
           label="Включены ли коммунальные услуги?"
-            labelClassName={styles.secondLabel}
+          labelClassName={styles.secondLabel}
         />
       </div>
 
@@ -106,22 +105,18 @@ const StepApartmentAdditionalDetails: React.FC = () => {
           placeholder="Введите описание квартиры..."
           className={styles.textAreaField}
         />
-        {description.trim().length < 10 && (
-          <p className={styles.errorText}>Минимум 10 символов</p>
-        )}
+        {description.trim().length < 10 && <p className={styles.errorText}>Минимум 10 символов</p>}
       </div>
 
       {/* Photos Upload */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Загрузите фотографии:</label>
-        <MyFileUpload 
-            photos={photos} 
-            setPhotos={(newPhotos) => setValue("apartmentDetails.photos", newPhotos)}
-            maxCount={8}
-          />
-        {photos.length < 5 && (
-          <p className={styles.errorText}>Добавьте минимум 5 фотографий</p>
-        )}
+        <MyFileUpload
+          photos={photos}
+          setPhotos={(newPhotos) => setValue("apartmentDetails.photos", newPhotos)}
+          maxCount={8}
+        />
+        {photos.length < 5 && <p className={styles.errorText}>Добавьте минимум 5 фотографий</p>}
       </div>
     </div>
   );

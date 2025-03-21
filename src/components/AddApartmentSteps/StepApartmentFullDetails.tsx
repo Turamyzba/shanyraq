@@ -26,7 +26,7 @@ const StepApartmentFullDetails: React.FC = () => {
   const ownerPhones = watch("apartmentDetails.ownerPhones") || []; // Array of phone numbers
   const residents: Resident[] = watch("apartmentDetails.residents") || []; // Array of residents
   const peopleInApartment = watch("peopleInApartment") || "1"; // Number of people in apartment
-  
+
   // Local state for UI
   const [showAddOwnerPhone, setShowAddOwnerPhone] = useState(false);
   const [newOwnerPhone, setNewOwnerPhone] = useState("");
@@ -46,7 +46,7 @@ const StepApartmentFullDetails: React.FC = () => {
   // Form validation helpers
   const isPhoneValid = (phone: string) => {
     // Remove all non-digit characters and check if it has at least 10 digits
-    return phone.replace(/\D/g, '').length >= 10;
+    return phone.replace(/\D/g, "").length >= 10;
   };
 
   // Handle adding a new owner phone
@@ -72,10 +72,10 @@ const StepApartmentFullDetails: React.FC = () => {
         name: newResidentName,
         phones: [newResidentPhone],
       };
-      
+
       const updatedResidents = [...residents, newResident];
       setValue("apartmentDetails.residents", updatedResidents);
-      
+
       // Reset form
       setNewResidentName("");
       setNewResidentPhone("");
@@ -89,7 +89,7 @@ const StepApartmentFullDetails: React.FC = () => {
       const updatedResidents = [...residents];
       updatedResidents[residentIndex].phones.push(newPhoneForResident);
       setValue("apartmentDetails.residents", updatedResidents);
-      
+
       // Reset
       setNewPhoneForResident("");
       setShowAddResidentPhone(false);
@@ -195,7 +195,9 @@ const StepApartmentFullDetails: React.FC = () => {
           />
         </div>
         {floorsFrom > floorsTo && (
-          <p className={styles.errorText}>Текущий этаж не может быть больше общего количества этажей</p>
+          <p className={styles.errorText}>
+            Текущий этаж не может быть больше общего количества этажей
+          </p>
         )}
       </div>
 
@@ -235,7 +237,7 @@ const StepApartmentFullDetails: React.FC = () => {
       {/* Owner Phone Numbers Section */}
       <div className={styles.contactSection}>
         <h2 className={styles.contactTitle}>Контактные телефоны</h2>
-        
+
         {/* Display existing phone numbers */}
         <div className={styles.phoneNumberList}>
           {ownerPhones.map((phone: any, index: any) => (
@@ -250,7 +252,7 @@ const StepApartmentFullDetails: React.FC = () => {
                 />
                 <span>{phone}</span>
               </div>
-              <button 
+              <button
                 onClick={() => handleRemoveOwnerPhone(index)}
                 className={styles.removePhoneButton}
               >
@@ -268,17 +270,14 @@ const StepApartmentFullDetails: React.FC = () => {
               onChange={(e: any) => setNewOwnerPhone(e.target.value)}
             />
             <div className={styles.addPhoneButtons}>
-              <MyButton 
-                onPress={handleAddOwnerPhone} 
-                className={styles.addButton}
-              >
+              <MyButton onPress={handleAddOwnerPhone} className={styles.addButton}>
                 Добавить
               </MyButton>
-              <MyButton 
+              <MyButton
                 onPress={() => {
                   setShowAddOwnerPhone(false);
                   setNewOwnerPhone("");
-                }} 
+                }}
                 className={styles.cancelButton}
                 variant="bordered"
               >
@@ -287,10 +286,7 @@ const StepApartmentFullDetails: React.FC = () => {
             </div>
           </div>
         ) : (
-          <button 
-            onClick={() => setShowAddOwnerPhone(true)} 
-            className={styles.addPhoneButton}
-          >
+          <button onClick={() => setShowAddOwnerPhone(true)} className={styles.addPhoneButton}>
             <Images.Plus size={16} color="#1AA683" />
             <span className={styles.addPhoneText}>Добавить еще телефоны</span>
           </button>
@@ -304,14 +300,14 @@ const StepApartmentFullDetails: React.FC = () => {
         <div key={residentIndex} className={styles.residentBlock}>
           <div className={styles.residentHeader}>
             <h3 className={styles.contactTitle}>Добавление контактов жителей</h3>
-            <button 
+            <button
               onClick={() => handleRemoveResident(residentIndex)}
               className={styles.removeButton}
             >
               <Images.closeIcon />
             </button>
           </div>
-          
+
           {/* Resident Name */}
           <div className={styles.inputGroup}>
             <label className={styles.secondaryLabel}>Имя в личных сообщениях</label>
@@ -330,7 +326,7 @@ const StepApartmentFullDetails: React.FC = () => {
           {/* Resident Phones */}
           <div className={styles.contactSection}>
             <h4 className={styles.secondaryLabel}>Контактные телефоны</h4>
-            
+
             <div className={styles.phoneNumberList}>
               {resident.phones.map((phone, phoneIndex) => (
                 <div key={phoneIndex} className={styles.phoneItem}>
@@ -345,7 +341,7 @@ const StepApartmentFullDetails: React.FC = () => {
                     <span>{phone}</span>
                   </div>
                   {phoneIndex > 0 && (
-                    <button 
+                    <button
                       onClick={() => handleRemoveResidentPhone(residentIndex, phoneIndex)}
                       className={styles.removePhoneButton}
                     >
@@ -355,7 +351,7 @@ const StepApartmentFullDetails: React.FC = () => {
                 </div>
               ))}
             </div>
-            
+
             {/* Add phone for existing resident */}
             {selectedResidentIndex === residentIndex && showAddResidentPhone ? (
               <div className={styles.addPhoneForm}>
@@ -364,18 +360,18 @@ const StepApartmentFullDetails: React.FC = () => {
                   onChange={(e: any) => setNewPhoneForResident(e.target.value)}
                 />
                 <div className={styles.addPhoneButtons}>
-                  <MyButton 
-                    onPress={() => handleAddPhoneToResident(residentIndex)} 
+                  <MyButton
+                    onPress={() => handleAddPhoneToResident(residentIndex)}
                     className={styles.addButton}
                   >
                     Добавить
                   </MyButton>
-                  <MyButton 
+                  <MyButton
                     onPress={() => {
                       setShowAddResidentPhone(false);
                       setNewPhoneForResident("");
                       setSelectedResidentIndex(null);
-                    }} 
+                    }}
                     className={styles.cancelButton}
                     variant="bordered"
                   >
@@ -384,11 +380,11 @@ const StepApartmentFullDetails: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <button 
+              <button
                 onClick={() => {
                   setSelectedResidentIndex(residentIndex);
                   setShowAddResidentPhone(true);
-                }} 
+                }}
                 className={styles.addPhoneButton}
               >
                 <Images.Plus size={16} color="#1AA683" />
@@ -396,7 +392,7 @@ const StepApartmentFullDetails: React.FC = () => {
               </button>
             )}
           </div>
-          
+
           <hr className={styles.divider} />
         </div>
       ))}
@@ -405,7 +401,7 @@ const StepApartmentFullDetails: React.FC = () => {
       {showAddResidentForm && (
         <div className={styles.residentBlock}>
           <h3 className={styles.contactTitle}>Добавление контактов жителей</h3>
-          
+
           {/* Resident Name */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>Имя в личных сообщениях</label>
@@ -420,27 +416,24 @@ const StepApartmentFullDetails: React.FC = () => {
           {/* Resident Phone */}
           <div className={styles.contactSection}>
             <h4 className={styles.secondaryLabel}>Контактные телефоны</h4>
-            
+
             <div className={styles.addPhoneForm}>
               <MyInput
                 value={newResidentPhone}
                 onChange={(e: any) => setNewResidentPhone(e.target.value)}
               />
             </div>
-            
+
             <div className={styles.addPhoneButtons}>
-              <MyButton 
-                onPress={handleAddResident} 
-                className={styles.addButton}
-              >
+              <MyButton onPress={handleAddResident} className={styles.addButton}>
                 Добавить
               </MyButton>
-              <MyButton 
+              <MyButton
                 onClick={() => {
                   setShowAddResidentForm(false);
                   setNewResidentName("");
                   setNewResidentPhone("");
-                }} 
+                }}
                 className={styles.cancelButton}
                 variant="bordered"
               >
@@ -448,15 +441,15 @@ const StepApartmentFullDetails: React.FC = () => {
               </MyButton>
             </div>
           </div>
-          
+
           <hr className={styles.divider} />
         </div>
       )}
 
       {/* Add more residents button - only show if we haven't reached the limit */}
       {!showAddResidentForm && residents.length < getMaxResidents() && (
-        <MyButton 
-          onClick={() => setShowAddResidentForm(true)} 
+        <MyButton
+          onClick={() => setShowAddResidentForm(true)}
           className={styles.addContactButton}
           variant="bordered"
         >

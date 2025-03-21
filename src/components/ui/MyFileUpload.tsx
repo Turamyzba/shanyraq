@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { PlusOutlined, DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Image, Upload, Button, message } from 'antd';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
+import React, { useState, useEffect } from "react";
+import { PlusOutlined, DeleteOutlined, UploadOutlined } from "@ant-design/icons";
+import { Image, Upload, Button, message } from "antd";
+import type { GetProp, UploadFile, UploadProps } from "antd";
 
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 interface FileUploadProps {
   photos: string[];
@@ -13,7 +13,7 @@ interface FileUploadProps {
   maxCount?: number;
 }
 
-const getBase64 = (file: FileType): Promise<string> => 
+const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -23,7 +23,7 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount = 8 }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
+  const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
 
@@ -33,7 +33,7 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       const newFileList = photos.map((url, index) => ({
         uid: `-${index}`,
         name: `image-${index}.jpg`,
-        status: 'done' as const,
+        status: "done" as const,
         url: url,
       }));
       setFileList(newFileList);
@@ -50,7 +50,7 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
     setPreviewOpen(true);
   };
 
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     // Fix duplication by not updating the fileList on upload
     if (!uploading) {
       setFileList(newFileList);
@@ -58,14 +58,14 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
   };
 
   const handleRemove = (file: UploadFile) => {
-    const newFileList = fileList.filter(item => item.uid !== file.uid);
+    const newFileList = fileList.filter((item) => item.uid !== file.uid);
     setFileList(newFileList);
-    
+
     // Update the parent component's photos array
     const newPhotos = newFileList
-      .filter(file => file.status === 'done')
-      .map(file => file.url || '');
-    
+      .filter((file) => file.status === "done")
+      .map((file) => file.url || "");
+
     setPhotos(newPhotos);
     return true;
   };
@@ -76,25 +76,25 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       setUploading(true);
       // Simulate upload process
       const base64 = await getBase64(file);
-      
+
       // Add to fileList
       const newFile = {
         uid: `-${Date.now()}`,
         name: file.name,
-        status: 'done' as const,
+        status: "done" as const,
         url: base64,
       };
-      
+
       const newFileList = [...fileList, newFile];
       setFileList(newFileList);
-      
+
       // Update parent photos array
       const newPhotos = newFileList
-        .filter(file => file.status === 'done')
-        .map(file => file.url || '');
-      
+        .filter((file) => file.status === "done")
+        .map((file) => file.url || "");
+
       setPhotos(newPhotos);
-      
+
       if (onSuccess) {
         setTimeout(() => {
           onSuccess("ok");
@@ -106,7 +106,7 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
         onError(error);
       }
       setUploading(false);
-      message.error('Не удалось загрузить файл');
+      message.error("Не удалось загрузить файл");
     }
   };
 
@@ -121,12 +121,9 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       <div className="flex flex-col items-center gap-4">
         <UploadOutlined className="text-4xl text-[#1AA683]" />
         <p className="text-sm text-[#252525]">
-          <span className="text-[#1AA683]">Нажмите</span>, чтобы загрузить,
-          или перетащите.
+          <span className="text-[#1AA683]">Нажмите</span>, чтобы загрузить, или перетащите.
         </p>
-        <p className="text-sm text-[#B5B7C0]">
-          Минимум количество 5
-        </p>
+        <p className="text-sm text-[#B5B7C0]">Минимум количество 5</p>
       </div>
     </div>
   );
@@ -137,9 +134,9 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       {fileList.length > 0 && (
         <div className="flex justify-between items-center mt-6 mb-4">
           <span className="text-sm font-semibold text-[#252525] m-0">Загруженные фотографии</span>
-          <Button 
-            type="text" 
-            danger 
+          <Button
+            type="text"
+            danger
             onClick={handleDeleteAll}
             className="p-0 h-auto hover:bg-transparent hover:underline"
           >
@@ -147,19 +144,18 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
           </Button>
         </div>
       )}
-      
+
       {previewImage && (
         <Image
-          wrapperStyle={{ display: 'none' }}
+          wrapperStyle={{ display: "none" }}
           preview={{
             visible: previewOpen,
             onVisibleChange: (visible) => setPreviewOpen(visible),
-            afterOpenChange: (visible) => !visible && setPreviewImage(''),
+            afterOpenChange: (visible) => !visible && setPreviewImage(""),
           }}
           src={previewImage}
         />
       )}
-
 
       <style jsx global>{`
         .ant-upload-select {
@@ -171,9 +167,9 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
           background-color: transparent !important;
           transition: border 0.3s ease;
         }
-        
+
         .ant-upload-select:hover {
-          border: 2px dashed #1AA683 !important;
+          border: 2px dashed #1aa683 !important;
         }
       `}</style>
 
@@ -190,8 +186,6 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       >
         {fileList.length >= maxCount ? null : uploadButton}
       </Upload>
-      
-      
     </div>
   );
 };
