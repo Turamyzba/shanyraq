@@ -1,0 +1,146 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  
+    .label {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 20px;
+      color: #252525;
+    }
+  
+    .secondLabel {
+      font-size: 16px;
+      font-weight: 400 !important;
+      line-height: 18px;
+      color: #252525;
+      margin-right: 10px;
+    }
+  }
+  
+  .errorText {
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: normal;
+    color: red;
+  }
+  
+  .inputField {
+    width: 100%;
+    font-size: 16px;
+    color: #252525;
+    outline: none;
+  
+    &:focus {
+      border-color: #1aa683;
+    }
+  
+    &::placeholder {
+      color: #b5b7c0;
+    }
+  }
+  
+  .textAreaField {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 12px;
+  
+    &:focus {
+      border-color: #1aa683;
+      outline: none;
+    }
+  }
+  
+  .utilitiesInputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    
+    .inputWithLabel {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+  }
+  
+  .sliderContainer {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .sliderLabels {
+    display: flex;
+    justify-content: space-between;
+    color: #1aa683;
+    font-size: 12px;
+    line-height: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .mySlider {
+    width: 100%;
+    display: flex;
+  }
+  
+  .photoUploadContainer {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  
+    &:hover {
+      border-color: #1aa683;
+    }
+  
+    .uploadIcon {
+      display: block;
+      margin: 0 auto 10px;
+      color: #1aa683;
+    }
+  }
+  
+  .photoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+  }
+  
+  .photoItem {
+    position: relative;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+  
+    .removePhoto {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }

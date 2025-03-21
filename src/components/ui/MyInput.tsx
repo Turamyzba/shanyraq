@@ -13,7 +13,7 @@ type Props = {
   errorMessage?: string;
   placeholder?: string;
   color?: NextUiColors;
-  type?: "email" | "password" | "text" | "number";
+  type?: "email" | "password" | "text" | "number" | "tel";
   variant?: "bordered";
   className?: string;
 };

@@ -32,6 +32,7 @@ import {
   Filter,
   Columns3,
   X,
+  CircleCheckBig,
 } from "lucide-react";
 
 const whatsappIcon = () => (
@@ -158,6 +159,7 @@ const Images = {
   closeIcon: X,
   radioSelected: radioSelected,
   radioNotSelected: radioNotSelected,
+  Finish: CircleCheckBig
 };
 
 export default Images;

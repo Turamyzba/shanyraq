@@ -8,9 +8,9 @@ import { useForm, FormProvider } from "react-hook-form";
 import StepRole, { UserRole } from "../AddApartmentSteps/StepRole";
 import StepBasicInfo from "../AddApartmentSteps/StepBasicInfo";
 import StepApartmentDetails from "../AddApartmentSteps/StepApartmentDetails";
-// import StepApartmentAdditionalDetails from "../AddApartmentSteps/StepApartmentAdditionalDetails";
-// import StepApartmentFullDetails from "../AddApartmentSteps/StepApartmentFullDetails";
-// import StepSuccess from "../AddApartmentSteps/StepSuccess";
+import StepApartmentAdditionalDetails from "../AddApartmentSteps/StepApartmentAdditionalDetails";
+import StepApartmentFullDetails from "../AddApartmentSteps/StepApartmentFullDetails";
+import StepSuccess from "../AddApartmentSteps/StepSuccess";
 
 const defaultValues = {
   role: UserRole.TENANT,
@@ -42,7 +42,7 @@ const defaultValues = {
     floorsTo: 3,
     ownerPhone: "",
     longTerm: false,
-    roomSize: 0,
+    roomSize: [0, 50],
   },
   selectedAdjectives: [],
 };
@@ -51,7 +51,7 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   // Form state shared across all steps
   const methods = useForm({ defaultValues });
 
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(5);
 
   // List of steps with the respective component.
   // Note that each step component now receives the form state and updater.
@@ -71,21 +71,21 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       name: "Детали квартиры",
       component: <StepApartmentDetails />,
     },
-    // {
-    //   id: 4,
-    //   name: "Дополнительные детали",
-    //   component: <StepApartmentAdditionalDetails formData={formData} setFormData={setFormData} />,
-    // },
-    // {
-    //   id: 5,
-    //   name: "Полные детали",
-    //   component: <StepApartmentFullDetails formData={formData} setFormData={setFormData} />,
-    // },
-    // {
-    //   id: 6,
-    //   name: "Успех",
-    //   component: <StepSuccess />,
-    // },
+    {
+      id: 4,
+      name: "Дополнительные детали",
+      component: <StepApartmentAdditionalDetails />,
+    },
+    {
+      id: 5,
+      name: "Полные детали",
+      component: <StepApartmentFullDetails />,
+    },
+    {
+      id: 6,
+      name: "Успех",
+      component: <StepSuccess />,
+    },
   ];
 
   // Navigation handlers
