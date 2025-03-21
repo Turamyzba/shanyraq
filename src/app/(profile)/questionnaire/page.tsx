@@ -189,22 +189,26 @@ import { useMediaQuery } from "react-responsive";
 import dynamic from "next/dynamic";
 
 // Dynamically import layout-specific components
-const MobileQuestionnaireForm = dynamic(() => import("../components/mobile/Questionnaire/QuestionnaireForm"), { ssr: false });
-const DesktopQuestionnaireForm = dynamic(() => import("../components/desktop/Questionnaire/QuestionnaireForm"), { ssr: false });
+const MobileQuestionnaireForm = dynamic(
+  () => import("../components/mobile/Questionnaire/QuestionnaireForm"),
+  { ssr: false }
+);
+const DesktopQuestionnaireForm = dynamic(
+  () => import("../components/desktop/Questionnaire/QuestionnaireForm"),
+  { ssr: false }
+);
 
 export default function QuestionnairePage() {
   const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
-  
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  
+
   if (!isMounted) {
     return <div className="loading-placeholder">Загрузка...</div>;
   }
-  
-  return (
-    <>{isMobile ? <MobileQuestionnaireForm /> : <DesktopQuestionnaireForm />}</>
-  );
+
+  return <>{isMobile ? <MobileQuestionnaireForm /> : <DesktopQuestionnaireForm />}</>;
 }

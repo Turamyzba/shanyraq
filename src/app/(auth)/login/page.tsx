@@ -37,7 +37,7 @@ export default function LoginPage() {
       setIsLoading(true);
       const response = await login({
         email: email,
-        password: password
+        password: password,
       });
 
       addToast({
@@ -45,7 +45,7 @@ export default function LoginPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "success"
+        color: "success",
       });
 
       // Redirect based on survey completion status
@@ -61,7 +61,7 @@ export default function LoginPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "danger"
+        color: "danger",
       });
     } finally {
       setIsLoading(false);
@@ -91,9 +91,13 @@ export default function LoginPage() {
               isRequired
             />
           </div>
-          
+
           <div className={styles.rememberForgot}>
-            <Checkbox isSelected={rememberMe} onValueChange={setRememberMe} className={styles.rememberMe}>
+            <Checkbox
+              isSelected={rememberMe}
+              onValueChange={setRememberMe}
+              className={styles.rememberMe}
+            >
               Запомнить меня
             </Checkbox>
             <Link href="/forgot-password" className={styles.forgotPassword}>
@@ -101,15 +105,11 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <MyButton 
-            type={"submit"} 
-            className={styles.submitButton}
-            isLoading={isLoading}
-          >
+          <MyButton type={"submit"} className={styles.submitButton} isLoading={isLoading}>
             Войти
           </MyButton>
         </Form>
-        
+
         <div className={styles.footer}>
           Нет учетной записи?
           <Link href="/register">Зарегистрироваться</Link>

@@ -33,6 +33,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>{isMobile ? <MobileLayout>{children}</MobileLayout> : <DesktopLayout>{children}</DesktopLayout>}</>
+    <>
+      {isMobile ? (
+        <MobileLayout>{children}</MobileLayout>
+      ) : (
+        <DesktopLayout>{children}</DesktopLayout>
+      )}
+    </>
   );
 }

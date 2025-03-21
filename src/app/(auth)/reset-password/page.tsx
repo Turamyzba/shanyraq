@@ -12,14 +12,14 @@ import styles from "./ResetPassword.module.scss";
 export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Get email from URL parameters
-  const email = searchParams.get('email') || "";
-  const token = searchParams.get('token') || "";
+  const email = searchParams.get("email") || "";
+  const token = searchParams.get("token") || "";
 
   // Check if we have required parameters
   useEffect(() => {
@@ -84,10 +84,10 @@ export default function ResetPasswordPage() {
 
     try {
       setIsLoading(true);
-      
+
       await updatePassword({
         email: email,
-        password: password
+        password: password,
       });
 
       addToast({
@@ -96,7 +96,7 @@ export default function ResetPasswordPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "success"
+        color: "success",
       });
 
       // Redirect to login page
@@ -108,7 +108,7 @@ export default function ResetPasswordPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "danger"
+        color: "danger",
       });
     } finally {
       setIsLoading(false);
@@ -141,18 +141,15 @@ export default function ResetPasswordPage() {
           </div>
 
           <div className={styles.buttonGroup}>
-            <MyButton 
-              type={"submit"} 
+            <MyButton
+              type={"submit"}
               className={styles.continueButton}
               isLoading={isLoading}
               isDisabled={!email || !token}
             >
               Продолжить
             </MyButton>
-            <MyButton 
-              className={styles.backButton}
-              onClick={() => router.push('/login')}
-            >
+            <MyButton className={styles.backButton} onClick={() => router.push("/login")}>
               Назад
             </MyButton>
           </div>

@@ -11,18 +11,18 @@ import styles from "./Verification.module.scss";
 export default function VerificationPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const [code, setCode] = useState("");
   const [email, setEmail] = useState("");
   const [verificationType, setVerificationType] = useState<"register" | "reset">("register");
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
-  
+
   // Initialize from URL parameters
   useEffect(() => {
-    const emailParam = searchParams.get('email');
-    const typeParam = searchParams.get('type');
-    
+    const emailParam = searchParams.get("email");
+    const typeParam = searchParams.get("type");
+
     if (emailParam) {
       setEmail(emailParam);
     } else {
@@ -35,9 +35,9 @@ export default function VerificationPage() {
         color: "danger",
       });
     }
-    
-    if (typeParam === 'reset') {
-      setVerificationType('reset');
+
+    if (typeParam === "reset") {
+      setVerificationType("reset");
     }
   }, [searchParams]);
 
@@ -70,29 +70,29 @@ export default function VerificationPage() {
 
     try {
       setIsLoading(true);
-      
+
       // Different verification based on type
-      if (verificationType === 'reset') {
+      if (verificationType === "reset") {
         // Verify reset code
         await verifyResetCode({ email, code });
-        
+
         // Redirect to reset password page with email
         router.push(`/reset-password?email=${encodeURIComponent(email)}&token=${code}`);
       } else {
         // Verify email for registration
         await verifyEmail({ email, code });
-        
+
         addToast({
           title: "Email подтвержден!",
           description: "Теперь вы можете войти в систему",
           variant: "flat",
           radius: "sm",
           timeout: 5000,
-          color: "success"
+          color: "success",
         });
-        
+
         // Redirect to login page
-        router.push('/login');
+        router.push("/login");
       }
     } catch (err: any) {
       addToast({
@@ -101,7 +101,7 @@ export default function VerificationPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "danger"
+        color: "danger",
       });
     } finally {
       setIsLoading(false);
@@ -124,14 +124,14 @@ export default function VerificationPage() {
     try {
       setResendLoading(true);
       await resendVerificationCode(email);
-      
+
       addToast({
         title: "Код отправлен повторно!",
         description: "Проверьте вашу электронную почту",
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "success"
+        color: "success",
       });
     } catch (err: any) {
       addToast({
@@ -140,7 +140,7 @@ export default function VerificationPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "danger"
+        color: "danger",
       });
     } finally {
       setResendLoading(false);
@@ -177,15 +177,15 @@ export default function VerificationPage() {
           </div>
 
           <div className={styles.buttonGroup}>
-            <MyButton 
-              type={"submit"} 
+            <MyButton
+              type={"submit"}
               className={styles.confirmButton}
               isLoading={isLoading}
               isDisabled={code.length !== 6}
             >
               Потвердить
             </MyButton>
-            <MyButton 
+            <MyButton
               className={styles.resendButton}
               onClick={handleResendCode}
               isLoading={resendLoading}

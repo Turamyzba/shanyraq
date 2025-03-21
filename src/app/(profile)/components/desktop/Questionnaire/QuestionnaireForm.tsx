@@ -4,7 +4,7 @@ import { Button, Modal } from "antd";
 import { ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { RadioGroup, Radio } from "@heroui/react";
 import styles from "./QuestionnaireForm.module.scss";
-import './QuestionnaireForm.scss'
+import "./QuestionnaireForm.scss";
 const questions = [
   {
     id: 1,

@@ -4,21 +4,21 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { 
-  register, 
-  forgotPassword, 
-  verifyResetCode, 
-  updatePassword, 
-  verifyEmail, 
+import {
+  register,
+  forgotPassword,
+  verifyResetCode,
+  updatePassword,
+  verifyEmail,
   resendVerificationCode,
-  googleAuth
+  googleAuth,
 } from "@/lib/api/authService";
-import type { 
-  RegisterCredentials, 
-  ForgotPasswordCredentials, 
-  ResetPasswordCredentials, 
+import type {
+  RegisterCredentials,
+  ForgotPasswordCredentials,
+  ResetPasswordCredentials,
   VerificationCredentials,
-  GoogleLoginCredentials
+  GoogleLoginCredentials,
 } from "@/lib/api/authService";
 
 export const useAuth = () => {
@@ -34,19 +34,19 @@ export const useAuth = () => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
-      
+
       if (result?.error) {
         setError(result.error);
         return false;
       }
-      
+
       // Redirect to the profile page upon successful login
       router.push("/profile");
       return true;
@@ -62,7 +62,7 @@ export const useAuth = () => {
   const signup = async (credentials: RegisterCredentials) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await register(credentials);
       // Redirect to verification page
@@ -86,7 +86,7 @@ export const useAuth = () => {
   const handleForgotPassword = async (credentials: ForgotPasswordCredentials) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await forgotPassword(credentials);
       return true;
@@ -102,7 +102,7 @@ export const useAuth = () => {
   const verifyCode = async (credentials: VerificationCredentials) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await verifyResetCode(credentials);
       return true;
@@ -118,7 +118,7 @@ export const useAuth = () => {
   const handleResetPassword = async (credentials: ResetPasswordCredentials) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await updatePassword(credentials);
       router.push("/login");
@@ -135,7 +135,7 @@ export const useAuth = () => {
   const verifyEmailAddress = async (credentials: VerificationCredentials) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await verifyEmail(credentials);
       router.push("/login");
@@ -152,7 +152,7 @@ export const useAuth = () => {
   const resendCode = async (email: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await resendVerificationCode(email);
       return true;
@@ -168,7 +168,7 @@ export const useAuth = () => {
   const handleGoogleAuth = async (code: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await googleAuth({ code });
       router.push("/profile");

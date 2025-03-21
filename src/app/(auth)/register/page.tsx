@@ -82,23 +82,23 @@ export default function RegisterPage() {
 
     try {
       setIsLoading(true);
-      
+
       // Use the variables directly instead of shorthand properties
       const result = await register({
         firstName: name,
         lastName: lastname,
         email: email,
-        password: password
+        password: password,
       });
 
-      if(result)
+      if (result)
         addToast({
           title: "Успешная регистрация!",
           description: "Пожалуйста, проверьте вашу электронную почту для подтверждения",
           variant: "flat",
           radius: "sm",
           timeout: 5000,
-          color: "success"
+          color: "success",
         });
       else
         addToast({
@@ -107,7 +107,7 @@ export default function RegisterPage() {
           variant: "flat",
           radius: "sm",
           timeout: 5000,
-          color: "danger"
+          color: "danger",
         });
       // Redirect to verification page or login page depending on your flow
       router.push("/verification?email=" + encodeURIComponent(email));
@@ -118,7 +118,7 @@ export default function RegisterPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "danger"
+        color: "danger",
       });
     } finally {
       setIsLoading(false);
@@ -169,11 +169,7 @@ export default function RegisterPage() {
             />
           </div>
 
-          <MyButton
-            type={"submit"}
-            className={styles.submitButton}
-            isLoading={isLoading}
-          >
+          <MyButton type={"submit"} className={styles.submitButton} isLoading={isLoading}>
             Зарегистрироваться
           </MyButton>
         </Form>

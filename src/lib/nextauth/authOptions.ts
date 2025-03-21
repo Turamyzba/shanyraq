@@ -1,7 +1,7 @@
 // src/lib/nextauth/authOptions.ts
-import type { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { login, getCurrentUser } from '../api/authService';
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { login, getCurrentUser } from "../api/authService";
 
 // Define custom types for NextAuth to use with credentials
 declare module "next-auth" {
@@ -39,10 +39,10 @@ declare module "next-auth/jwt" {
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -51,10 +51,10 @@ export const authOptions: NextAuthOptions = {
 
         try {
           // Call the login function from our authService
-          const response = await login({
+          const response = (await login({
             email: credentials.email,
             password: credentials.password,
-          }) as any;
+          })) as any;
 
           if (response.token) {
             // Return the user object with token
@@ -64,20 +64,20 @@ export const authOptions: NextAuthOptions = {
               email: response.user.email,
               role: response.user.role,
               token: response.token,
-              refreshToken: response.refreshToken
+              refreshToken: response.refreshToken,
             };
           }
-          
+
           return null;
         } catch (error) {
-          console.error('Login error:', error);
+          console.error("Login error:", error);
           return null;
         }
-      }
-    })
+      },
+    }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
@@ -91,13 +91,13 @@ export const authOptions: NextAuthOptions = {
           token: string;
           refreshToken: string;
         };
-        
+
         token.id = typedUser.id;
         token.role = typedUser.role;
         token.accessToken = typedUser.token;
         token.refreshToken = typedUser.refreshToken;
       }
-      
+
       // On subsequent calls, check if the token is still valid
       // This is a good place to implement token refresh logic
       return token;
@@ -113,10 +113,10 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/login',
-    error: '/login',
-    signOut: '/',
+    signIn: "/login",
+    error: "/login",
+    signOut: "/",
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === "development",
 };

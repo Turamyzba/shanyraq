@@ -52,7 +52,7 @@ function ForgotPasswordPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "success"
+        color: "success",
       });
 
       // Redirect to verification page with email
@@ -64,7 +64,7 @@ function ForgotPasswordPage() {
         variant: "flat",
         radius: "sm",
         timeout: 5000,
-        color: "danger"
+        color: "danger",
       });
     } finally {
       setIsLoading(false);
@@ -94,17 +94,10 @@ function ForgotPasswordPage() {
           </div>
 
           <div className={styles.buttonGroup}>
-            <MyButton 
-              type={"submit"} 
-              className={styles.continueButton}
-              isLoading={isLoading}
-            >
+            <MyButton type={"submit"} className={styles.continueButton} isLoading={isLoading}>
               Продолжить
             </MyButton>
-            <MyButton 
-              className={styles.backButton}
-              onClick={() => router.push('/login')}
-            >
+            <MyButton className={styles.backButton} onClick={() => router.push("/login")}>
               Назад
             </MyButton>
           </div>

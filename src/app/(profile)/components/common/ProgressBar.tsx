@@ -9,10 +9,10 @@ interface ProgressBarProps {
   compact?: boolean;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ 
-  percent, 
-  description = 'Заполните полностью профиль и получите доступ к функции "Поделиться профилем"', 
-  compact = false 
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  percent,
+  description = 'Заполните полностью профиль и получите доступ к функции "Поделиться профилем"',
+  compact = false,
 }) => {
   return (
     <div className={styles.topBar}>
@@ -22,9 +22,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <div className={styles.progressInfo}>
         <div className={styles.infoRow}>
           <span className={styles.percent}>{percent}%</span>
-          <span className={styles.description}>
-            {compact ? "Заполните профиль" : description}
-          </span>
+          <span className={styles.description}>{compact ? "Заполните профиль" : description}</span>
         </div>
         <Progress
           percent={percent}
