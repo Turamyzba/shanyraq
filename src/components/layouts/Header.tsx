@@ -15,14 +15,16 @@ import {
 } from "@heroui/react";
 import type { MenuProps } from "antd";
 import { Dropdown as DropdownAnt } from "antd";
+import { useRouter } from "next/navigation";
 
-export default function Header() {
+export default function Header({ handleOpenModal }: { handleOpenModal: () => void }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [local, setLocal] = useState("kz");
   const [selectedKeys, setSelectedKeys] = useState(new Set(["astana"]));
   const selectedCity = useMemo(() => Array.from(selectedKeys).join(", "), [selectedKeys]);
 
   const [isOspan, setIsOspan] = useState(true);
+  const router = useRouter();
 
   const cities = [
     { key: "astana", label: "Астана" },
@@ -135,7 +137,7 @@ export default function Header() {
                 </Button>
               )}
 
-              <Button className={styles.createAdButton}>
+              <Button onPress={handleOpenModal} className={styles.createAdButton}>
                 Подать объявление
                 <Images.Plus size={16} />
               </Button>
