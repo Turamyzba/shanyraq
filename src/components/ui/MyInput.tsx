@@ -16,6 +16,7 @@ type Props = {
   type?: "email" | "password" | "text" | "number" | "tel";
   variant?: "bordered";
   className?: string;
+  startContent?: any
 };
 
 const MyInput = ({
@@ -31,6 +32,7 @@ const MyInput = ({
   variant = "bordered",
   color = "primary",
   className,
+  startContent
 }: Props) => {
   return (
     <NextInput
@@ -41,6 +43,7 @@ const MyInput = ({
       isRequired={isRequired}
       errorMessage={errorMessage}
       placeholder={placeholder}
+      startContent={startContent}
       type={type}
       value={value}
       onChange={onChange}

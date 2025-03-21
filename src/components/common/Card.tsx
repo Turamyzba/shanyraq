@@ -26,11 +26,11 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ card }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setShareUrl(`${window.location.origin}/apartments/${card?.id}`);
-    }
-  }, [card?.id]);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     setShareUrl(`${window.location.origin}/apartments/${card?.id}`);
+  //   }
+  // }, [card?.id]);
 
   const showModal = () => {
     setIsModalOpen(true);

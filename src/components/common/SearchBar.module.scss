@@ -1,0 +1,344 @@
+.searchBarWrapper {
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    
+    @media (max-width: 991px) {
+      margin-top: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      margin-top: 25px;
+    }
+    
+    @media (max-width: 480px) {
+      margin-top: 20px;
+    }
+  }
+  
+  .searchBarForm {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  
+  .searchItems {
+    display: flex;
+    gap: 5px;
+    
+    @media (max-width: 768px) {
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  .searchItemWrapper {
+    position: relative;
+  }
+  
+  .searchItem {
+    width: 200px;
+    height: 50px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    }
+    
+    @media (max-width: 991px) {
+      width: 180px;
+    }
+    
+    @media (max-width: 768px) {
+      width: 60%;
+      height: 45px;
+    }
+    
+    @media (max-width: 480px) {
+      width: 100%;
+      height: 45px;
+    }
+    
+    p {
+      flex: 1;
+      margin: 0 8px;
+      color: #252525;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
+      @media (max-width: 768px) {
+        font-size: 13px;
+      }
+    }
+  }
+  
+  .searchButton {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1aa683;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    
+    span {
+      margin-right: 5px;
+      font-size: 14px;
+    }
+    
+    &:hover {
+      background: #159a6b;
+    }
+    
+    @media (max-width: 768px) {
+      width: 60%;
+      height: 45px;
+    }
+    
+    @media (max-width: 480px) {
+      width: 100%;
+      height: 45px;
+    }
+  }
+  
+  /* Address Dropdown Styles */
+  .addressDropdown {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 670px;
+    height: 514px;
+    padding: 16px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 100;
+    
+    @media (max-width: 768px) {
+      width: 90vw;
+      max-width: 670px;
+    }
+  }
+  
+  .searchInput {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .addressColumns {
+    display: flex;
+    gap: 7px;
+    width: 100%;
+    height: 380px;
+  }
+  
+  .addressColumn {
+    flex: 1;
+    border: 1px solid #D6D6D6;
+    border-radius: 5px;
+    overflow: auto;
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #252525;
+        
+        &:hover {
+          background-color: rgba(26, 166, 131, 0.2);
+        }
+      }
+    }
+  }
+  
+  .activeItem {
+    background-color: #1aa68383 !important;
+    color: white !important;
+  }
+  
+  .confirmButton {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    
+    button {
+      padding: 12px 55px;
+      background-color: #32343A;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      
+      &:hover {
+        background-color: #24262A;
+      }
+    }
+  }
+  
+  /* Price Range Dropdown Styles */
+  .priceDropdown {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 405px;
+    padding: 24px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    
+    h3 {
+      font-size: 14px;
+      color: #4B4B4B;
+      margin-bottom: 24px;
+      font-weight: normal;
+    }
+    
+    @media (max-width: 768px) {
+      width: 90vw;
+      max-width: 405px;
+    }
+  }
+  
+  .priceInputs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 24px;
+  }
+  
+  .sliderContainer {
+    margin-bottom: 24px;
+  }
+  
+  .sliderLabels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    
+    span {
+      font-size: 12px;
+      color: #1aa683;
+      font-weight: 600;
+    }
+  }
+  
+  /* Gender Dropdown Styles */
+  .genderDropdown {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 200px;
+    padding: 20px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    
+    h3 {
+      font-size: 14px;
+      color: #252525;
+      margin-bottom: 12px;
+      font-weight: normal;
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 4px 12px;
+        margin-bottom: 4px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        
+        &:hover {
+          background-color: rgba(26, 166, 131, 0.1);
+        }
+      }
+    }
+  }
+  
+  .activeGender {
+    background-color: #D1EDE6 !important;
+    color: #1aa683 !important;
+  }
+  
+  /* Roommates Dropdown Styles */
+  .roommatesDropdown {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 230px;
+    padding: 20px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    
+    h3 {
+      font-size: 14px;
+      color: #5c5c5c;
+      margin-bottom: 24px;
+      font-weight: normal;
+    }
+  }
+  
+  .roommatesList {
+    display: flex;
+    justify-content: space-between;
+    gap: 7px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 12px;
+      background-color: #D1EDE6;
+      color: #5c5c5c;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 300;
+    }
+  }
+  
+  .activeRoommate {
+    background-color: #1aa683 !important;
+    color: white !important;
+  }

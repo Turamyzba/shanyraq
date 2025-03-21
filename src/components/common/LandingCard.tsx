@@ -8,6 +8,7 @@ import { Button, Snippet } from "@heroui/react";
 import { Modal } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 interface CardProps {
   card?: {
@@ -27,11 +28,8 @@ interface CardProps {
 const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setShareUrl(`${window.location.origin}/apartments/${card?.id}`);
-    }
-  }, [card?.id]);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isSmallMobile = useMediaQuery({ maxWidth: 480 });
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -48,24 +46,15 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
       <div className={styles.card}>
         {/* Image Section */}
         <div className={styles.cardImage}>
-          <Carousel autoplay style={{ width: "343px", height: "220px" }}>
-            <Image
-              src={"https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"}
-              alt={card?.title || "Room Image"}
-              width={343}
-              height={220}
-              className={styles.image}
-            />
-            <Image
+          <Image
               src={"https://i.pinimg.com/736x/a3/1f/b7/a31fb71819bd92f736b655b4411879c0.jpg"}
               alt={card?.title || "Room Image"}
               width={343}
               height={220}
               className={styles.image}
             />
-          </Carousel>
           <Button className={styles.shareIcon} onPress={showModal} isIconOnly variant="bordered">
-            <Images.Share color="white" />
+            <Images.Share color="white" size={isSmallMobile ? 18 : 20} />
           </Button>
           <Modal
             title="Поделиться объявлением"
@@ -89,29 +78,29 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
             </p>
           </div>
           <div className={styles.cardLocation}>
-            <Images.Map size={20} color={"#929292"} />
+            <Images.Map size={isSmallMobile ? 18 : 20} color={"#929292"} />
             <p>{card?.address || "Алматы, Казахстан"}</p>
           </div>
 
           {/* Room Information */}
           <div className={styles.roomInfo}>
             <div className={styles.infoItem}>
-              <Images.Calendar size={20} />
+              <Images.Calendar size={isSmallMobile ? 18 : 20} />
               <p>{card?.arriveDate || "01.04.2024"}</p>
             </div>
 
             <div className={styles.infoItem}>
-              <Images.Apartment size={20} />
+              <Images.Apartment size={isSmallMobile ? 18 : 20} />
               <p>{card?.roomCount ? `${card.roomCount} комната` : "2 комнаты"}</p>
             </div>
 
             <div className={styles.infoItem}>
-              <Images.GenderBoth size={20} />
+              <Images.GenderBoth size={isSmallMobile ? 18 : 20} />
               <p>{card?.selectedGender || "Любой"}</p>
             </div>
 
             <div className={styles.infoItem}>
-              <Images.People size={20} />
+              <Images.People size={isSmallMobile ? 18 : 20} />
               <p>{card?.roommates ? `${card.roommates} чел.` : "3 чел."}</p>
             </div>
           </div>
@@ -125,15 +114,15 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
 
         {/* Learn More Button */}
         <div className={styles.learnMore}>
-          <Link href={"/"}>Узнать больше</Link>
-          <Images.ArrowRight size={14} color="#999999" />
+          <Link href={shareUrl || "/"}>Узнать больше</Link>
+          <Images.ArrowRight size={isSmallMobile ? 12 : 14} color="#999999" />
         </div>
       </div>
 
       {/* If this is the last card, show full-screen button */}
       {isLast && (
         <div className={styles.lastOverlay}>
-          <Button as={Link} href="/" className={styles.viewAllButton}>
+          <Button as={Link} href="/apartments" className={styles.viewAllButton}>
             Смотреть все квартиры
           </Button>
         </div>

@@ -25,8 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="app-wrapper">
             {isMobile ? <MobileHeader /> : <Header handleOpenModal={onOpen} />}
             <main className="content-wrapper">{children}</main>
-            {!isMobile && <Footer />}
-            {isMobile && <MobileNavigation />}
+            {isMobile ? <MobileNavigation /> : <Footer />}
           </div>
         </Providers>
         {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />}

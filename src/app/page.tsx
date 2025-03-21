@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Button, Accordion, AccordionItem } from "@heroui/react";
 import Images from "../components/common/Images";
 import Container from "../components/layouts/Container";
 import styles from "./page.module.scss";
 import Card from "../components/common/LandingCard";
 import CardSkeleton from "../components/common/LandingCardSkeleton";
+import { useMediaQuery } from "react-responsive";
+import { useRouter } from "next/navigation";
+import SearchBar from "@/components/common/SearchBar";
 
 const appAdvantages = [
   {
@@ -125,20 +128,36 @@ const cardData = [
 
 export default function LandingPage() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isSmallMobile = useMediaQuery({ maxWidth: 480 });
+  const [expandedKeys, setExpandedKeys] = useState(new Set(["1"]));
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  // Simulate loading state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Scroll Left (Previous)
   const handlePrev = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -350, behavior: "smooth" });
+      const scrollAmount = isSmallMobile ? -300 : isMobile ? -320 : -350;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
   // Scroll Right (Next)
   const handleNext = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 350, behavior: "smooth" });
+      const scrollAmount = isSmallMobile ? 300 : isMobile ? 320 : 350;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
+
   return (
     <Container>
       <div className={styles.landing}>
@@ -146,32 +165,37 @@ export default function LandingPage() {
         <div className={styles.hero}>
           <div className={styles.heroContent}>
             <h1>Найди идеального сожителя!</h1>
-            <p>Маркетплейс для тех, кто ищет комфортное жилье и надежного соседа.</p>
+            <p className={styles.heroSubtitleText}>Маркетплейс для тех, кто ищет комфортное жилье и надежного соседа.</p>
             <div className={styles.searchBar}>
               <div className={styles.searchItem}>
-                <Images.Map color="black" size={20} />
+                <Images.Map color="black" size={isSmallMobile ? 16 : 20} />
                 <p>Астана</p>
-                <Images.ChevronDown color="black" size={20} />
+                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
               </div>
               <div className={styles.searchItem}>
-                <Images.Money color="black" size={20} />
+                <Images.Money color="black" size={isSmallMobile ? 16 : 20} />
                 <p>150 000-200 000</p>
-                <Images.ChevronDown color="black" size={20} />
+                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
               </div>
               <div className={styles.searchItem}>
-                <Images.User color="black" size={20} />
+                <Images.User color="black" size={isSmallMobile ? 16 : 20} />
                 <p>Мужчины</p>
-                <Images.ChevronDown color="black" size={20} />
+                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
               </div>
               <div className={styles.searchItem}>
-                <Images.People color="black" size={20} />
+                <Images.People color="black" size={isSmallMobile ? 16 : 20} />
                 <p>3 жителей</p>
-                <Images.ChevronDown color="black" size={20} />
+                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
               </div>
-              <Button className={styles.searchButton}>
-                <Images.Search size={18} />
+              <Button 
+                className={styles.searchButton}
+                onPress={() => router.push('/apartments')}
+              >
+                {isMobile && <p>Поиск</p>}
+                <Images.Search size={isSmallMobile ? 16 : 18} />
               </Button>
             </div>
+            {/* <SearchBar /> */}
           </div>
         </div>
 
@@ -181,21 +205,27 @@ export default function LandingPage() {
             <h2>Выгодные предложения</h2>
             <div className={styles.navButtons}>
               <Button className={styles.navButton} onPress={handlePrev}>
-                <Images.ChevronLeft />
+                <Images.ChevronLeft size={isSmallMobile ? 16 : 20} />
               </Button>
               <Button className={styles.navButton} onPress={handleNext}>
-                <Images.ChevronRight />
+                <Images.ChevronRight size={isSmallMobile ? 16 : 20} />
               </Button>
             </div>
           </div>
 
-          <div className={styles.offersList}>
-            {cardData.map((card, index) => (
-              <Card key={card.id} card={card} isLast={index === cardData.length - 1} />
-            ))}
-            {/* {cardData.map((card, index) => (
-              <CardSkeleton key={card.id} />
-            ))} */}
+          <div className={styles.offersList} ref={scrollRef}>
+            {isLoading 
+              ? Array(3).fill(0).map((_, index) => (
+                  <div className="card-wrapper" key={`skeleton-${index}`}>
+                    <CardSkeleton />
+                  </div>
+                ))
+              : cardData.map((card, index) => (
+                  <div className="card-wrapper" key={card.id}>
+                    <Card key={card.id} card={card} isLast={index === cardData.length - 1} />
+                  </div>
+                ))
+            }
           </div>
         </div>
 
@@ -205,9 +235,12 @@ export default function LandingPage() {
             <div className={styles.ctaBar}></div>
             <h1>Начните сдавать комнату сами!</h1>
             <p>На нашем сайте вы можете выставлять свои объявления</p>
-            <Button className={styles.ctaButton}>
+            <Button 
+              className={styles.ctaButton}
+              onPress={() => router.push('/my-announcements/create-announcements')}
+            >
               Подать объявление
-              <Images.ArrowRight />
+              <Images.ArrowRight size={isSmallMobile ? 16 : 20} />
             </Button>
           </div>
         </div>
@@ -216,20 +249,26 @@ export default function LandingPage() {
         <div className={styles.benefits}>
           <h2>Наши преимущества</h2>
           <div className={styles.benefitsContent}>
-            <Accordion selectionMode="multiple" defaultExpandedKeys={["1"]}>
-              {appAdvantages.map((advantage) => (
-                <AccordionItem
-                  key={advantage.id}
-                  aria-label={advantage.title}
-                  title={<span className={styles.advantageTitle}>{advantage.title}</span>}
-                >
-                  <p className={styles.advantageDescription}>{advantage.description}</p>
-                  <a href="#" className={styles.advantageLink}>
-                    Узнать больше
-                  </a>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <div className={styles.accordionWrapper}>
+              <Accordion 
+                selectionMode="multiple" 
+                selectedKeys={expandedKeys}
+                onSelectionChange={(keys) => setExpandedKeys(keys as Set<string>)}
+              >
+                {appAdvantages.map((advantage) => (
+                  <AccordionItem
+                    key={advantage.id.toString()}
+                    aria-label={advantage.title}
+                    title={<span className={styles.advantageTitle}>{advantage.title}</span>}
+                  >
+                    <p className={styles.advantageDescription}>{advantage.description}</p>
+                    <a href="#" className={styles.advantageLink}>
+                      Узнать больше
+                    </a>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
             <div className={styles.benefitImage}>
               <img src="/benefit.png" alt="benefit" />
             </div>
