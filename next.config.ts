@@ -2,7 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["i.pinimg.com"], // Add this line
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",   // wildcard for ANY domain
+        port: "",
+        pathname: "/**",  // wildcard for all paths
+      },
+    ],
   },
 };
 

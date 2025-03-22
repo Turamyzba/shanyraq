@@ -57,92 +57,54 @@ const appAdvantages = [
   },
 ];
 
-const cardData = [
-  {
-    id: 1,
-    title: "Уютная квартира в центре",
-    cost: "180 000",
-    image: "/apartment1.jpg",
-    address: "Алматы, Самал-2",
-    selectedGender: "Мужчины",
-    roomCount: 2,
-    roommates: 1,
-    arriveDate: "01.04.2024",
-  },
-  {
-    id: 2,
-    title: "Современная студия",
-    cost: "220 000",
-    image: "/apartment2.jpg",
-    address: "Астана, Байконур",
-    selectedGender: "Любой",
-    roomCount: 1,
-    roommates: 2,
-    arriveDate: "10.03.2024",
-  },
-  {
-    id: 3,
-    title: "Комната с панорамным видом",
-    cost: "150 000",
-    image: "/apartment3.jpg",
-    address: "Шымкент, Аль-Фараби",
-    selectedGender: "Женщины",
-    roomCount: 3,
-    roommates: 1,
-    arriveDate: "05.04.2024",
-  },
-  {
-    id: 4,
-    title: "Уютная квартира в центре",
-    cost: "180 000",
-    image: "/apartment1.jpg",
-    address: "Алматы, Самал-2",
-    selectedGender: "Мужчины",
-    roomCount: 2,
-    roommates: 1,
-    arriveDate: "01.04.2024",
-  },
-  {
-    id: 5,
-    title: "Современная студия",
-    cost: "220 000",
-    image: "/apartment2.jpg",
-    address: "Астана, Байконур",
-    selectedGender: "Любой",
-    roomCount: 1,
-    roommates: 2,
-    arriveDate: "10.03.2024",
-  },
-  {
-    id: 6,
-    title: "Комната с панорамным видом",
-    cost: "150 000",
-    image: "/apartment3.jpg",
-    address: "Шымкент, Аль-Фараби",
-    selectedGender: "Женщины",
-    roomCount: 3,
-    roommates: 1,
-    arriveDate: "05.04.2024",
-  },
-];
+interface GreatDeal {
+  announcementId: number;
+  image: string;
+  title: string;
+  address: string;
+  arriveDate: string;
+  roomCount: string;
+  selectedGender: string;
+  roommates: number;
+  cost: number;
+  coordsX: string;
+  coordsY: string;
+  isArchived: boolean;
+  consideringOnlyNPeople: boolean;
+}
 
 export default function LandingPage() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [cardData, setCardData] = useState<GreatDeal[]>([]);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
   const [expandedKeys, setExpandedKeys] = useState(new Set(["1"]));
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // Simulate loading state
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  const fetchGreatDeals = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("https://shanyraq-server-production.up.railway.app/api/announcement/great-deals");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch great deals");
+      }
+
+      const data = await response.json();
+      setCardData(data);
+    } catch (err: any) {
+      console.log(err?.message || "Something went wrong");
+    } finally {
       setIsLoading(false);
-    }, 10000);
-    return () => clearTimeout(timer);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchGreatDeals();
   }, []);
 
-  // Scroll Left (Previous)
   const handlePrev = () => {
     if (scrollRef.current) {
       const scrollAmount = isSmallMobile ? -300 : isMobile ? -320 : -350;
@@ -150,7 +112,6 @@ export default function LandingPage() {
     }
   };
 
-  // Scroll Right (Next)
   const handleNext = () => {
     if (scrollRef.current) {
       const scrollAmount = isSmallMobile ? 300 : isMobile ? 320 : 350;
@@ -166,36 +127,7 @@ export default function LandingPage() {
           <div className={styles.heroContent}>
             <h1>Найди идеального сожителя!</h1>
             <p className={styles.heroSubtitleText}>Маркетплейс для тех, кто ищет комфортное жилье и надежного соседа.</p>
-            <div className={styles.searchBar}>
-              <div className={styles.searchItem}>
-                <Images.Map color="black" size={isSmallMobile ? 16 : 20} />
-                <p>Астана</p>
-                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
-              </div>
-              <div className={styles.searchItem}>
-                <Images.Money color="black" size={isSmallMobile ? 16 : 20} />
-                <p>150 000-200 000</p>
-                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
-              </div>
-              <div className={styles.searchItem}>
-                <Images.User color="black" size={isSmallMobile ? 16 : 20} />
-                <p>Мужчины</p>
-                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
-              </div>
-              <div className={styles.searchItem}>
-                <Images.People color="black" size={isSmallMobile ? 16 : 20} />
-                <p>3 жителей</p>
-                <Images.ChevronDown color="black" size={isSmallMobile ? 16 : 20} />
-              </div>
-              <Button 
-                className={styles.searchButton}
-                onPress={() => router.push('/apartments')}
-              >
-                {isMobile && <p>Поиск</p>}
-                <Images.Search size={isSmallMobile ? 16 : 18} />
-              </Button>
-            </div>
-            {/* <SearchBar /> */}
+            <SearchBar />
           </div>
         </div>
 
@@ -215,14 +147,14 @@ export default function LandingPage() {
 
           <div className={styles.offersList} ref={scrollRef}>
             {isLoading 
-              ? Array(3).fill(0).map((_, index) => (
+              ? Array(4).fill(0).map((_, index) => (
                   <div className="card-wrapper" key={`skeleton-${index}`}>
                     <CardSkeleton />
                   </div>
                 ))
               : cardData.map((card, index) => (
-                  <div className="card-wrapper" key={card.id}>
-                    <Card key={card.id} card={card} isLast={index === cardData.length - 1} />
+                  <div className="card-wrapper" key={card.announcementId}>
+                    <Card key={card.announcementId} card={card} isLast={index === cardData.length - 1} />
                   </div>
                 ))
             }
