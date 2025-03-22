@@ -22,9 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="ru">
-        <body>
+      <body>
         <LoadingProvider>
-        <Providers>
+          <Providers>
             <div className="app-wrapper">
               {isMobile ? <MobileHeader /> : <Header handleOpenModal={onOpen} />}
               <main className="content-wrapper">
@@ -34,10 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {!isMobile && <Footer />}
               {isMobile && <MobileNavigation />}
             </div>
-        </Providers>
-        {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />}
-      </LoadingProvider>
-        </body>
-      </html>
+          </Providers>
+          {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />}
+        </LoadingProvider>
+      </body>
+    </html>
   );
 }

@@ -92,35 +92,9 @@ export default function ApartmentsPage() {
   const [selectedSort, setSelectedSort] = useState("1");
   const [isMap, setIsMap] = useState(false);
   const [hideFilter, setHideFilter] = useState(true);
-  const [pageLoaded, setPageLoaded] = useState(false);
   const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
 
-  const handleLoad = () => {
-    setTimeout(() => setPageLoaded(true), 500);
-  };
-
-  useEffect(() => {
-    if (document.readyState === "complete") {
-      handleLoad();
-    } else {
-      window.addEventListener("load", handleLoad);
-      return () => window.removeEventListener("load", handleLoad);
-    }
-  }, []);
-
-  if (!pageLoaded) {
-    return (
-      <Container>
-        <div className={styles.loadingScreen}>
-          <Spin indicator={antIcon} />
-        </div>
-      </Container>
-    );
-  }
-
   const handleIsMap = () => {
-    setPageLoaded(false);
-    handleLoad();
     if (isMap) setHideFilter(true);
     setIsMap(!isMap);
   };
