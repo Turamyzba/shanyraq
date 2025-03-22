@@ -63,11 +63,11 @@ export default function MyCalendar({
         classNames={{
           base: "w-full",
           selectorIcon: "text-gray-500",
-          popoverContent: "mt-1 border border-gray-300 rounded-md bg-white shadow-lg",
+          popoverContent: "mt-1 border-[#EBEBEB] border-1 rounded-[5px]",
           calendar: "w-full",
           calendarContent: "p-2",
           timeInputLabel: "text-sm text-gray-500",
-          timeInput: "p-2 border border-gray-300 rounded-md",
+          timeInput: "p-2 border-[#EBEBEB] border-1 rounded-[5px]",
         }}
       />
       {description && <p className="text-xs text-gray-500">{description}</p>}

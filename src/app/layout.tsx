@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import React from "react";
 import { useMediaQuery } from "react-responsive";
@@ -12,17 +13,20 @@ import { Providers } from "@/app/providers";
 import { LoadingProvider } from "@/context/LoadingContext";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import "@ant-design/v5-patch-for-react-19";
+import { useDisclosure } from "@heroui/react";
+import AddApartmentModal from "@/components/layouts/AddApartmentModal";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Providers>
-      <LoadingProvider>
-        <html lang="ru">
-          <body>
+    <html lang="ru">
+        <body>
+        <LoadingProvider>
+        <Providers>
             <div className="app-wrapper">
-              {isMobile ? <MobileHeader /> : <Header />}
+              {isMobile ? <MobileHeader /> : <Header handleOpenModal={onOpen} />}
               <main className="content-wrapper">
                 <LoadingScreen />
                 {children}
@@ -30,9 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {!isMobile && <Footer />}
               {isMobile && <MobileNavigation />}
             </div>
-          </body>
-        </html>
+        </Providers>
+        {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />}
       </LoadingProvider>
-    </Providers>
+        </body>
+      </html>
   );
 }
