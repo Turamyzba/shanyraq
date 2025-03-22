@@ -1,5 +1,5 @@
 .card {
-  border: 1px solid #EBEBEB;
+  border: 1px solid #ebebeb;
   background-color: white;
   width: 287px;
   height: auto;
@@ -43,7 +43,7 @@
   cursor: pointer;
   z-index: 10;
 }
-.editButton svg{
+.editButton svg {
   width: 17px;
 }
 .content {
@@ -68,7 +68,7 @@
   font-size: 14px;
   color: #6b7280;
 }
-.location svg{
+.location svg {
   width: 15px;
 }
 .details {
@@ -84,7 +84,7 @@
   font-size: 14px;
   color: #252525;
 }
-.detailItem span{
+.detailItem span {
   font-size: 10px;
   font-weight: 400;
   color: #252525;
@@ -112,7 +112,7 @@
   border: 1px solid #252525;
   color: #252525;
   height: 40px;
-  width:48%;
+  width: 48%;
   border-radius: 5px;
   font-weight: 700;
   font-size: 12px;
@@ -129,11 +129,11 @@
   width: 100%;
   box-shadow: none;
 }
-.archiveButton:hover{
+.archiveButton:hover {
   border: 1px solid #252525 !important;
   color: #252525 !important;
 }
-.applicationsButton:hover{
+.applicationsButton:hover {
   background-color: #252525 !important;
   color: #fff !important;
 }
@@ -149,12 +149,11 @@
   align-items: center;
   justify-content: center;
   box-shadow: none;
-
 }
 
 .applicationsLink {
   text-decoration: none;
-  width:48%;
+  width: 48%;
 }
 
 // Mobile styles

@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, ChangeEvent,useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { Button, Modal } from "antd";
 import { ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { RadioGroup, Radio } from "@heroui/react";
 import styles from "./QuestionnaireForm.module.scss";
-import './QuestionnaireForm.scss'
+import "./QuestionnaireForm.scss";
 const questions = [
   {
     id: 1,
@@ -87,7 +87,7 @@ export default function DesktopQuestionnaireForm() {
     const timer = setTimeout(() => {
       setIsModalOpen(true);
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, []);
   const handleStartQuestionnaire = () => setIsModalOpen(false);

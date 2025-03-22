@@ -17,7 +17,7 @@ const PhotoEditModal: React.FC<PhotoEditModalProps> = ({
   onClose,
   onAddPhoto,
   fileInputRef,
-  handleFileChange
+  handleFileChange,
 }) => {
   return (
     <Modal
@@ -29,7 +29,7 @@ const PhotoEditModal: React.FC<PhotoEditModalProps> = ({
         base: styles.modalBase,
         body: styles.modalBody,
         header: styles.modalHeader,
-        footer: styles.modalFooter
+        footer: styles.modalFooter,
       }}
     >
       <div className={styles.container}>

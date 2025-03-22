@@ -32,7 +32,7 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [pathname, searchParams]);

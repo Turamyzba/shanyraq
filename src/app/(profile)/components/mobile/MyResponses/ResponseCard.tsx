@@ -237,4 +237,3 @@ const GroupIcon = () => (
 );
 
 export default ResponseCard;
-

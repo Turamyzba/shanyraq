@@ -10,6 +10,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   return (
-    <>{isMobile ? <MobileLayout>{children}</MobileLayout> : <DesktopLayout>{children}</DesktopLayout>}</>
+    <>
+      {isMobile ? (
+        <MobileLayout>{children}</MobileLayout>
+      ) : (
+        <DesktopLayout>{children}</DesktopLayout>
+      )}
+    </>
   );
 }

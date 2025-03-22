@@ -12,7 +12,7 @@ import {
 } from "@heroui/react";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import styles from "./ProfileForm.module.scss";
-import './ProfileForm.scss'
+import "./ProfileForm.scss";
 export default function DesktopProfileForm() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);

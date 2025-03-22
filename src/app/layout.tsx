@@ -10,7 +10,7 @@ import Footer from "@/components/layouts/Footer";
 import MobileNavigation from "@/components/layouts/mobile/MobileNavigation";
 import MobileHeader from "@/components/layouts/mobile/MobileHeader";
 import { Providers } from "@/app/providers";
-import { LoadingProvider } from "@/context/LoadingContext";
+
 import LoadingScreen from "@/components/common/LoadingScreen";
 import "@ant-design/v5-patch-for-react-19";
 import { useDisclosure } from "@heroui/react";
@@ -23,20 +23,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru">
       <body>
-        <LoadingProvider>
-          <Providers>
-            <div className="app-wrapper">
-              {isMobile ? <MobileHeader /> : <Header handleOpenModal={onOpen} />}
-              <main className="content-wrapper">
-                <LoadingScreen />
-                {children}
-              </main>
-              {!isMobile && <Footer />}
-              {isMobile && <MobileNavigation />}
-            </div>
-          </Providers>
+        <Providers>
+          <div className="app-wrapper">
+            {isMobile ? <MobileHeader /> : <Header handleOpenModal={onOpen} />}
+            <main className="content-wrapper">
+              <LoadingScreen />
+              {children}
+            </main>
+            {!isMobile && <Footer />}
+            {isMobile && <MobileNavigation />}
+          </div>
           {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />}
-        </LoadingProvider>
+        </Providers>
       </body>
     </html>
   );

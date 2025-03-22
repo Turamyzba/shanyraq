@@ -46,7 +46,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
         </div>
 
         <Link href={`/edit-apartment/${announcement.id}`} className={styles.editButton}>
-          <EditIcon/>
+          <EditIcon />
         </Link>
       </div>
 
