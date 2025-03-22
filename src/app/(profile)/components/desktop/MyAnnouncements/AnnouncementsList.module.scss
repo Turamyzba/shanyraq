@@ -22,22 +22,22 @@
 
 .tabs :global(.ant-tabs-tab-active) {
   font-weight: 500;
+  color: #1aa683 !important;
 }
 
 .tabs :global(.ant-tabs-ink-bar) {
-  background-color: #1aa683;
+  background-color: #1aa683 !important;
 }
 
 .announcementsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 24px;
 }
 
 .emptyState {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 40px;
   color: #6b7280;
   font-size: 16px;
 }
@@ -51,4 +51,8 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
+}
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #1aa683;
+  text-shadow: 0 0 0.25px #111;
 }
