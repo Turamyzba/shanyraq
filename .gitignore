@@ -51,3 +51,4 @@ package-lock.json
 .idea/*
 .idea*
 
+bun.lock
