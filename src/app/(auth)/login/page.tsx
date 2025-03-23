@@ -46,7 +46,6 @@ export default function LoginPage() {
     }
 
     login({ email, password }).then((res) => {
-      console.log(res.data);
       router.push("/apartments");
     });
   };

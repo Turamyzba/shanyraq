@@ -99,7 +99,6 @@ export default function VerificationPage() {
 
     if (verificationType === "reset") {
       verifyCode({ email, code }).then((res) => {
-        console.log(res);
         router.push(`/reset-password?email=${encodeURIComponent(email)}&token=${code}`);
       });
     } else {
