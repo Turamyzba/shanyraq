@@ -10,33 +10,23 @@ import Images from "@/components/common/Images";
 import MySelect from "@/components/ui/MySelect";
 import MyButton from "../ui/MyButton";
 import { Button } from "@heroui/react";
-import {
-  getAddresses,
-  AddressType,
-  AddressState,
-  GenderState,
-  RommatesState,
-} from "@/lib/api/filterService";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { initialState, setGender } from "@/store/features/searchBar/searchBar";
-import {
-  useGetAddressesQuery,
-  useLazyGetAddressesQuery,
-} from "@/store/features/searchBar/searchBarApi";
+import { initialState, setGender, setPriceRange, setRoommates, setAddress } from "@/store/features/searchBar/searchBar";
+import { useLazyGetAddressesQuery } from "@/store/features/landing/landingApi";
+import { AddressType, AddressState, genderOptions, roommateOptions } from "@/types/landing";
+import { formatPrice } from "@/utils/helpers";
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
-
-  const searchBarState = useAppSelector((state) => state.searchBar);
+  
+  const [getAddresses, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
   const dispatch = useAppDispatch();
+  
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
-
-  const [address, setAddress] = useState<AddressState>(initialState.address);
-
-  const [priceRange, setPriceRange] = useState([0, 500000]);
-  const { gender } = searchBarState;
-  const [roommates, setRoommates] = useState<RommatesState>();
+  
+  const searchBarState = useAppSelector((state) => state.searchBar);
+  const { gender, priceRange, roommates, address } = searchBarState;
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -50,62 +40,34 @@ const SearchBar: React.FC = () => {
   const [mobileDistrict, setMobileDistrict] = useState<AddressType | null>(null);
   const [mobileMicroDistrict, setMobileMicroDistrict] = useState<AddressType | null>(null);
 
-  const [getAddress, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
-
-  const genders = [
-    { id: 1, name: "Мужской", code: "MALE" },
-    { id: 2, name: "Женский", code: "FEMALE" },
-    { id: 3, name: "Любой", code: "OTHER" },
-  ];
-
-  const roommateOptions = [
-    { id: 1, name: "1" },
-    { id: 2, name: "2" },
-    { id: 3, name: "3" },
-    { id: 4, name: "4" },
-    { id: 5, name: "5+" },
-  ];
-
   // --------------------------------------
   // Fetch Functions
   // --------------------------------------
   const fetchCities = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getAddresses(1);
-      setCitiesData(data);
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-    } finally {
+    setIsLoading(true);
+    getAddresses(1).then(({ data }) => {
+      setCitiesData(data?.data as AddressType[]);
+    }).finally(() => {
       setIsLoading(false);
-    }
+    })
   };
 
   const fetchDistricts = async (cityId: number) => {
-    // getAddress(cityId).then((res) => {
-    //   setDistrictsData(res.data?.data!)
-    // });
-    try {
-      setIsLoading(true);
-      const data = await getAddresses(cityId);
-      setDistrictsData(data);
-    } catch (error) {
-      console.error("Error fetching districts:", error);
-    } finally {
+    setIsLoading(true);
+    getAddresses(cityId).then(({ data }) => {
+      setDistrictsData(data?.data as AddressType[]);
+    }).finally(() => {
       setIsLoading(false);
-    }
+    })
   };
 
   const fetchMicroDistricts = async (districtId: number) => {
-    try {
-      setIsLoading(true);
-      const data = await getAddresses(districtId);
-      setMicroDistrictsData(data);
-    } catch (error) {
-      console.error("Error fetching microDistricts:", error);
-    } finally {
+    setIsLoading(true);
+    getAddresses(districtId).then(({ data }) => {
+      setMicroDistrictsData(data?.data as AddressType[]);
+    }).finally(() => {
       setIsLoading(false);
-    }
+    })
   };
 
   useEffect(() => {
@@ -120,10 +82,6 @@ const SearchBar: React.FC = () => {
     if (address.microDistrictName) return address.microDistrictName;
     if (address.districtName) return address.districtName;
     return address.regionName;
-  };
-
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -176,8 +134,8 @@ const SearchBar: React.FC = () => {
     setDistrictsData([]);
     setMicroDistrictsData([]);
 
-    setAddress((prev) => ({
-      ...prev,
+    dispatch(setAddress({
+      ...address,
       regionId: city.id,
       regionName: city.namerus,
       districtId: null,
@@ -196,8 +154,8 @@ const SearchBar: React.FC = () => {
     setMobileDistrict(null);
     setMobileMicroDistrict(null);
 
-    setAddress((prev) => ({
-      ...prev,
+    dispatch(setAddress({
+      ...address,
       districtId: district.id,
       districtName: district.namerus,
       microDistrictId: null,
@@ -211,23 +169,15 @@ const SearchBar: React.FC = () => {
 
   const handleMicroDistrictSelect = (microDistrict: AddressType) => {
     setMobileMicroDistrict(null);
-    setAddress((prev) => ({
-      ...prev,
+    dispatch(setAddress({
+      ...address,
       microDistrictId: microDistrict.id,
       microDistrictName: microDistrict.namerus,
     }));
   };
 
   const handleSelectAllKazakhstan = () => {
-    setAddress({
-      regionId: null,
-      regionName: "Весь Казахстан",
-      districtId: null,
-      districtName: "",
-      microDistrictId: null,
-      microDistrictName: "",
-    });
-
+    dispatch(setAddress(initialState.address));
     setDistrictsData([]);
     setMicroDistrictsData([]);
   };
@@ -243,7 +193,7 @@ const SearchBar: React.FC = () => {
           onChange={(e) => {
             const value = e.target.value === "" ? 0 : parseInt(e.target.value.replace(/\D/g, ""));
             if (!isNaN(value)) {
-              setPriceRange([value, priceRange[1]]);
+              dispatch(setPriceRange([priceRange[1], value]));
             }
           }}
         />
@@ -253,7 +203,7 @@ const SearchBar: React.FC = () => {
           onChange={(e) => {
             const value = e.target.value === "" ? 0 : parseInt(e.target.value.replace(/\D/g, ""));
             if (!isNaN(value)) {
-              setPriceRange([priceRange[0], value]);
+              dispatch(setPriceRange([priceRange[0], value]));
             }
           }}
         />
@@ -270,7 +220,7 @@ const SearchBar: React.FC = () => {
           step={5000}
           value={priceRange}
           handleSliderChange={(event: any, newValue: number | number[]) => {
-            setPriceRange(newValue as number[]);
+            dispatch(setPriceRange(newValue as number[]));
           }}
           className={styles.priceSlider}
         />
@@ -289,7 +239,7 @@ const SearchBar: React.FC = () => {
       <h3>Выберите пол</h3>
 
       <ul>
-        {genders.map((g) => (
+        {genderOptions.map((g) => (
           <Button
             key={g.id}
             className={`${styles.genderItem} ${gender?.code === g.code ? styles.activeGender : ""}`}
@@ -298,7 +248,7 @@ const SearchBar: React.FC = () => {
               setOpenDropdown(null);
             }}
           >
-            {g.name}
+            {g.namerus}
           </Button>
         ))}
       </ul>
@@ -315,7 +265,7 @@ const SearchBar: React.FC = () => {
             key={r.id}
             className={roommates?.id === r.id ? styles.activeRoommate : ""}
             onClick={() => {
-              setRoommates(r);
+              dispatch(setRoommates(r));
               setOpenDropdown(null);
             }}
           >
@@ -336,8 +286,8 @@ const SearchBar: React.FC = () => {
     setMicroDistrictsData([]);
 
     if (nextRegion) {
-      setAddress((prev) => ({
-        ...prev,
+      dispatch(setAddress({
+        ...address,
         regionId: nextRegion.id,
         regionName: nextRegion.namerus,
         districtId: null,
@@ -345,20 +295,12 @@ const SearchBar: React.FC = () => {
         microDistrictId: null,
         microDistrictName: "",
       }));
-
+  
       if (nextRegion.haschild) {
         fetchDistricts(nextRegion.id);
       }
     } else {
-      setAddress((prev) => ({
-        ...prev,
-        regionId: null,
-        regionName: "Весь Казахстан",
-        districtId: null,
-        districtName: "",
-        microDistrictId: null,
-        microDistrictName: "",
-      }));
+      dispatch(setAddress(initialState.address));
     }
   }
 
@@ -368,8 +310,8 @@ const SearchBar: React.FC = () => {
     setMobileMicroDistrict(null);
 
     if (nextDist) {
-      setAddress((prev) => ({
-        ...prev,
+      dispatch(setAddress({
+        ...address,
         districtId: nextDist.id,
         districtName: nextDist.namerus,
         microDistrictId: null,
@@ -382,8 +324,8 @@ const SearchBar: React.FC = () => {
         setMicroDistrictsData([]);
       }
     } else {
-      setAddress((prev) => ({
-        ...prev,
+      dispatch(setAddress({
+        ...address,
         districtId: null,
         districtName: "",
         microDistrictId: null,
@@ -398,14 +340,14 @@ const SearchBar: React.FC = () => {
     setMobileMicroDistrict(nextMicro);
 
     if (nextMicro) {
-      setAddress((prev) => ({
-        ...prev,
+      dispatch(setAddress({
+        ...address,
         microDistrictId: nextMicro.id,
         microDistrictName: nextMicro.namerus,
       }));
     } else {
-      setAddress((prev) => ({
-        ...prev,
+      dispatch(setAddress({
+        ...address,
         microDistrictId: null,
         microDistrictName: "",
       }));
@@ -449,8 +391,8 @@ const SearchBar: React.FC = () => {
                       !address.districtId ? styles.activeItem : ""
                     }`}
                     onPress={() => {
-                      setAddress((prev) => ({
-                        ...prev,
+                      dispatch(setAddress({
+                        ...address,
                         districtId: null,
                         districtName: "",
                         microDistrictId: null,
@@ -484,8 +426,8 @@ const SearchBar: React.FC = () => {
                       !address.microDistrictId ? styles.activeItem : ""
                     }`}
                     onPress={() =>
-                      setAddress((prev) => ({
-                        ...prev,
+                      dispatch(setAddress({
+                        ...address,
                         microDistrictId: null,
                         microDistrictName: "",
                       }))
@@ -620,7 +562,7 @@ const SearchBar: React.FC = () => {
           >
             <div className={styles.searchItem} onClick={() => toggleDropdown("gender")}>
               <Images.User color="black" size={getIconSize()} />
-              <p>{gender?.name || "Выберите пол"}</p>
+              <p>{gender?.namerus || "Выберите пол"}</p>
               <Images.ChevronDown color="black" size={getIconSize()} />
             </div>
           </Dropdown>

@@ -78,10 +78,6 @@
   padding: 12px 0;
   transition: background-color 0.2s;
 
-  &:hover {
-    background-color: darken(#1aa683, 5%);
-  }
-
   @media (max-width: 767px) {
     padding: 10px 0;
   }

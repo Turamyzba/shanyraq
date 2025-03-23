@@ -1,7 +1,7 @@
 "use client";
 
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { AddressState, GenderState, RommatesState } from "@/lib/api/filterService";
+import type { AddressState, GenderState, RommatesState } from "@/types/landing";
 
 interface SearchBarState {
   address: AddressState ;
@@ -12,7 +12,7 @@ interface SearchBarState {
 
 export const initialState: SearchBarState = {
   address: {
-    regionId: null,
+    regionId: 1,
     regionName: "Весь Казахстан",
     districtId: null,
     districtName: "",
