@@ -17,24 +17,21 @@ import {
   GenderState,
   RommatesState,
 } from "@/lib/api/filterService";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { initialState, setGender } from "@/store/features/searchBar/searchBar";
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
 
+  const searchBarState = useAppSelector((state) => state.searchBar);
+  const dispatch = useAppDispatch()
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
 
-  const [address, setAddress] = useState<AddressState>({
-    regionId: null,
-    regionName: "Весь Казахстан",
-    districtId: null,
-    districtName: "",
-    microDistrictId: null,
-    microDistrictName: "",
-  });
+  const [address, setAddress] = useState<AddressState>(initialState.address);
 
   const [priceRange, setPriceRange] = useState([0, 500000]);
-  const [gender, setGender] = useState<GenderState>();
+  const { gender } = searchBarState;
   const [roommates, setRoommates] = useState<RommatesState>();
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -288,7 +285,7 @@ const SearchBar: React.FC = () => {
             key={g.id}
             className={`${styles.genderItem} ${gender?.code === g.code ? styles.activeGender : ""}`}
             onPress={() => {
-              setGender(g);
+              dispatch(setGender(g));
               setOpenDropdown(null);
             }}
           >
