@@ -25,8 +25,6 @@ import ProgressBar from "../common/ProgressBar";
 import UserAvatar from "../common/UserAvatar";
 import { StatusKey } from "../common/StatusLabels";
 import StatusModal from "./Modals/StatusModal";
-
-// Moved outside component to prevent unnecessary recreations
 const menuItems = [
   { key: "profile", icon: <UserOutlined />, label: "Профиль" },
   {
@@ -128,7 +126,6 @@ const DesktopLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
-      {/* Photo Edit Modal */}
       <HeroModal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent className={styles.darkModalContent}>
           {() => (
@@ -165,7 +162,6 @@ const DesktopLayout = ({ children }: { children: React.ReactNode }) => {
         </ModalContent>
       </HeroModal>
 
-      {/* Status Modal */}
       <StatusModal
         isOpen={statusModalOpen}
         onClose={closeStatusModal}

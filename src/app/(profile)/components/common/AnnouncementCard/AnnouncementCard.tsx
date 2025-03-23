@@ -33,30 +33,18 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   return (
     <div className={`${styles.card} ${isMobile ? styles.mobile : ""}`}>
       <div className={styles.imageContainer}>
-        <Carousel autoplay dots={false}>
-          <div>
-            <div className={styles.imageWrapper}>
-              <Image
-                src="https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"
-                alt={announcement.title}
-                width={240}
-                height={130}
-                className={styles.image}
-              />
-            </div>
+        <div>
+          <div className={styles.imageWrapper}>
+            <Image
+              src="https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"
+              alt={announcement.title}
+              width={240}
+              height={130}
+              className={styles.image}
+            />
           </div>
-          <div>
-            <div className={styles.imageWrapper}>
-              <Image
-                src="https://i.pinimg.com/736x/a3/1f/b7/a31fb71819bd92f736b655b4411879c0.jpg"
-                alt={announcement.title}
-                width={240}
-                height={130}
-                className={styles.image}
-              />
-            </div>
-          </div>
-        </Carousel>
+        </div>
+
         <Link href={`/edit-apartment/${announcement.id}`} className={styles.editButton}>
           <EditIcon />
         </Link>

@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs } from "antd";
 import AnnouncementCard from "../../common/AnnouncementCard/AnnouncementCard";
 import styles from "./AnnouncementsList.module.scss";
-
+import "./AnnouncementsList.scss";
 interface Announcement {
   id: number;
   title: string;

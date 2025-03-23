@@ -1,0 +1,211 @@
+.container {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.header {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.groupTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #252525;
+  margin: 0 0 8px;
+}
+
+.memberCount {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.statusMessage {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background-color: #fef3c7;
+  color: #f59e0b;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.leaveButton {
+  width: 100%;
+  margin-top: 12px;
+  height: 38px;
+  border: 1px solid #ef4444;
+  background-color: white;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.leaveButton:hover,
+.leaveButton:focus {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.section {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #252525;
+  margin: 0 0 12px;
+}
+
+.membersList,
+.applicationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.applicationsList {
+  margin-top: 12px;
+}
+
+.newAppsButton {
+  width: 100%;
+  height: 40px;
+  background-color: #1aa683;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Member card styles */
+.memberCard {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.memberHeader {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.memberAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+}
+
+.memberInfo {
+  flex: 1;
+}
+
+.memberName {
+  font-size: 15px;
+  font-weight: 500;
+  color: #252525;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.ownerBadge {
+  font-size: 11px;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.memberEmail {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.memberDetails {
+  margin-bottom: 14px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.detailLabel {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.detailValue {
+  font-size: 13px;
+  font-weight: 500;
+  color: #252525;
+}
+
+.memberActions {
+  display: flex;
+  gap: 8px;
+}
+
+.acceptButton,
+.rejectButton,
+.removeButton {
+  flex: 1;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.acceptButton {
+  background-color: #1aa683;
+  border: none;
+}
+
+.rejectButton {
+  background-color: white;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+.rejectButton:hover,
+.rejectButton:focus {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.removeButton {
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+.removeButton:hover,
+.removeButton:focus {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}

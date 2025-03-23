@@ -87,6 +87,35 @@
   color: #252525;
 }
 
+.infoStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #252525;
+}
+
+.statusText {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.pending {
+  color: #f59e0b;
+  background-color: #fef3c7;
+}
+
+.accepted {
+  color: #10b981;
+  background-color: #d1fae5;
+}
+
+.rejected {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
 .price {
   font-size: 24px;
   font-weight: 700;

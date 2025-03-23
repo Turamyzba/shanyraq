@@ -1,0 +1,240 @@
+.container {
+  padding: 16px;
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  background-color: #fff;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ebebeb;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px 0;
+  font-size: 14px;
+  color: #6b7280;
+  position: relative;
+  cursor: pointer;
+  min-width: 80px;
+}
+
+.activeTab {
+  color: #1aa683;
+  font-weight: 600;
+}
+
+.activeTab::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #1aa683;
+}
+
+.responsesList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Card styles */
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  border-bottom: 1px solid #f3f4f6;
+  padding: 12px;
+}
+
+.imageWrapper {
+  width: 100px;
+  height: 70px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-right: 12px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.headerInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #252525;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #252525;
+  margin: 0;
+}
+
+.currency {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.cardContent {
+  padding: 12px;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.statusLabel {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.statusValue {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.pending {
+  background-color: #fef3c7;
+  color: #f59e0b;
+}
+
+.accepted {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+.rejected {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.detailIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+.detailText {
+  font-size: 13px;
+  color: #374151;
+}
+
+.cardActions {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.cancelButton,
+.leaveButton {
+  flex: 1;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #ef4444;
+  background-color: white;
+  color: #ef4444;
+}
+
+.cancelButton:hover,
+.leaveButton:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.detailsLink {
+  flex: 1;
+  text-decoration: none;
+}
+
+.detailsButton {
+  width: 100%;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 500;
+  background-color: #252525;
+  color: white;
+  border: none;
+}
+
+.detailsButton:hover {
+  background-color: #1a1a1a;
+  color: white;
+}
+
+.detailsButton:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
