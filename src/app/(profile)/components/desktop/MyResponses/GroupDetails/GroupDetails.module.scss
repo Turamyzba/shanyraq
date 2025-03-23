@@ -1,0 +1,237 @@
+.container {
+  width: 100%;
+}
+
+.groupsTitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #252525;
+}
+
+.groupsList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.groupCard {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.groupHeader {
+  padding: 20px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.groupTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex: 1;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #252525;
+  }
+}
+
+.userStatus {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.creatorBadge {
+  background-color: #d1fae5;
+  color: #10b981;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.memberBadge {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.avatarsRow {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+  margin-left: -10px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.moreAvatars {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-left: -10px;
+}
+
+.collapse {
+  background-color: transparent;
+}
+
+.collapsePanel {
+  background-color: transparent;
+  border: none;
+}
+
+.membersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 20px;
+}
+
+.memberCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.memberAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+}
+
+.memberData {
+  display: flex;
+  flex-direction: column;
+}
+
+.memberName {
+  font-size: 16px;
+  font-weight: 500;
+  color: #252525;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ownerBadge {
+  font-size: 12px;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.memberEmail {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.memberDetails {
+  display: flex;
+  gap: 24px;
+  flex: 1;
+}
+
+.memberDetail {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailLabel {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.detailValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: #252525;
+}
+
+.leaveGroupSection {
+  padding: 16px 20px;
+  border-top: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.leaveGroupButton {
+  background-color: white;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  height: 36px;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.leaveGroupButton:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .memberCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .memberDetails {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .memberDetail {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

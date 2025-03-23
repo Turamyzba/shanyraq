@@ -7,17 +7,17 @@ import { Button } from "antd";
 import styles from "./styles.module.scss";
 
 // Dynamically import components based on device type
-const DesktopResponseDetail = dynamic(
-  () => import("../../components/mobile/MyResponses/ResponseDetail/ResponseDetail"),
+const DesktopGroupList = dynamic(
+  () => import("../../components/desktop/MyResponses/GroupDetails/GroupList"),
   { ssr: false }
 );
-const MobileResponseDetail = dynamic(
-  () => import("../../components/desktop/MyResponses/ResponseDetail/ResponseDetail"),
+const MobileGroupList = dynamic(
+  () => import("../../components/mobile/MyResponses/GroupDetails/GroupList"),
   { ssr: false }
 );
 
-// Sample data for the response detail
-const mockResponseDetail = {
+// Sample data for the announcement detail
+const mockAnnouncementDetail = {
   id: 1,
   title: "Ищем 2 девушек",
   address: "Ул. Раймбека 181/23",
@@ -27,108 +27,95 @@ const mockResponseDetail = {
   moveInDate: "21.11.2024",
   deposit: "50.000тг",
   description: "Ищем 2 девушек на подселение",
-  applicationCount: 12,
   price: 150000,
   image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
   status: "accepted", // pending, accepted, rejected
-  ownerName: "Батырхан",
-  ownerId: 1,
-  applicationDate: "27/11/2024",
-  isGroupCreator: true,
 };
 
-// Sample group data with members and status
-const mockGroup = {
-  id: 1,
-  name: "Группа 1",
-  status: "accepted", // pending, accepted, rejected
-  members: [
-    {
-      id: 1,
-      name: "Батырхан",
-      email: "amantay11@gmail.com",
-      age: 24,
-      phone: "8777 777 77 77",
-      date: "27/11/2024",
-      avatar: "https://i.pravatar.cc/150?u=1",
-      isOwner: true,
-    },
-    {
-      id: 2,
-      name: "Ерасыл",
-      email: "erasyl.m@mail.ru",
-      age: 18,
-      phone: "8777 545 74 78",
-      date: "27/11/2024",
-      avatar: "https://i.pravatar.cc/150?u=2",
-    },
-    {
-      id: 3,
-      name: "Айбол",
-      email: "aibol.qazaq@gmail.com",
-      age: 19,
-      phone: "8701 577 77 78",
-      date: "27/11/2024",
-      avatar: "https://i.pravatar.cc/150?u=3",
-    },
-  ],
-  newApplications: [
-    {
-      id: 4,
-      name: "Алмас",
-      email: "almas@gmail.com",
-      age: 22,
-      phone: "8707 123 45 67",
-      date: "29/11/2024",
-      avatar: "https://i.pravatar.cc/150?u=4",
-    },
-  ],
-};
+// Sample groups data
+const mockGroups = [
+  {
+    id: 1,
+    name: "Группа 1",
+    members: [
+      {
+        id: 1,
+        name: "Батырхан",
+        email: "amantay11@gmail.com",
+        age: 24,
+        phone: "8777 777 77 77",
+        date: "27/11/2024",
+        avatar: "/avatars/user1.jpg",
+        isOwner: true,
+      },
+      {
+        id: 2,
+        name: "Ерасыл",
+        email: "erasyl.m@mail.ru",
+        age: 18,
+        phone: "8777 545 74 78",
+        date: "27/11/2024",
+        avatar: "/avatars/user2.jpg",
+      },
+      {
+        id: 3,
+        name: "Айбол",
+        email: "aibol.qazaq@gmail.com",
+        age: 19,
+        phone: "8701 577 77 78",
+        date: "27/11/2024",
+        avatar: "/avatars/user3.jpg",
+      },
+    ],
+    isUserMember: true,
+    isUserGroupCreator: false,
+  },
+  {
+    id: 2,
+    name: "Группа 2",
+    members: [
+      {
+        id: 4,
+        name: "Марат",
+        email: "marat@gmail.com",
+        age: 25,
+        phone: "8700 123 45 67",
+        date: "26/11/2024",
+        avatar: "/avatars/user4.jpg",
+        isOwner: true,
+      },
+      {
+        id: 5,
+        name: "Алишер",
+        email: "alisher@mail.ru",
+        age: 22,
+        phone: "8707 987 65 43",
+        date: "26/11/2024",
+        avatar: "/avatars/user5.jpg",
+      },
+    ],
+    isUserMember: true,
+    isUserGroupCreator: true,
+  },
+];
 
-export default function ResponseDetailPage() {
+export default function ResponseGroupsPage() {
   const params = useParams();
   const router = useRouter();
-  const responseId = params.id as string;
-  const [responseDetail, setResponseDetail] = useState(mockResponseDetail);
-  const [group, setGroup] = useState(mockGroup);
+  const announcementId = params.id as string;
+  const [announcementDetail, setAnnouncementDetail] = useState(mockAnnouncementDetail);
+  const [groups, setGroups] = useState(mockGroups);
   const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   useEffect(() => {
     setIsMounted(true);
-    // In a real app, you would fetch the data here based on responseId
-  }, [responseId]);
+    // In a real app, you would fetch the data here based on announcementId
+  }, [announcementId]);
 
-  const handleAcceptApplication = (applicationId: number) => {
-    setGroup((prev) => {
-      const application = prev.newApplications.find((app) => app.id === applicationId);
-      if (!application) return prev;
-
-      return {
-        ...prev,
-        members: [...prev.members, application],
-        newApplications: prev.newApplications.filter((app) => app.id !== applicationId),
-      };
-    });
-  };
-
-  const handleRejectApplication = (applicationId: number) => {
-    setGroup((prev) => ({
-      ...prev,
-      newApplications: prev.newApplications.filter((app) => app.id !== applicationId),
-    }));
-  };
-
-  const handleRemoveMember = (memberId: number) => {
-    setGroup((prev) => ({
-      ...prev,
-      members: prev.members.filter((member) => member.id !== memberId),
-    }));
-  };
-
-  const handleLeaveGroup = () => {
-    // In a real app, you would make an API call
-    router.push("/my-responses");
+  const handleLeaveGroup = (groupId: number) => {
+    // In a real app, you would call an API to leave the group
+    setGroups(groups.filter((group) => group.id !== groupId));
   };
 
   if (!isMounted) {
@@ -145,77 +132,61 @@ export default function ResponseDetailPage() {
         >
           Назад
         </Button>
-        <h1 className={styles.title}>
-          {responseDetail.isGroupCreator ? "Ваша группа" : "Информация о заявке"}
-        </h1>
+        <h1 className={styles.title}>Группы объявления</h1>
       </div>
 
       <div className={styles.apartmentDetails}>
         <div className={styles.apartmentImage}>
-          <img src={responseDetail.image} alt={responseDetail.title} />
+          <img src={announcementDetail.image} alt={announcementDetail.title} />
         </div>
         <div className={styles.apartmentInfo}>
           <div className={styles.infoMain}>
             <div className={styles.infoLeft}>
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{responseDetail.address}</span>
+                <span className={styles.infoLabel}>{announcementDetail.address}</span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{responseDetail.district}</span>
+                <span className={styles.infoLabel}>{announcementDetail.district}</span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{responseDetail.city}</span>
+                <span className={styles.infoLabel}>{announcementDetail.city}</span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{responseDetail.roomDetails}</span>
+                <span className={styles.infoLabel}>{announcementDetail.roomDetails}</span>
               </div>
             </div>
             <div className={styles.infoRight}>
               <div className={styles.infoRow}>
                 <span className={styles.infoLabel}>
-                  Можно заехать с {responseDetail.moveInDate}
+                  Можно заехать с {announcementDetail.moveInDate}
                 </span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Депозит {responseDetail.deposit}</span>
+                <span className={styles.infoLabel}>Депозит {announcementDetail.deposit}</span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{responseDetail.description}</span>
+                <span className={styles.infoLabel}>{announcementDetail.description}</span>
               </div>
               <div className={styles.infoRow}>
                 <span className={styles.infoStatus}>
                   Статус:
-                  <span className={`${styles.statusText} ${styles[responseDetail.status]}`}>
-                    {responseDetail.status === "pending" && "В ожидании"}
-                    {responseDetail.status === "accepted" && "Принята"}
-                    {responseDetail.status === "rejected" && "Отклонена"}
+                  <span className={`${styles.statusText} ${styles[announcementDetail.status]}`}>
+                    {announcementDetail.status === "pending" && "В ожидании"}
+                    {announcementDetail.status === "accepted" && "Принята"}
+                    {announcementDetail.status === "rejected" && "Отклонена"}
                   </span>
                 </span>
               </div>
             </div>
           </div>
-          <div className={styles.price}>{responseDetail.price.toLocaleString()} ₸</div>
+          <div className={styles.price}>{announcementDetail.price.toLocaleString()} ₸</div>
         </div>
       </div>
 
       {isMobile ? (
-        <MobileResponseDetail
-          group={group}
-          responseDetail={responseDetail}
-          onAcceptApplication={handleAcceptApplication}
-          onRejectApplication={handleRejectApplication}
-          onRemoveMember={handleRemoveMember}
-          onLeaveGroup={handleLeaveGroup}
-        />
+        <MobileGroupList groups={groups} onLeaveGroup={handleLeaveGroup} />
       ) : (
-        <DesktopResponseDetail
-          group={group}
-          responseDetail={responseDetail}
-          onAcceptApplication={handleAcceptApplication}
-          onRejectApplication={handleRejectApplication}
-          onRemoveMember={handleRemoveMember}
-          onLeaveGroup={handleLeaveGroup}
-        />
+        <DesktopGroupList groups={groups} onLeaveGroup={handleLeaveGroup} />
       )}
     </div>
   );

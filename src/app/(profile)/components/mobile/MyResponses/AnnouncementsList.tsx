@@ -1,8 +1,8 @@
 import React from "react";
-import ResponseCard from "./ResponseCard";
-import styles from "./ResponsesList.module.scss";
+import AnnouncementCard from "./AnnouncementCard";
+import styles from "./AnnouncementsList.module.scss";
 
-interface Response {
+interface Announcement {
   id: number;
   title: string;
   address: string;
@@ -11,26 +11,22 @@ interface Response {
   image: string;
   status: "pending" | "accepted" | "rejected";
   ownerName: string;
-  ownerId: number;
+  groupCount: number;
   applicationDate: string;
-  memberCount: number;
-  isGroupCreator: boolean;
 }
 
-interface ResponsesListProps {
-  responses: Response[];
+interface AnnouncementsListProps {
+  announcements: Announcement[];
   activeTab: "all" | "pending" | "accepted" | "rejected";
   onTabChange: (tab: "all" | "pending" | "accepted" | "rejected") => void;
   onCancelResponse: (id: number) => void;
-  onLeaveGroup: (id: number) => void;
 }
 
-const MobileResponsesList: React.FC<ResponsesListProps> = ({
-  responses,
+const MobileAnnouncementsList: React.FC<AnnouncementsListProps> = ({
+  announcements,
   activeTab,
   onTabChange,
   onCancelResponse,
-  onLeaveGroup,
 }) => {
   return (
     <div className={styles.container}>
@@ -61,14 +57,17 @@ const MobileResponsesList: React.FC<ResponsesListProps> = ({
         </button>
       </div>
 
-      <div className={styles.responsesList}>
-        {responses.length > 0 ? (
-          responses.map((response) => (
-            <ResponseCard
-              key={response.id}
-              response={response}
-              onCancel={() => onCancelResponse(response.id)}
-              onLeave={() => onLeaveGroup(response.id)}
+      <div className={styles.announcementsList}>
+        {announcements.length > 0 ? (
+          announcements.map((announcement) => (
+            <AnnouncementCard
+              key={announcement.id}
+              announcement={announcement}
+              onCancel={
+                announcement.status === "pending"
+                  ? () => onCancelResponse(announcement.id)
+                  : undefined
+              }
             />
           ))
         ) : (
@@ -89,4 +88,4 @@ const MobileResponsesList: React.FC<ResponsesListProps> = ({
   );
 };
 
-export default MobileResponsesList;
+export default MobileAnnouncementsList;
