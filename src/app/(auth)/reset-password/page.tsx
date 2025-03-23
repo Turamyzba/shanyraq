@@ -68,7 +68,8 @@ export default function ResetPasswordPage() {
     if (!hasUpperCase || !hasNumber || !hasSpecialChar || !isLongEnough) {
       addToast({
         title: "Ошибка",
-        description: "Пароль должен содержать как минимум одну заглавную букву, один символ, один чисел и быть длиной как минимум 8",
+        description:
+          "Пароль должен содержать как минимум одну заглавную букву, один символ, один чисел и быть длиной как минимум 8",
         variant: "flat",
         radius: "sm",
         timeout: 5000,

@@ -60,7 +60,8 @@ function ForgotPasswordPage() {
     } catch (err: any) {
       addToast({
         title: "Ошибка",
-        description: err?.response?.data || err.message || "Произошла ошибка при отправке инструкций",
+        description:
+          err?.response?.data || err.message || "Произошла ошибка при отправке инструкций",
         variant: "flat",
         radius: "sm",
         timeout: 5000,

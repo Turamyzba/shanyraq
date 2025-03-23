@@ -46,11 +46,8 @@ export default function LoginPage() {
       });
 
       router.push("/apartments");
-
     } catch (err: any) {
-      const errorMessage =
-        err?.response?.data ||
-        "Неверный email или пароль";
+      const errorMessage = err?.response?.data || "Неверный email или пароль";
 
       addToast({
         title: "Ошибка",

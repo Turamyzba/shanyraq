@@ -9,12 +9,12 @@ import { LoadingProvider } from "@/context/LoadingContext";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     // <AuthProvider>
-      <LoadingProvider>
-        <HeroUIProvider>
-            <ToastProvider placement={"top-center"} />
-            {children}
-          </HeroUIProvider>
-      </LoadingProvider>
+    <LoadingProvider>
+      <HeroUIProvider>
+        <ToastProvider placement={"top-center"} />
+        {children}
+      </HeroUIProvider>
+    </LoadingProvider>
     // </AuthProvider>
   );
 }

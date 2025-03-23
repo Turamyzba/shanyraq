@@ -5,7 +5,12 @@ import { Form, InputOtp } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MyInput from "@/components/ui/MyInput";
 import MyButton from "@/components/ui/MyButton";
-import { verifyEmail, verifyResetCode, resendVerificationCode, register } from "@/lib/api/authService";
+import {
+  verifyEmail,
+  verifyResetCode,
+  resendVerificationCode,
+  register,
+} from "@/lib/api/authService";
 import { addToast } from "@heroui/react";
 import styles from "./Verification.module.scss";
 import { useMediaQuery } from "react-responsive";
@@ -24,7 +29,7 @@ export default function VerificationPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [updateEmailLoading, setUpdateEmailLoading] = useState(false);
-  
+
   // Registration data
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -37,12 +42,12 @@ export default function VerificationPage() {
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const typeParam = searchParams.get("type");
-    
+
     // Look for additional registration data
     const firstNameParam = searchParams.get("firstName");
     const lastNameParam = searchParams.get("lastName");
     const passwordParam = searchParams.get("password");
-    
+
     if (firstNameParam) setFirstName(firstNameParam);
     if (lastNameParam) setLastName(lastNameParam);
     if (passwordParam) setPassword(passwordParam);
@@ -215,7 +220,7 @@ export default function VerificationPage() {
 
     try {
       setUpdateEmailLoading(true);
-      
+
       // If we have firstName, lastName and password (from URL params), we can register directly
       if (firstName && lastName && password && newEmail !== email) {
         // Re-register with the new email
@@ -223,9 +228,9 @@ export default function VerificationPage() {
           firstName,
           lastName,
           email: newEmail,
-          password
+          password,
         });
-        
+
         addToast({
           title: "Новая регистрация выполнена!",
           description: "Пожалуйста, проверьте электронную почту для подтверждения",
@@ -234,12 +239,12 @@ export default function VerificationPage() {
           timeout: 5000,
           color: "success",
         });
-        
+
         // Update the URL and internal state
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('email', newEmail);
-        window.history.pushState({}, '', `${window.location.pathname}?${urlParams.toString()}`);
-        
+        urlParams.set("email", newEmail);
+        window.history.pushState({}, "", `${window.location.pathname}?${urlParams.toString()}`);
+
         setEmail(newEmail);
         setCode(""); // Reset code for new email
       }
@@ -275,16 +280,18 @@ export default function VerificationPage() {
       <div className={styles.formWrapper}>
         <div className={styles.header}>
           <h2>Введите код подтверждения</h2>
-          <p>{!editingEmail ? "Пожалуйста, введите 6-значный код, отправленный на ваш электронный адрес.": "Пожалуйста, введите новый email адрес для регистрации."}
-            
+          <p>
+            {!editingEmail
+              ? "Пожалуйста, введите 6-значный код, отправленный на ваш электронный адрес."
+              : "Пожалуйста, введите новый email адрес для регистрации."}
           </p>
-          
+
           {!editingEmail ? (
             <div className={styles.emailBlock}>
               <span className={styles.emailDisplay}>{email}</span>
-              <button 
-                type="button" 
-                onClick={() => setEditingEmail(true)} 
+              <button
+                type="button"
+                onClick={() => setEditingEmail(true)}
                 className={styles.changeEmail}
               >
                 Изменить email
@@ -300,14 +307,14 @@ export default function VerificationPage() {
                 isRequired
               />
               <div className={styles.buttonGroup}>
-                <MyButton 
-                  onClick={handleUpdateEmail} 
+                <MyButton
+                  onClick={handleUpdateEmail}
                   isLoading={updateEmailLoading}
                   className={styles.confirmButton}
                 >
                   Сохранить
                 </MyButton>
-                <MyButton 
+                <MyButton
                   onClick={() => {
                     setEditingEmail(false);
                     setNewEmail(email);
@@ -347,11 +354,9 @@ export default function VerificationPage() {
                 isLoading={resendLoading}
                 isDisabled={!canResend}
               >
-                {canResend ? (
-                  "Отправить код повторно"
-                ) : (
-                  `Повторная отправка через ${countdown} сек.`
-                )}
+                {canResend
+                  ? "Отправить код повторно"
+                  : `Повторная отправка через ${countdown} сек.`}
               </MyButton>
               <MyButton
                 type={"submit"}

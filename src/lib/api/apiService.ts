@@ -102,7 +102,6 @@ export const del = async <T>(url: string, config?: AxiosRequestConfig): Promise<
 
 const handleApiError = (error: AxiosError) => {
   // console.error("API Error:", error.response?.data || error.message);
-
   // if (error.response?.status === 404) {
   //   console.error("Resource not found");
   // } else if (error.response?.status === 403) {

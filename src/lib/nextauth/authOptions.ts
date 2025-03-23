@@ -84,7 +84,7 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.accessToken = user.token;
       }
-      
+
       // On subsequent calls, you can try to refresh the token here if needed
       return token;
     },

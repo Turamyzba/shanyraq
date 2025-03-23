@@ -10,7 +10,13 @@ import Images from "@/components/common/Images";
 import MySelect from "@/components/ui/MySelect";
 import MyButton from "../ui/MyButton";
 import { Button } from "@heroui/react";
-import { getAddresses, AddressType, AddressState, GenderState, RommatesState } from "@/lib/api/filterService";
+import {
+  getAddresses,
+  AddressType,
+  AddressState,
+  GenderState,
+  RommatesState,
+} from "@/lib/api/filterService";
 
 const SearchBar: React.FC = () => {
   const router = useRouter();

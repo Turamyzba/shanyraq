@@ -19,7 +19,7 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
   if (response.accessToken) {
     localStorage.setItem("token", response.accessToken);
   }
-  
+
   if (response.isSurveyCompleted !== undefined) {
     localStorage.setItem("isSurveyCompleted", response.isSurveyCompleted.toString());
   }

@@ -39,7 +39,8 @@ export default function RegisterPage() {
     if (!firstNameRegex.test(name)) {
       addToast({
         title: "Ошибка",
-        description: "Имя должно начинаться с заглавной буквы и содержать только маленькие буквы после первой",
+        description:
+          "Имя должно начинаться с заглавной буквы и содержать только маленькие буквы после первой",
         variant: "flat",
         radius: "sm",
         timeout: 5000,
@@ -53,7 +54,8 @@ export default function RegisterPage() {
     if (!lastNameRegex.test(lastname)) {
       addToast({
         title: "Ошибка",
-        description: "Фамилия должно начинаться с заглавной буквы и содержать только маленькие буквы после первой",
+        description:
+          "Фамилия должно начинаться с заглавной буквы и содержать только маленькие буквы после первой",
         variant: "flat",
         radius: "sm",
         timeout: 5000,
@@ -71,7 +73,8 @@ export default function RegisterPage() {
     if (!hasUpperCase || !hasNumber || !hasSpecialChar || !isLongEnough) {
       addToast({
         title: "Ошибка",
-        description: "Пароль должен содержать как минимум одну заглавную букву, один символ, один чисел и быть длиной как минимум 8",
+        description:
+          "Пароль должен содержать как минимум одну заглавную букву, один символ, один чисел и быть длиной как минимум 8",
         variant: "flat",
         radius: "sm",
         timeout: 5000,
@@ -147,7 +150,9 @@ export default function RegisterPage() {
           color: "danger",
         });
       // Redirect to verification page or login page depending on your flow
-      router.push(`/verification?email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(name)}&lastName=${encodeURIComponent(lastname)}&password=${encodeURIComponent(password)}`);
+      router.push(
+        `/verification?email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(name)}&lastName=${encodeURIComponent(lastname)}&password=${encodeURIComponent(password)}`
+      );
     } catch (err: any) {
       addToast({
         title: "Ошибка",
