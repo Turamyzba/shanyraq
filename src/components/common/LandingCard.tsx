@@ -3,8 +3,7 @@
 import Image from "next/image";
 import Images from "./Images";
 import styles from "./LandingCard.module.scss";
-import { Carousel } from "antd";
-import { Button, Snippet } from "@heroui/react";
+import { Button, addToast, Snippet } from "@heroui/react";
 import { Modal } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -12,15 +11,20 @@ import { useMediaQuery } from "react-responsive";
 
 interface CardProps {
   card?: {
-    id: number;
+    announcementId: number;
+    image: string;
     title: string;
-    cost: string;
-    image: string; // Updated to an array of images
     address: string;
-    selectedGender: string;
-    roomCount: number;
-    roommates: number;
     arriveDate: string;
+    roomCount: string;
+    selectedGender: string;
+    roommates: number;
+    cost: number;
+    coordsX: string;
+    coordsY: string;
+    isArchived: boolean;
+    consideringOnlyNPeople: boolean;
+  
   };
   isLast?: boolean;
 }
@@ -31,23 +35,42 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && card?.announcementId) {
+      setShareUrl(`${window.location.origin}/apartments/${card.announcementId}`);
+    }
+  }, [card?.announcementId]);
+
+
   const showModal = () => {
     setIsModalOpen(true);
   };
 
   const handleClose = () => {
-    setTimeout(() => {
-      setIsModalOpen(false);
-    }, 1000);
+    // After copy, show a toast
+    addToast({
+      title: "Ссылка скопирована!",
+      variant: "flat",
+      radius: "sm",
+      timeout: 2000,
+      color: "success",
+    });
+    setIsModalOpen(false);
   };
 
+
+  const truncatedTitle = (card?.title ?? "").length > 26 
+    ? `${card?.title.substring(0, 26)}...`
+    : card?.title;
+
+
   return (
-    <div className={styles.cardWrapper}>
+    <div 
+      className={styles.cardWrapper}>
       <div className={styles.card}>
-        {/* Image Section */}
         <div className={styles.cardImage}>
-          <Image
-              src={"https://i.pinimg.com/736x/a3/1f/b7/a31fb71819bd92f736b655b4411879c0.jpg"}
+            <Image
+              src={card?.image ?? ''}
               alt={card?.title || "Room Image"}
               width={343}
               height={220}
@@ -74,7 +97,7 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
           {/* Title & Location */}
           <div className={styles.cardTitle}>
             <p>
-              {(card?.title ?? "").length > 26 ? `${card?.title.substring(0, 26)}...` : card?.title}
+              {truncatedTitle}
             </p>
           </div>
           <div className={styles.cardLocation}>
