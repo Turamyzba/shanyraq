@@ -60,10 +60,15 @@ export default function ResetPasswordPage() {
       return false;
     }
 
-    if (password.length < 6) {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+    const isLongEnough = password.length >= 8;
+
+    if (!hasUpperCase || !hasNumber || !hasSpecialChar || !isLongEnough) {
       addToast({
         title: "Ошибка",
-        description: "Пароль должен содержать минимум 6 символов",
+        description: "Пароль должен содержать как минимум одну заглавную букву, один символ, один чисел и быть длиной как минимум 8",
         variant: "flat",
         radius: "sm",
         timeout: 5000,
@@ -104,7 +109,7 @@ export default function ResetPasswordPage() {
     } catch (err: any) {
       addToast({
         title: "Ошибка",
-        description: err.message || "Произошла ошибка при сбросе пароля",
+        description: err?.response?.data || err.message || "Произошла ошибка при сбросе пароля",
         variant: "flat",
         radius: "sm",
         timeout: 5000,

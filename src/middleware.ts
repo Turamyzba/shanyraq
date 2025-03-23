@@ -9,21 +9,21 @@ const protectedPaths = ["/profile", "/my-announcements", "/my-responses", "/ques
 const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verification"];
 
 export default async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request });
-  const isAuthenticated = !!token;
-  const path = request.nextUrl.pathname;
+  // const token = await getToken({ req: request });
+  // const isAuthenticated = !!token;
+  // const path = request.nextUrl.pathname;
 
-  // Check if the path is protected and user is not authenticated
-  const isProtectedPath = protectedPaths.some((pp) => path.startsWith(pp));
-  if (isProtectedPath && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // // Check if the path is protected and user is not authenticated
+  // const isProtectedPath = protectedPaths.some((pp) => path.startsWith(pp));
+  // if (isProtectedPath && !isAuthenticated) {
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 
-  // Check if the path is an auth route and user is already authenticated
-  const isAuthPath = authRoutes.some((ar) => path.startsWith(ar));
-  if (isAuthPath && isAuthenticated) {
-    return NextResponse.redirect(new URL("/profile", request.url));
-  }
+  // // Check if the path is an auth route and user is already authenticated
+  // const isAuthPath = authRoutes.some((ar) => path.startsWith(ar));
+  // if (isAuthPath && isAuthenticated) {
+  //   return NextResponse.redirect(new URL("/profile", request.url));
+  // }
 
   return NextResponse.next();
 }

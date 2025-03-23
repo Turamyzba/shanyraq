@@ -10,37 +10,7 @@ import Images from "@/components/common/Images";
 import MySelect from "@/components/ui/MySelect";
 import MyButton from "../ui/MyButton";
 import { Button } from "@heroui/react";
-
-interface AddressType {
-  id: number;
-  parentid: number;
-  haschild: boolean;
-  atetypenamerus: string;
-  atetypenamekaz: string;
-  namerus: string;
-  namekaz: string;
-  children?: AddressType[];
-}
-
-interface GenderState {
-  id: number;
-  name: string;
-  code: string;
-}
-
-interface RommatesState {
-  id: number;
-  name: string;
-}
-
-interface AddressState {
-  regionId: number | null;
-  regionName: string;
-  districtId: number | null;
-  districtName: string;
-  microDistrictId: number | null;
-  microDistrictName: string;
-}
+import { getAddresses, AddressType, AddressState, GenderState, RommatesState } from "@/lib/api/filterService";
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
@@ -93,13 +63,7 @@ const SearchBar: React.FC = () => {
   const fetchCities = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(
-        "https://shanyraq-server-production.up.railway.app/api/address/get-children/1"
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch cities");
-      }
-      const data: AddressType[] = await response.json();
+      const data = await getAddresses(1);
       setCitiesData(data);
     } catch (error) {
       console.error("Error fetching cities:", error);
@@ -111,13 +75,7 @@ const SearchBar: React.FC = () => {
   const fetchDistricts = async (cityId: number) => {
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `https://shanyraq-server-production.up.railway.app/api/address/get-children/${cityId}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch districts");
-      }
-      const data: AddressType[] = await response.json();
+      const data = await getAddresses(cityId);
       setDistrictsData(data);
     } catch (error) {
       console.error("Error fetching districts:", error);
@@ -129,13 +87,7 @@ const SearchBar: React.FC = () => {
   const fetchMicroDistricts = async (districtId: number) => {
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `https://shanyraq-server-production.up.railway.app/api/address/get-children/${districtId}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch microDistricts");
-      }
-      const data: AddressType[] = await response.json();
+      const data = await getAddresses(districtId);
       setMicroDistrictsData(data);
     } catch (error) {
       console.error("Error fetching microDistricts:", error);

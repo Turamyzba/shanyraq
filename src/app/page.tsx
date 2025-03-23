@@ -11,6 +11,7 @@ import CardSkeleton from "../components/common/LandingCardSkeleton";
 import { useMediaQuery } from "react-responsive";
 import { useRouter } from "next/navigation";
 import SearchBar from "@/components/common/SearchBar";
+import { getGreatDeals, LandingCard } from "@/lib/api/landingService";
 
 const appAdvantages = [
   {
@@ -57,25 +58,9 @@ const appAdvantages = [
   },
 ];
 
-interface GreatDeal {
-  announcementId: number;
-  image: string;
-  title: string;
-  address: string;
-  arriveDate: string;
-  roomCount: string;
-  selectedGender: string;
-  roommates: number;
-  cost: number;
-  coordsX: string;
-  coordsY: string;
-  isArchived: boolean;
-  consideringOnlyNPeople: boolean;
-}
-
 export default function LandingPage() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [cardData, setCardData] = useState<GreatDeal[]>([]);
+  const [cardData, setCardData] = useState<LandingCard[]>([]);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
   const [expandedKeys, setExpandedKeys] = useState(new Set(["1"]));
@@ -85,15 +70,7 @@ export default function LandingPage() {
   const fetchGreatDeals = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(
-        "https://shanyraq-server-production.up.railway.app/api/announcement/great-deals"
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch great deals");
-      }
-
-      const data = await response.json();
+      const data = await getGreatDeals();
       setCardData(data);
     } catch (err: any) {
       console.log(err?.message || "Something went wrong");

@@ -35,10 +35,7 @@ export default function LoginPage() {
 
     try {
       setIsLoading(true);
-      const response = await login({
-        email: email,
-        password: password,
-      });
+      const response = await login({ email, password });
 
       addToast({
         title: "Успешный вход!",
@@ -48,16 +45,16 @@ export default function LoginPage() {
         color: "success",
       });
 
-      // Redirect based on survey completion status
-      if (response.isSurveyCompleted) {
-        router.push("/profile");
-      } else {
-        router.push("/questionnaire");
-      }
+      router.push("/apartments");
+
     } catch (err: any) {
+      const errorMessage =
+        err?.response?.data ||
+        "Неверный email или пароль";
+
       addToast({
         title: "Ошибка",
-        description: err.message || "Неверный email или пароль",
+        description: errorMessage,
         variant: "flat",
         radius: "sm",
         timeout: 5000,

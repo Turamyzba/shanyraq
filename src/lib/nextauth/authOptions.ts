@@ -1,7 +1,7 @@
 // src/lib/nextauth/authOptions.ts
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { login, getCurrentUser } from "../api/authService";
+import { login as apiLogin } from "../api/authServices/loginService";
 
 // Define custom types for NextAuth to use with credentials
 declare module "next-auth" {
@@ -11,7 +11,6 @@ declare module "next-auth" {
     email: string;
     role: string;
     token: string;
-    refreshToken: string;
   }
 
   interface Session {
@@ -23,7 +22,6 @@ declare module "next-auth" {
       image?: string;
     };
     accessToken: string;
-    refreshToken: string;
   }
 }
 
@@ -32,7 +30,6 @@ declare module "next-auth/jwt" {
     id: string;
     role: string;
     accessToken: string;
-    refreshToken: string;
   }
 }
 
@@ -51,20 +48,19 @@ export const authOptions: NextAuthOptions = {
 
         try {
           // Call the login function from our authService
-          const response = (await login({
+          const response = await apiLogin({
             email: credentials.email,
             password: credentials.password,
-          })) as any;
+          });
 
-          if (response.token) {
-            // Return the user object with token
+          if (response.accessToken) {
+            // For NextAuth, construct a user object with the token
             return {
-              id: response.user.id,
-              name: `${response.user.name} ${response.user.lastname}`,
-              email: response.user.email,
-              role: response.user.role,
-              token: response.token,
-              refreshToken: response.refreshToken,
+              id: "user-id", // You might need to decode the token to get the actual user ID
+              name: "User", // These could be placeholders that get updated in the session callback
+              email: credentials.email,
+              role: "user",
+              token: response.accessToken,
             };
           }
 
@@ -84,30 +80,19 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       // Initial sign in
       if (user) {
-        // Need to cast user to our custom User type
-        const typedUser = user as {
-          id: string;
-          role: string;
-          token: string;
-          refreshToken: string;
-        };
-
-        token.id = typedUser.id;
-        token.role = typedUser.role;
-        token.accessToken = typedUser.token;
-        token.refreshToken = typedUser.refreshToken;
+        token.id = user.id;
+        token.role = user.role;
+        token.accessToken = user.token;
       }
-
-      // On subsequent calls, check if the token is still valid
-      // This is a good place to implement token refresh logic
+      
+      // On subsequent calls, you can try to refresh the token here if needed
       return token;
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id as string;
+      if (token) {
+        session.user.id = token.id;
         session.user.role = token.role as string;
-        session.accessToken = token.accessToken as string;
-        session.refreshToken = token.refreshToken as string;
+        session.accessToken = token.accessToken;
       }
       return session;
     },

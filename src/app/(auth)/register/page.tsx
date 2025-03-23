@@ -21,6 +21,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
+    // Check if all fields are filled
     if (!name || !lastname || !email || !password || !passwordConfirm) {
       addToast({
         title: "Ошибка",
@@ -33,10 +34,12 @@ export default function RegisterPage() {
       return false;
     }
 
-    if (password.length < 6) {
+    // Validate FirstName format
+    const firstNameRegex = /^[A-ZА-Я][a-zа-я]*$/;
+    if (!firstNameRegex.test(name)) {
       addToast({
         title: "Ошибка",
-        description: "Пароль должен содержать минимум 6 символов",
+        description: "Имя должно начинаться с заглавной буквы и содержать только маленькие буквы после первой",
         variant: "flat",
         radius: "sm",
         timeout: 5000,
@@ -45,6 +48,39 @@ export default function RegisterPage() {
       return false;
     }
 
+    // Validate LastName format
+    const lastNameRegex = /^[A-ZА-Я][a-zа-я]*$/;
+    if (!lastNameRegex.test(lastname)) {
+      addToast({
+        title: "Ошибка",
+        description: "Фамилия должно начинаться с заглавной буквы и содержать только маленькие буквы после первой",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    // Validate password complexity
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+    const isLongEnough = password.length >= 8;
+
+    if (!hasUpperCase || !hasNumber || !hasSpecialChar || !isLongEnough) {
+      addToast({
+        title: "Ошибка",
+        description: "Пароль должен содержать как минимум одну заглавную букву, один символ, один чисел и быть длиной как минимум 8",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return false;
+    }
+
+    // Confirm passwords match
     if (password !== passwordConfirm) {
       addToast({
         title: "Ошибка",
@@ -57,6 +93,7 @@ export default function RegisterPage() {
       return false;
     }
 
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       addToast({
@@ -110,11 +147,11 @@ export default function RegisterPage() {
           color: "danger",
         });
       // Redirect to verification page or login page depending on your flow
-      router.push("/verification?email=" + encodeURIComponent(email));
+      router.push(`/verification?email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(name)}&lastName=${encodeURIComponent(lastname)}&password=${encodeURIComponent(password)}`);
     } catch (err: any) {
       addToast({
         title: "Ошибка",
-        description: err.message || "Произошла ошибка при регистрации",
+        description: err.response?.data || "Произошла ошибка при регистрации",
         variant: "flat",
         radius: "sm",
         timeout: 5000,

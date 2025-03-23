@@ -1,40 +1,52 @@
+// src/app/(auth)/verification/Verification.module.scss
+@import "../_auth-styles.scss";
+
 .container {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  @include auth-container;
 }
 
 .formWrapper {
-  max-width: 720px;
-  width: 100%;
-  border-radius: 16px;
-  padding: 70px 100px;
-  background-color: white;
-  border: 1px solid #f5f5f5;
+  @include auth-form-wrapper;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 30px;
+  @include auth-header;
+}
 
-  h2 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #252525;
-    margin-bottom: 12px;
-  }
+.emailBlock {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 
-  p {
-    color: #b5b7c0;
-    font-size: 16px;
-    line-height: 1.5;
-  }
-
-  .emailDisplay {
-    font-weight: 500;
+  @media (max-width: 767px) {
     margin-top: 8px;
+    gap: 4px;
+  }
+}
+
+.emailDisplay {
+  font-weight: 500;
+  color: #252525;
+  font-size: 16px;
+  
+  @media (max-width: 767px) {
+    font-size: 14px;
+  }
+}
+
+.changeEmail {
+  color: #1aa683;
+  font-size: 14px;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 767px) {
+    font-size: 13px;
   }
 }
 
@@ -42,42 +54,48 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 30px 0;
 }
 
 .buttonGroup {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 24px;
+  @include button-group;
 }
 
 .confirmButton {
-  width: 100%;
-  background-color: #1aa683;
-  color: white;
-  border-radius: 8px;
-  font-weight: 600;
-  padding: 12px 0;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: darken(#1aa683, 5%);
-  }
+  @include auth-button-primary;
 }
 
 .resendButton {
+  @include auth-button-secondary;
+}
+
+.backButtonContainer {
+  margin-top: 16px;
+  text-align: center;
+  
+  @media (max-width: 767px) {
+    margin-top: 12px;
+  }
+}
+
+.backButton {
   width: 100%;
+  max-width: 200px;
   background-color: white;
-  color: #252525;
+  color: #666;
   border: 1px solid #eaeaea;
   border-radius: 8px;
-  font-weight: 600;
-  padding: 12px 0;
+  font-weight: 500;
+  padding: 10px 0;
   transition: background-color 0.2s;
-
+  
   &:hover {
     background-color: #f5f5f5;
+    color: #333;
+  }
+  
+  @media (max-width: 767px) {
+    max-width: 150px;
+    padding: 8px 0;
+    font-size: 14px;
   }
 }
