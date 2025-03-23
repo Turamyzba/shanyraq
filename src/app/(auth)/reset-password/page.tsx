@@ -1,21 +1,23 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
 import { Form } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MyPasswordInput } from "@/components/ui/MyPasswordInput";
 import MyButton from "@/components/ui/MyButton";
-import { updatePassword } from "@/lib/api/authService";
 import { addToast } from "@heroui/react";
 import styles from "./ResetPassword.module.scss";
+import { useUpdatePasswordMutation } from "@/store/features/auth/authApi";
+import { showToast } from "@/utils/notification";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [updatePassword, { isLoading }] = useUpdatePasswordMutation();
 
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   // Get email from URL parameters
   const email = searchParams.get("email") || "";
@@ -24,12 +26,9 @@ export default function ResetPasswordPage() {
   // Check if we have required parameters
   useEffect(() => {
     if (!email || !token) {
-      addToast({
+      showToast({
         title: "Ошибка",
         description: "Отсутствуют необходимые параметры для сброса пароля",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
         color: "danger",
       });
     }
@@ -37,24 +36,18 @@ export default function ResetPasswordPage() {
 
   const validateForm = () => {
     if (!password || !passwordConfirm) {
-      addToast({
+      showToast({
         title: "Ошибка",
         description: "Все поля обязательны для заполнения",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
         color: "danger",
       });
       return false;
     }
 
     if (password !== passwordConfirm) {
-      addToast({
+      showToast({
         title: "Ошибка",
         description: "Пароли не совпадают",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
         color: "danger",
       });
       return false;
@@ -62,17 +55,14 @@ export default function ResetPasswordPage() {
 
     const hasUpperCase = /[A-Z]/.test(password);
     const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
     const isLongEnough = password.length >= 8;
 
     if (!hasUpperCase || !hasNumber || !hasSpecialChar || !isLongEnough) {
-      addToast({
+      showToast({
         title: "Ошибка",
         description:
           "Пароль должен содержать как минимум одну заглавную букву, один символ, один чисел и быть длиной как минимум 8",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
         color: "danger",
       });
       return false;
@@ -88,37 +78,12 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    try {
-      setIsLoading(true);
-
-      await updatePassword({
-        email: email,
-        password: password,
-      });
-
-      addToast({
-        title: "Пароль успешно обновлен!",
-        description: "Теперь вы можете войти в систему с новым паролем",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
-        color: "success",
-      });
-
-      // Redirect to login page
+    updatePassword({
+      email: email,
+      password: password,
+    }).then((res) => {
       router.push("/login");
-    } catch (err: any) {
-      addToast({
-        title: "Ошибка",
-        description: err?.response?.data || err.message || "Произошла ошибка при сбросе пароля",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
-        color: "danger",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
   return (

@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { useState } from "react";
 import { Form } from "@heroui/react";
 import Link from "next/link";
@@ -7,18 +9,20 @@ import { useRouter } from "next/navigation";
 import MyInput from "@/components/ui/MyInput";
 import MyButton from "@/components/ui/MyButton";
 import { MyPasswordInput } from "@/components/ui/MyPasswordInput";
-import { register } from "@/lib/api/authService";
 import { addToast } from "@heroui/react";
 import styles from "./Register.module.scss";
+import { useRegisterMutation } from "@/store/features/auth/authApi";
+import MyPhoneInput from "@/components/ui/MyPhoneInput";
 
-export default function RegisterPage() {
+export default function Register() {
   const router = useRouter();
+  const [register, { isLoading }] = useRegisterMutation();
+
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     // Check if all fields are filled
@@ -67,7 +71,7 @@ export default function RegisterPage() {
     // Validate password complexity
     const hasUpperCase = /[A-Z]/.test(password);
     const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
     const isLongEnough = password.length >= 8;
 
     if (!hasUpperCase || !hasNumber || !hasSpecialChar || !isLongEnough) {
@@ -120,51 +124,16 @@ export default function RegisterPage() {
       return;
     }
 
-    try {
-      setIsLoading(true);
-
-      // Use the variables directly instead of shorthand properties
-      const result = await register({
-        firstName: name,
-        lastName: lastname,
-        email: email,
-        password: password,
-      });
-
-      if (result)
-        addToast({
-          title: "Успешная регистрация!",
-          description: "Пожалуйста, проверьте вашу электронную почту для подтверждения",
-          variant: "flat",
-          radius: "sm",
-          timeout: 5000,
-          color: "success",
-        });
-      else
-        addToast({
-          title: "Ошибка",
-          description: result || "Произошла ошибка при регистрации",
-          variant: "flat",
-          radius: "sm",
-          timeout: 5000,
-          color: "danger",
-        });
-      // Redirect to verification page or login page depending on your flow
+    register({
+      firstName: name,
+      lastName: lastname,
+      email: email,
+      password: password,
+    }).then((res) => {
       router.push(
         `/verification?email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(name)}&lastName=${encodeURIComponent(lastname)}&password=${encodeURIComponent(password)}`
       );
-    } catch (err: any) {
-      addToast({
-        title: "Ошибка",
-        description: err.response?.data || "Произошла ошибка при регистрации",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
-        color: "danger",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
   return (

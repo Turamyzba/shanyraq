@@ -12,28 +12,26 @@ import styles from "./Verification.module.scss";
 import { useMediaQuery } from "react-responsive";
 import {
   useVerifyEmailMutation,
-  useVerifyCodeMutation,
   useResendCodeMutation,
   useRegisterMutation,
 } from "@/store/features/auth/authApi";
-import { showToast } from "@/utils/notification";
 
-export default function VerificationPage() {
+export default function VerificationForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
 
-  const [verifyEmail, { isLoading: verifyEmailLoading }] = useVerifyEmailMutation();
-  const [verifyCode, { isLoading: verifyCodeLoading }] = useVerifyCodeMutation();
-  const [resendCode, { isLoading: resendApiLoading }] = useResendCodeMutation();
-  const [register, { isLoading: registerApiLoading }] = useRegisterMutation();
+  const [verifyEmail, { isLoading: verifyLoading }] = useVerifyEmailMutation();
+  const [resendCode, { isLoading: resendLoading }] = useResendCodeMutation();
+  const [register, { isLoading: registerLoading }] = useRegisterMutation();
 
   const [code, setCode] = useState("");
   const [email, setEmail] = useState("");
   const [editingEmail, setEditingEmail] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [verificationType, setVerificationType] = useState<"register" | "reset">("register");
+  const [updateEmailLoading, setUpdateEmailLoading] = useState(false);
 
   // Registration data
   const [firstName, setFirstName] = useState("");
@@ -61,9 +59,12 @@ export default function VerificationPage() {
       setEmail(emailParam);
       setNewEmail(emailParam);
     } else {
-      showToast({
+      addToast({
         title: "Ошибка",
         description: "Email не указан. Вернитесь на предыдущую страницу.",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
         color: "danger",
       });
     }
@@ -80,64 +81,111 @@ export default function VerificationPage() {
     e.preventDefault();
 
     if (code.length !== 6) {
-      showToast({
+      addToast({
         title: "Ошибка",
         description: "Пожалуйста, введите 6-значный код",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
         color: "danger",
       });
       return;
     }
 
     if (!email) {
-      showToast({
+      addToast({
         title: "Ошибка",
         description: "Email не найден, пожалуйста, начните процесс заново",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
         color: "danger",
       });
       return;
     }
 
-    if (verificationType === "reset") {
-      verifyCode({ email, code }).then((res) => {
-        console.log(res);
-        router.push(`/reset-password?email=${encodeURIComponent(email)}&token=${code}`);
-      });
-    } else {
-      verifyEmail({ email, code }).then((res) => {
+    try {
+      // Verify email for registration
+      const result = await verifyEmail({ email, code }).unwrap();
+
+      if (result.data) {
+        addToast({
+          title: "Email подтвержден!",
+          description: "Теперь вы можете войти в систему",
+          variant: "flat",
+          radius: "sm",
+          timeout: 5000,
+          color: "success",
+        });
+
+        // Redirect to login page
         router.push("/login");
+      } else {
+        throw new Error(result.error || "Неверный код подтверждения");
+      }
+    } catch (err: any) {
+      addToast({
+        title: "Ошибка",
+        description: err?.data?.message || err.message || "Неверный код подтверждения",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
       });
     }
   };
 
   const handleResendCode = async () => {
     if (!email) {
-      showToast({
+      addToast({
         title: "Ошибка",
         description: "Email не найден, пожалуйста, начните процесс заново",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
         color: "danger",
       });
       return;
     }
 
-    resendCode({ email })
-      .then((res) => {
+    try {
+      const result = await resendCode({ email }).unwrap();
+
+      if (result.data) {
+        addToast({
+          title: "Код отправлен повторно!",
+          description: "Проверьте вашу электронную почту",
+          variant: "flat",
+          radius: "sm",
+          timeout: 5000,
+          color: "success",
+        });
+
         setCountdown(30);
         setCanResend(false);
-      })
-      .catch((err) => {
-        showToast({
-          title: "Ошибка",
-          description: err?.data?.message || err.message || "Ошибка при повторной отправке кода",
-          color: "danger",
-        });
+      } else {
+        throw new Error(result.error || "Ошибка при повторной отправке кода");
+      }
+    } catch (err: any) {
+      addToast({
+        title: "Ошибка",
+        description: err?.data?.message || err.message || "Ошибка при повторной отправке кода",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
       });
+    }
   };
 
   const handleUpdateEmail = async () => {
     if (!newEmail) {
-      showToast({
+      addToast({
         title: "Ошибка",
         description: "Пожалуйста, введите email",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
         color: "danger",
       });
       return;
@@ -146,30 +194,64 @@ export default function VerificationPage() {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newEmail)) {
-      showToast({
+      addToast({
         title: "Ошибка",
         description: "Пожалуйста, введите корректный email",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
         color: "danger",
       });
       return;
     }
 
-    if (firstName && lastName && password && newEmail !== email) {
-      setEditingEmail(true);
-      register({
-        firstName,
-        lastName,
-        email: newEmail,
-        password,
-      }).then((res) => {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("email", newEmail);
-        window.history.pushState({}, "", `${window.location.pathname}?${urlParams.toString()}`);
+    try {
+      setUpdateEmailLoading(true);
 
-        setEmail(newEmail);
-        setCode("");
-        setEditingEmail(false);
+      // If we have firstName, lastName and password (from URL params), we can register directly
+      if (firstName && lastName && password && newEmail !== email) {
+        // Re-register with the new email
+        const result = await register({
+          firstName,
+          lastName,
+          email: newEmail,
+          password,
+        }).unwrap();
+
+        if (result.data) {
+          addToast({
+            title: "Новая регистрация выполнена!",
+            description: "Пожалуйста, проверьте электронную почту для подтверждения",
+            variant: "flat",
+            radius: "sm",
+            timeout: 5000,
+            color: "success",
+          });
+
+          // Update the URL and internal state
+          const urlParams = new URLSearchParams(window.location.search);
+          urlParams.set("email", newEmail);
+          window.history.pushState({}, "", `${window.location.pathname}?${urlParams.toString()}`);
+
+          setEmail(newEmail);
+          setCode(""); // Reset code for new email
+        } else {
+          throw new Error(result.error || "Ошибка при обновлении email");
+        }
+      }
+      // Exit editing mode
+      setEditingEmail(false);
+    } catch (err: any) {
+      addToast({
+        title: "Ошибка",
+        description: err?.data?.message || err.message || "Ошибка при обновлении email",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
       });
+    } finally {
+      setUpdateEmailLoading(false);
     }
   };
 
@@ -218,7 +300,7 @@ export default function VerificationPage() {
               <div className={styles.buttonGroup}>
                 <MyButton
                   onClick={handleUpdateEmail}
-                  isLoading={registerApiLoading}
+                  isLoading={updateEmailLoading}
                   className={styles.confirmButton}
                 >
                   Сохранить
@@ -260,7 +342,7 @@ export default function VerificationPage() {
               <MyButton
                 className={styles.resendButton}
                 onClick={handleResendCode}
-                isLoading={resendApiLoading}
+                isLoading={resendLoading}
                 isDisabled={!canResend}
               >
                 {canResend
@@ -270,7 +352,7 @@ export default function VerificationPage() {
               <MyButton
                 type={"submit"}
                 className={styles.confirmButton}
-                isLoading={verifyEmailLoading || verifyCodeLoading}
+                isLoading={verifyLoading}
                 isDisabled={code.length !== 6}
               >
                 Подтвердить

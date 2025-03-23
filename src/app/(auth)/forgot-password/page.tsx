@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import MyInput from "@/components/ui/MyInput";
 import MyButton from "@/components/ui/MyButton";
-import { forgotPassword } from "@/lib/api/authService";
 import { addToast } from "@heroui/react";
 import styles from "./ForgotPassword.module.scss";
+import { useForgotPasswordMutation } from "@/store/features/auth/authApi";
 
-function ForgotPasswordPage() {
+export default function ForgotPasswordPage() {
   const router = useRouter();
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,34 +42,9 @@ function ForgotPasswordPage() {
       return;
     }
 
-    try {
-      setIsLoading(true);
-      await forgotPassword({ email });
-
-      addToast({
-        title: "Инструкции отправлены!",
-        description: "Проверьте вашу электронную почту для восстановления пароля",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
-        color: "success",
-      });
-
-      // Redirect to verification page with email
+    forgotPassword({ email }).then((res) => {
       router.push(`/verification?email=${encodeURIComponent(email)}&type=reset`);
-    } catch (err: any) {
-      addToast({
-        title: "Ошибка",
-        description:
-          err?.response?.data || err.message || "Произошла ошибка при отправке инструкций",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
-        color: "danger",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
   return (
@@ -107,5 +82,3 @@ function ForgotPasswordPage() {
     </div>
   );
 }
-
-export default ForgotPasswordPage;

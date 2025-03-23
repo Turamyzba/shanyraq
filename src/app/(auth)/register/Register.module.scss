@@ -1,5 +1,5 @@
 // src/app/(auth)/login/Login.module.scss
-@import "../_auth-styles.scss";
+@import "../auth-styles";
 
 .container {
   @include auth-container;
