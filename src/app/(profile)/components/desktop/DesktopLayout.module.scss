@@ -16,6 +16,8 @@
   border-radius: 10px;
   background-color: #fff;
   min-height: 750px;
+  box-shadow: 0 4px 10px 0 #1E1E1E26; 
+
 }
 
 .profileBlock {
@@ -32,6 +34,7 @@
 }
 
 .content {
+  box-shadow: 0 4px 10px 0 #1E1E1E26; 
   flex: 1;
   border-radius: 10px;
 }
