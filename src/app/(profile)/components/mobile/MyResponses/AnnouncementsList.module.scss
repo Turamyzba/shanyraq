@@ -1,6 +1,5 @@
 .container {
   padding: 16px;
-  width: 100%;
 }
 
 .tabs {
@@ -45,7 +44,7 @@
   background-color: #1aa683;
 }
 
-.responsesList {
+.announcementsList {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -195,8 +194,7 @@
   border-top: 1px solid #f3f4f6;
 }
 
-.cancelButton,
-.leaveButton {
+.cancelButton {
   flex: 1;
   height: 36px;
   font-size: 13px;
@@ -206,8 +204,7 @@
   color: #ef4444;
 }
 
-.cancelButton:hover,
-.leaveButton:hover {
+.cancelButton:hover {
   background-color: #fee2e2;
   color: #ef4444;
   border-color: #ef4444;

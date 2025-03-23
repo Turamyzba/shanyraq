@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "antd";
 import Link from "next/link";
-import styles from "./ResponsesList.module.scss";
+import styles from "./AnnouncementsList.module.scss";
 
-interface Response {
+interface Announcement {
   id: number;
   title: string;
   address: string;
@@ -12,33 +12,30 @@ interface Response {
   image: string;
   status: "pending" | "accepted" | "rejected";
   ownerName: string;
-  ownerId: number;
+  groupCount: number;
   applicationDate: string;
-  memberCount: number;
-  isGroupCreator: boolean;
 }
 
-interface ResponseCardProps {
-  response: Response;
-  onCancel: () => void;
-  onLeave: () => void;
+interface AnnouncementCardProps {
+  announcement: Announcement;
+  onCancel?: () => void;
 }
 
-const ResponseCard: React.FC<ResponseCardProps> = ({ response, onCancel, onLeave }) => {
+const AnnouncementCard: React.FC<AnnouncementCardProps> = ({ announcement, onCancel }) => {
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <div className={styles.imageWrapper}>
-          <img src={response.image} alt={response.title} className={styles.image} />
+          <img src={announcement.image} alt={announcement.title} className={styles.image} />
         </div>
         <div className={styles.headerInfo}>
-          <h3 className={styles.title}>{response.title}</h3>
+          <h3 className={styles.title}>{announcement.title}</h3>
           <div className={styles.location}>
             <LocationIcon />
-            <span>{response.address}</span>
+            <span>{announcement.address}</span>
           </div>
           <p className={styles.price}>
-            {response.price.toLocaleString()} <span className={styles.currency}>₸</span>
+            {announcement.price.toLocaleString()} <span className={styles.currency}>₸</span>
           </p>
         </div>
       </div>
@@ -48,16 +45,16 @@ const ResponseCard: React.FC<ResponseCardProps> = ({ response, onCancel, onLeave
           <span className={styles.statusLabel}>Статус:</span>
           <span
             className={`${styles.statusValue} ${
-              response.status === "pending"
+              announcement.status === "pending"
                 ? styles.pending
-                : response.status === "accepted"
+                : announcement.status === "accepted"
                   ? styles.accepted
                   : styles.rejected
             }`}
           >
-            {response.status === "pending" && "В ожидании"}
-            {response.status === "accepted" && "Принята"}
-            {response.status === "rejected" && "Отклонена"}
+            {announcement.status === "pending" && "В ожидании"}
+            {announcement.status === "accepted" && "Принята"}
+            {announcement.status === "rejected" && "Отклонена"}
           </span>
         </div>
 
@@ -65,46 +62,33 @@ const ResponseCard: React.FC<ResponseCardProps> = ({ response, onCancel, onLeave
           <div className={styles.detailIcon}>
             <CalendarIcon />
           </div>
-          <span className={styles.detailText}>Дата заявки: {response.applicationDate}</span>
+          <span className={styles.detailText}>Дата заявки: {announcement.applicationDate}</span>
         </div>
 
         <div className={styles.detailRow}>
           <div className={styles.detailIcon}>
             <UserIcon />
           </div>
-          <span className={styles.detailText}>Владелец: {response.ownerName}</span>
-        </div>
-
-        <div className={styles.detailRow}>
-          <div className={styles.detailIcon}>
-            <PeopleIcon />
-          </div>
-          <span className={styles.detailText}>Участников: {response.memberCount}</span>
+          <span className={styles.detailText}>Владелец: {announcement.ownerName}</span>
         </div>
 
         <div className={styles.detailRow}>
           <div className={styles.detailIcon}>
             <GroupIcon />
           </div>
-          <span className={styles.detailText}>
-            {response.isGroupCreator ? "Вы создатель группы" : "Участник группы"}
-          </span>
+          <span className={styles.detailText}>Количество групп: {announcement.groupCount}</span>
         </div>
       </div>
 
       <div className={styles.cardActions}>
-        {response.status === "pending" ? (
+        {announcement.status === "pending" && onCancel && (
           <Button onClick={onCancel} className={styles.cancelButton}>
             Отменить заявку
           </Button>
-        ) : response.status === "accepted" ? (
-          <Button onClick={onLeave} className={styles.leaveButton}>
-            Покинуть группу
-          </Button>
-        ) : null}
-        <Link href={`/my-responses/${response.id}`} className={styles.detailsLink}>
-          <Button className={styles.detailsButton} disabled={response.status === "rejected"}>
-            Подробнее
+        )}
+        <Link href={`/my-responses/${announcement.id}`} className={styles.detailsLink}>
+          <Button className={styles.detailsButton} disabled={announcement.status === "rejected"}>
+            Посмотреть группы
           </Button>
         </Link>
       </div>
@@ -184,39 +168,6 @@ const UserIcon = () => (
   </svg>
 );
 
-const PeopleIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M14.1666 17.5V15.8333C14.1666 14.9493 13.8155 14.1014 13.1903 13.4763C12.5652 12.8512 11.7174 12.5 10.8333 12.5H4.16665C3.2826 12.5 2.43475 12.8512 1.80962 13.4763C1.1845 14.1014 0.833313 14.9493 0.833313 15.8333V17.5"
-      stroke="black"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M7.49999 9.16667C9.34094 9.16667 10.8333 7.67428 10.8333 5.83333C10.8333 3.99238 9.34094 2.5 7.49999 2.5C5.65904 2.5 4.16666 3.99238 4.16666 5.83333C4.16666 7.67428 5.65904 9.16667 7.49999 9.16667Z"
-      stroke="black"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M19.1667 17.5001V15.8334C19.1662 15.0948 18.9204 14.3774 18.4679 13.7936C18.0154 13.2098 17.3819 12.793 16.6667 12.6084"
-      stroke="black"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M13.3333 2.6084C14.0503 2.79198 14.6858 3.20898 15.1396 3.79366C15.5935 4.37833 15.8398 5.09742 15.8398 5.83757C15.8398 6.57771 15.5935 7.2968 15.1396 7.88147C14.6858 8.46615 14.0503 8.88315 13.3333 9.06673"
-      stroke="black"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 const GroupIcon = () => (
   <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -236,4 +187,4 @@ const GroupIcon = () => (
   </svg>
 );
 
-export default ResponseCard;
+export default AnnouncementCard;

@@ -3,17 +3,16 @@ import React, { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import dynamic from "next/dynamic";
 
-const DesktopResponsesList = dynamic(
-  () => import("../components/mobile/MyResponses/ResponsesList"),
+const DesktopAnnouncementsList = dynamic(
+  () => import("../components/desktop/MyResponses/AnnouncementsList"),
   { ssr: false }
 );
-const MobileResponsesList = dynamic(
-  () => import("../components/desktop/MyResponses/ResponsesList"),
+const MobileAnnouncementsList = dynamic(
+  () => import("../components/mobile/MyResponses/AnnouncementsList"),
   { ssr: false }
 );
 
-// Mock data for responses
-const mockResponses = [
+const mockAnnouncements = [
   {
     id: 1,
     title: "Ищем 2 девушек",
@@ -23,24 +22,9 @@ const mockResponses = [
     image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
     status: "pending", // pending, accepted, rejected
     ownerName: "Батырхан",
-    ownerId: 1,
+    groupCount: 2,
     applicationDate: "27/11/2024",
-    memberCount: 3,
-    isGroupCreator: false,
-  },
-  {
-    id: 4,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    price: 150000,
-    image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
-    status: "pending", // pending, accepted, rejected
-    ownerName: "Батырхан",
-    ownerId: 1,
-    applicationDate: "27/11/2024",
-    memberCount: 3,
-    isGroupCreator: false,
+    genderRestriction:'female'
   },
   {
     id: 2,
@@ -51,10 +35,9 @@ const mockResponses = [
     image: "https://i.pinimg.com/736x/a3/1f/b7/a31fb71819bd92f736b655b4411879c0.jpg",
     status: "accepted",
     ownerName: "Асхат",
-    ownerId: 2,
+    groupCount: 1,
     applicationDate: "25/11/2024",
-    memberCount: 2,
-    isGroupCreator: true,
+    genderRestriction:'male'
   },
   {
     id: 3,
@@ -65,43 +48,53 @@ const mockResponses = [
     image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
     status: "rejected",
     ownerName: "Ерлан",
-    ownerId: 3,
+    groupCount: 0,
     applicationDate: "20/11/2024",
-    memberCount: 1,
-    isGroupCreator: false,
+    genderRestriction:'male'
+  },
+  {
+    id: 4,
+    title: "Сдаётся комната",
+    address: "Абая 48",
+    date: "05/09/2024",
+    price: 95000,
+    image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
+    status: "pending",
+    ownerName: "Марат",
+    groupCount: 1,
+    applicationDate: "22/11/2024",
+    genderRestriction:'female'
   },
   {
     id: 5,
-    title: "Ищем 1 парня",
-    address: "Сатпаева 18/2",
-    date: "15/09/2024",
-    price: 120000,
+    title: "2-комнатная квартира",
+    address: "Достык 12",
+    date: "12/10/2024",
+    price: 200000,
     image: "https://i.pinimg.com/736x/a3/1f/b7/a31fb71819bd92f736b655b4411879c0.jpg",
     status: "accepted",
-    ownerName: "Асхат",
-    ownerId: 2,
-    applicationDate: "25/11/2024",
-    memberCount: 2,
-    isGroupCreator: true,
+    ownerName: "Дина",
+    groupCount: 3,
+    applicationDate: "18/11/2024",
+    genderRestriction:'female'
   },
   {
     id: 6,
-    title: "Ищем соседа",
-    address: "Жандосова 34",
-    date: "10/10/2024",
-    price: 180000,
+    title: "Квартира в центре",
+    address: "Тимирязева 15",
+    date: "20/09/2024",
+    price: 160000,
     image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
-    status: "rejected",
-    ownerName: "Ерлан",
-    ownerId: 3,
-    applicationDate: "20/11/2024",
-    memberCount: 1,
-    isGroupCreator: false,
-  },
+    status: "pending",
+    ownerName: "Алмаз",
+    groupCount: 2,
+    applicationDate: "15/11/2024",
+    genderRestriction:'female'
+  }
 ];
 
 export default function MyResponsesPage() {
-  const [responses, setResponses] = useState(mockResponses);
+  const [announcements, setAnnouncements] = useState(mockAnnouncements);
   const [activeTab, setActiveTab] = useState<"all" | "pending" | "accepted" | "rejected">("all");
   const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -111,39 +104,33 @@ export default function MyResponsesPage() {
   }, []);
 
   const handleCancelResponse = (id: number) => {
-    setResponses(responses.filter((response) => response.id !== id));
-  };
-
-  const handleLeaveGroup = (id: number) => {
-    setResponses(responses.filter((response) => response.id !== id));
+    setAnnouncements(announcements.filter((announcement) => announcement.id !== id));
   };
 
   if (!isMounted) {
     return <div className="loading-placeholder">Загрузка...</div>;
   }
 
-  let filteredResponses = responses;
+  let filteredAnnouncements = announcements;
   if (activeTab !== "all") {
-    filteredResponses = responses.filter((response) => response.status === activeTab);
+    filteredAnnouncements = announcements.filter((announcement) => announcement.status === activeTab);
   }
 
   return (
     <>
       {isMobile ? (
-        <MobileResponsesList
-          responses={filteredResponses}
+        <MobileAnnouncementsList
+          announcements={filteredAnnouncements}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onCancelResponse={handleCancelResponse}
-          onLeaveGroup={handleLeaveGroup}
         />
       ) : (
-        <DesktopResponsesList
-          responses={filteredResponses}
+        <DesktopAnnouncementsList
+          announcements={filteredAnnouncements}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onCancelResponse={handleCancelResponse}
-          onLeaveGroup={handleLeaveGroup}
         />
       )}
     </>
