@@ -225,12 +225,24 @@
   gap: 8px;
 }
 
-.adminBadge {
+.adminBadge,
+.groupBadge {
   font-size: 12px;
   color: #6b7280;
   background-color: #f3f4f6;
   padding: 2px 8px;
   border-radius: 4px;
+}
+
+.groupBadge {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.groupRequest {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
 }
 
 .userEmail {
@@ -315,7 +327,8 @@
 }
 
 .questionnaireModal,
-.coverLetterModal {
+.coverLetterModal,
+.actionModalContent {
   padding: 10px;
 }
 
@@ -345,6 +358,24 @@
 .questionAnswer p {
   color: #6b7280;
   margin: 0;
+}
+
+.groupApplicantsContainer {
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  margin: 10px 16px;
+}
+
+.groupApplicantsTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: #252525;
+  margin: 0 0 10px 0;
+}
+
+.nestedTable {
+  margin-top: 10px;
 }
 
 @media (max-width: 768px) {
