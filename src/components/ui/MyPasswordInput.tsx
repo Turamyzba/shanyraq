@@ -17,6 +17,7 @@ interface Props {
   validate?: (value: any) => string | boolean;
   variant?: "bordered";
   color?: NextUiColors;
+  className?: string;
 }
 
 export const MyPasswordInput: React.FC<Props> = ({
@@ -24,13 +25,14 @@ export const MyPasswordInput: React.FC<Props> = ({
   onChange,
   name,
   label = name,
-  labelPlacement,
+  labelPlacement = "inside",
   isRequired,
   errorMessage,
   placeholder,
   validate,
   variant = "bordered",
   color = "primary",
+  className,
 }) => {
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -49,8 +51,9 @@ export const MyPasswordInput: React.FC<Props> = ({
       onChange={onChange}
       errorMessage={errorMessage}
       variant={variant}
+      className={className}
       classNames={{
-        inputWrapper: "border-[#EBEBEB] border",
+        inputWrapper: "border-[#EBEBEB] border-1 rounded-[5px]",
         label: "text-foreground",
       }}
       endContent={

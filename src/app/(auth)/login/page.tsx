@@ -1,33 +1,82 @@
 "use client";
 
-import MyInput from "@/components/ui/MyInput";
+import { useState } from "react";
 import { Checkbox, Form } from "@heroui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import MyInput from "@/components/ui/MyInput";
 import MyButton from "@/components/ui/MyButton";
 import { MyPasswordInput } from "@/components/ui/MyPasswordInput";
+import { login } from "@/lib/api/authService";
+import { addToast } from "@heroui/react";
+import styles from "./Login.module.scss";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({
-      email: email,
-      password: password,
-      rememberMe: rememberMe,
-    });
+
+    if (!email || !password) {
+      addToast({
+        title: "Ошибка",
+        description: "Пожалуйста, заполните все поля",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await login({
+        email: email,
+        password: password,
+      });
+
+      addToast({
+        title: "Успешный вход!",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "success",
+      });
+
+      // Redirect based on survey completion status
+      if (response.isSurveyCompleted) {
+        router.push("/profile");
+      } else {
+        router.push("/questionnaire");
+      }
+    } catch (err: any) {
+      addToast({
+        title: "Ошибка",
+        description: err.message || "Неверный email или пароль",
+        variant: "flat",
+        radius: "sm",
+        timeout: 5000,
+        color: "danger",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
-      <div className="max-w-[600px] rounded-2xl py-[70px] px-[100px]">
-        <h2 className="text-3xl text-center mb-10">Войдите в аккаунт Shanyraq!</h2>
+    <div className={styles.container}>
+      <div className={styles.formWrapper}>
+        <div className={styles.header}>
+          <h2>Войдите в аккаунт Shanyraq!</h2>
+        </div>
 
         <Form onSubmit={handleSubmit}>
-          <div className="w-full flex flex-col gap-3.5">
+          <div className={styles.formGroup}>
             <MyInput
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -42,19 +91,29 @@ export default function LoginPage() {
               isRequired
             />
           </div>
-          <div className="flex w-full justify-between items-center my-4">
-            <Checkbox isSelected={rememberMe} onValueChange={setRememberMe}>
+
+          <div className={styles.rememberForgot}>
+            <Checkbox
+              isSelected={rememberMe}
+              onValueChange={setRememberMe}
+              className={styles.rememberMe}
+            >
               Запомнить меня
             </Checkbox>
-            <Link href={"#"} className={"text-primary hover:underline"}>
+            <Link href="/forgot-password" className={styles.forgotPassword}>
               Забыли пароль?
             </Link>
           </div>
 
-          <MyButton type={"submit"} className={"bg-primary text-white w-full rounded font-bold"}>
+          <MyButton type={"submit"} className={styles.submitButton} isLoading={isLoading}>
             Войти
           </MyButton>
         </Form>
+
+        <div className={styles.footer}>
+          Нет учетной записи?
+          <Link href="/register">Зарегистрироваться</Link>
+        </div>
       </div>
     </div>
   );
