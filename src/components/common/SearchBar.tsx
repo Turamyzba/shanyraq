@@ -19,12 +19,16 @@ import {
 } from "@/lib/api/filterService";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { initialState, setGender } from "@/store/features/searchBar/searchBar";
+import {
+  useGetAddressesQuery,
+  useLazyGetAddressesQuery,
+} from "@/store/features/searchBar/searchBarApi";
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
 
   const searchBarState = useAppSelector((state) => state.searchBar);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
 
@@ -45,6 +49,8 @@ const SearchBar: React.FC = () => {
   const [mobileRegion, setMobileRegion] = useState<AddressType | null>(null);
   const [mobileDistrict, setMobileDistrict] = useState<AddressType | null>(null);
   const [mobileMicroDistrict, setMobileMicroDistrict] = useState<AddressType | null>(null);
+
+  const [getAddress, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
 
   const genders = [
     { id: 1, name: "Мужской", code: "MALE" },
@@ -76,6 +82,9 @@ const SearchBar: React.FC = () => {
   };
 
   const fetchDistricts = async (cityId: number) => {
+    // getAddress(cityId).then((res) => {
+    //   setDistrictsData(res.data?.data!)
+    // });
     try {
       setIsLoading(true);
       const data = await getAddresses(cityId);
