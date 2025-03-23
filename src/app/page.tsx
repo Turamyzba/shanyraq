@@ -85,8 +85,10 @@ export default function LandingPage() {
   const fetchGreatDeals = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("https://shanyraq-server-production.up.railway.app/api/announcement/great-deals");
-      
+      const response = await fetch(
+        "https://shanyraq-server-production.up.railway.app/api/announcement/great-deals"
+      );
+
       if (!response.ok) {
         throw new Error("Failed to fetch great deals");
       }
@@ -99,7 +101,6 @@ export default function LandingPage() {
       setIsLoading(false);
     }
   };
-
 
   useEffect(() => {
     fetchGreatDeals();
@@ -126,7 +127,9 @@ export default function LandingPage() {
         <div className={styles.hero}>
           <div className={styles.heroContent}>
             <h1>Найди идеального сожителя!</h1>
-            <p className={styles.heroSubtitleText}>Маркетплейс для тех, кто ищет комфортное жилье и надежного соседа.</p>
+            <p className={styles.heroSubtitleText}>
+              Маркетплейс для тех, кто ищет комфортное жилье и надежного соседа.
+            </p>
             <SearchBar />
           </div>
         </div>
@@ -146,18 +149,23 @@ export default function LandingPage() {
           </div>
 
           <div className={styles.offersList} ref={scrollRef}>
-            {isLoading 
-              ? Array(4).fill(0).map((_, index) => (
-                  <div className="card-wrapper" key={`skeleton-${index}`}>
-                    <CardSkeleton />
-                  </div>
-                ))
+            {isLoading
+              ? Array(4)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div className="card-wrapper" key={`skeleton-${index}`}>
+                      <CardSkeleton />
+                    </div>
+                  ))
               : cardData.map((card, index) => (
                   <div className="card-wrapper" key={card.announcementId}>
-                    <Card key={card.announcementId} card={card} isLast={index === cardData.length - 1} />
+                    <Card
+                      key={card.announcementId}
+                      card={card}
+                      isLast={index === cardData.length - 1}
+                    />
                   </div>
-                ))
-            }
+                ))}
           </div>
         </div>
 
@@ -167,9 +175,9 @@ export default function LandingPage() {
             <div className={styles.ctaBar}></div>
             <h1>Начните сдавать комнату сами!</h1>
             <p>На нашем сайте вы можете выставлять свои объявления</p>
-            <Button 
+            <Button
               className={styles.ctaButton}
-              onPress={() => router.push('/my-announcements/create-announcements')}
+              onPress={() => router.push("/my-announcements/create-announcements")}
             >
               Подать объявление
               <Images.ArrowRight size={isSmallMobile ? 16 : 20} />
@@ -182,8 +190,8 @@ export default function LandingPage() {
           <h2>Наши преимущества</h2>
           <div className={styles.benefitsContent}>
             <div className={styles.accordionWrapper}>
-              <Accordion 
-                selectionMode="multiple" 
+              <Accordion
+                selectionMode="multiple"
                 selectedKeys={expandedKeys}
                 onSelectionChange={(keys) => setExpandedKeys(keys as Set<string>)}
               >

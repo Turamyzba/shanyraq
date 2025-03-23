@@ -7,7 +7,7 @@ import { Dropdown, Input } from "antd";
 import MySlider from "../ui/MySlider";
 import styles from "./SearchBar.module.scss";
 import Images from "@/components/common/Images";
-import MySelect from "@/components/ui/MySelect"
+import MySelect from "@/components/ui/MySelect";
 import MyButton from "../ui/MyButton";
 import { Button } from "@heroui/react";
 
@@ -33,7 +33,6 @@ interface RommatesState {
   name: string;
 }
 
-
 interface AddressState {
   regionId: number | null;
   regionName: string;
@@ -45,10 +44,10 @@ interface AddressState {
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
-  
+
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
-  
+
   const [address, setAddress] = useState<AddressState>({
     regionId: null,
     regionName: "Весь Казахстан",
@@ -61,23 +60,23 @@ const SearchBar: React.FC = () => {
   const [priceRange, setPriceRange] = useState([0, 500000]);
   const [gender, setGender] = useState<GenderState>();
   const [roommates, setRoommates] = useState<RommatesState>();
-  
+
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  
+
   const [citiesData, setCitiesData] = useState<AddressType[]>([]);
   const [districtsData, setDistrictsData] = useState<AddressType[]>([]);
   const [microDistrictsData, setMicroDistrictsData] = useState<AddressType[]>([]);
-  
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [mobileRegion, setMobileRegion] = useState<AddressType | null>(null);
   const [mobileDistrict, setMobileDistrict] = useState<AddressType | null>(null);
   const [mobileMicroDistrict, setMobileMicroDistrict] = useState<AddressType | null>(null);
-  
+
   const genders = [
     { id: 1, name: "Мужской", code: "MALE" },
     { id: 2, name: "Женский", code: "FEMALE" },
-    { id: 3, name: "Любой", code: "OTHER" }
+    { id: 3, name: "Любой", code: "OTHER" },
   ];
 
   const roommateOptions = [
@@ -85,7 +84,7 @@ const SearchBar: React.FC = () => {
     { id: 2, name: "2" },
     { id: 3, name: "3" },
     { id: 4, name: "4" },
-    { id: 5, name: "5+" }
+    { id: 5, name: "5+" },
   ];
 
   // --------------------------------------
@@ -148,7 +147,7 @@ const SearchBar: React.FC = () => {
   useEffect(() => {
     fetchCities();
   }, []);
-  
+
   const getIconSize = () => {
     return isSmallMobile ? 16 : 20;
   };
@@ -190,11 +189,10 @@ const SearchBar: React.FC = () => {
 
     // numberOfPeopleAreYouAccommodating
     if (roommates) {
-      queryParams.numberOfPeopleAreYouAccommodating =
-      roommates.id.toString();
+      queryParams.numberOfPeopleAreYouAccommodating = roommates.id.toString();
     }
 
-    console.log(queryParams)
+    console.log(queryParams);
 
     // Filter out empty keys
     // const queryString = new URLSearchParams(queryParams).toString();
@@ -213,7 +211,7 @@ const SearchBar: React.FC = () => {
     setMobileMicroDistrict(null);
     setDistrictsData([]);
     setMicroDistrictsData([]);
-  
+
     setAddress((prev) => ({
       ...prev,
       regionId: city.id,
@@ -223,17 +221,17 @@ const SearchBar: React.FC = () => {
       microDistrictId: null,
       microDistrictName: "",
     }));
-  
+
     if (city.haschild) {
       fetchDistricts(city.id);
     }
   };
-  
+
   const handleDistrictSelect = (district: AddressType) => {
     setMicroDistrictsData([]);
     setMobileDistrict(null);
     setMobileMicroDistrict(null);
-  
+
     setAddress((prev) => ({
       ...prev,
       districtId: district.id,
@@ -241,12 +239,12 @@ const SearchBar: React.FC = () => {
       microDistrictId: null,
       microDistrictName: "",
     }));
-  
+
     if (district.haschild) {
       fetchMicroDistricts(district.id);
     }
   };
-  
+
   const handleMicroDistrictSelect = (microDistrict: AddressType) => {
     setMobileMicroDistrict(null);
     setAddress((prev) => ({
@@ -255,7 +253,7 @@ const SearchBar: React.FC = () => {
       microDistrictName: microDistrict.namerus,
     }));
   };
-  
+
   const handleSelectAllKazakhstan = () => {
     setAddress({
       regionId: null,
@@ -273,7 +271,7 @@ const SearchBar: React.FC = () => {
   const renderPriceDropdown = () => (
     <div className={styles.priceDropdown}>
       <h3>Выберите цену</h3>
-      
+
       <div className={styles.priceInputs}>
         <Input
           placeholder="Минимальный"
@@ -296,7 +294,7 @@ const SearchBar: React.FC = () => {
           }}
         />
       </div>
-      
+
       <div className={styles.sliderContainer}>
         <div className={styles.sliderLabels}>
           <span>0</span>
@@ -313,7 +311,7 @@ const SearchBar: React.FC = () => {
           className={styles.priceSlider}
         />
       </div>
-      
+
       <div className={styles.actionContent}>
         <Button className={styles.confirmButton} onPress={() => setOpenDropdown(null)}>
           Применить
@@ -325,10 +323,10 @@ const SearchBar: React.FC = () => {
   const renderGenderDropdown = () => (
     <div className={styles.genderDropdown}>
       <h3>Выберите пол</h3>
-      
+
       <ul>
-        {genders.map(g => (
-          <Button 
+        {genders.map((g) => (
+          <Button
             key={g.id}
             className={`${styles.genderItem} ${gender?.code === g.code ? styles.activeGender : ""}`}
             onPress={() => {
@@ -346,10 +344,10 @@ const SearchBar: React.FC = () => {
   const renderRoommatesDropdown = () => (
     <div className={styles.roommatesDropdown}>
       <h3>Количество сожителей</h3>
-      
+
       <ul className={styles.roommatesList}>
-        {roommateOptions.map(r => (
-          <li 
+        {roommateOptions.map((r) => (
+          <li
             key={r.id}
             className={roommates?.id === r.id ? styles.activeRoommate : ""}
             onClick={() => {
@@ -369,10 +367,10 @@ const SearchBar: React.FC = () => {
     setMobileRegion(nextRegion);
     setMobileDistrict(null);
     setMobileMicroDistrict(null);
-  
+
     setDistrictsData([]);
     setMicroDistrictsData([]);
-  
+
     if (nextRegion) {
       setAddress((prev) => ({
         ...prev,
@@ -383,7 +381,7 @@ const SearchBar: React.FC = () => {
         microDistrictId: null,
         microDistrictName: "",
       }));
-  
+
       if (nextRegion.haschild) {
         fetchDistricts(nextRegion.id);
       }
@@ -399,12 +397,12 @@ const SearchBar: React.FC = () => {
       }));
     }
   }
-  
+
   function handleMobileDistrictChange(value: string) {
     const nextDist = districtsData.find((d) => d.id.toString() === value) || null;
     setMobileDistrict(nextDist);
     setMobileMicroDistrict(null);
-  
+
     if (nextDist) {
       setAddress((prev) => ({
         ...prev,
@@ -413,7 +411,7 @@ const SearchBar: React.FC = () => {
         microDistrictId: null,
         microDistrictName: "",
       }));
-  
+
       if (nextDist.haschild) {
         fetchMicroDistricts(nextDist.id);
       } else {
@@ -430,11 +428,11 @@ const SearchBar: React.FC = () => {
       setMicroDistrictsData([]);
     }
   }
-  
+
   function handleMobileMicroDistrictChange(value: string) {
     const nextMicro = microDistrictsData.find((m) => m.id.toString() === value) || null;
     setMobileMicroDistrict(nextMicro);
-  
+
     if (nextMicro) {
       setAddress((prev) => ({
         ...prev,
@@ -449,7 +447,7 @@ const SearchBar: React.FC = () => {
       }));
     }
   }
-  
+
   function renderAddressDropdown() {
     if (!isMobile) {
       return (
@@ -535,9 +533,7 @@ const SearchBar: React.FC = () => {
                     <Button
                       key={micro.id}
                       className={`${styles.addressColumnItem} ${
-                        address.microDistrictId === micro.id
-                          ? styles.activeItem
-                          : ""
+                        address.microDistrictId === micro.id ? styles.activeItem : ""
                       }`}
                       onPress={() => handleMicroDistrictSelect(micro)}
                     >
@@ -549,10 +545,7 @@ const SearchBar: React.FC = () => {
             )}
           </div>
 
-          <MyButton
-            className={styles.confirmButton}
-            onClick={() => setOpenDropdown(null)}
-          >
+          <MyButton className={styles.confirmButton} onClick={() => setOpenDropdown(null)}>
             Выбрать
           </MyButton>
         </div>
@@ -598,21 +591,14 @@ const SearchBar: React.FC = () => {
                     value: m.id.toString(),
                     label: m.namerus,
                   }))}
-                  value={
-                    mobileMicroDistrict?.id
-                      ? mobileMicroDistrict.id.toString()
-                      : ""
-                  }
+                  value={mobileMicroDistrict?.id ? mobileMicroDistrict.id.toString() : ""}
                   onChange={handleMobileMicroDistrictChange}
                 />
               </div>
             )}
           </div>
 
-          <MyButton
-            className={styles.confirmButton}
-            onClick={() => setOpenDropdown(null)}
-          >
+          <MyButton className={styles.confirmButton} onClick={() => setOpenDropdown(null)}>
             Выбрать
           </MyButton>
         </div>
@@ -625,19 +611,16 @@ const SearchBar: React.FC = () => {
       <form onSubmit={handleSearch} className={styles.searchBarForm}>
         <div className={styles.searchItems}>
           <Dropdown
-            open={openDropdown === 'address'}
+            open={openDropdown === "address"}
             onOpenChange={(visible) => {
-              if (visible) setOpenDropdown('address');
-              else if (openDropdown === 'address') setOpenDropdown(null);
+              if (visible) setOpenDropdown("address");
+              else if (openDropdown === "address") setOpenDropdown(null);
             }}
-            trigger={['click']}
+            trigger={["click"]}
             dropdownRender={renderAddressDropdown}
             overlayClassName={styles.customDropdown}
           >
-            <div 
-              className={styles.searchItem}
-              onClick={() => toggleDropdown('address')}
-            >
+            <div className={styles.searchItem} onClick={() => toggleDropdown("address")}>
               <Images.Map color="black" size={getIconSize()} />
               <p>{getAddressDisplay()}</p>
               <Images.ChevronDown color="black" size={getIconSize()} />
@@ -645,19 +628,16 @@ const SearchBar: React.FC = () => {
           </Dropdown>
 
           <Dropdown
-            open={openDropdown === 'price'}
+            open={openDropdown === "price"}
             onOpenChange={(visible) => {
-              if (visible) setOpenDropdown('price');
-              else if (openDropdown === 'price') setOpenDropdown(null);
+              if (visible) setOpenDropdown("price");
+              else if (openDropdown === "price") setOpenDropdown(null);
             }}
-            trigger={['click']}
+            trigger={["click"]}
             dropdownRender={renderPriceDropdown}
             overlayClassName={styles.customDropdown}
           >
-            <div 
-              className={styles.searchItem}
-              onClick={() => toggleDropdown('price')}
-            >
+            <div className={styles.searchItem} onClick={() => toggleDropdown("price")}>
               <Images.Money color="black" size={getIconSize()} />
               <p>{`${formatPrice(priceRange[0])} - ${formatPrice(priceRange[1])}`}</p>
               <Images.ChevronDown color="black" size={getIconSize()} />
@@ -665,19 +645,16 @@ const SearchBar: React.FC = () => {
           </Dropdown>
 
           <Dropdown
-            open={openDropdown === 'gender'}
+            open={openDropdown === "gender"}
             onOpenChange={(visible) => {
-              if (visible) setOpenDropdown('gender');
-              else if (openDropdown === 'gender') setOpenDropdown(null);
+              if (visible) setOpenDropdown("gender");
+              else if (openDropdown === "gender") setOpenDropdown(null);
             }}
-            trigger={['click']}
+            trigger={["click"]}
             dropdownRender={renderGenderDropdown}
             overlayClassName={styles.customDropdown}
           >
-            <div 
-              className={styles.searchItem}
-              onClick={() => toggleDropdown('gender')}
-            >
+            <div className={styles.searchItem} onClick={() => toggleDropdown("gender")}>
               <Images.User color="black" size={getIconSize()} />
               <p>{gender?.name || "Выберите пол"}</p>
               <Images.ChevronDown color="black" size={getIconSize()} />
@@ -685,19 +662,16 @@ const SearchBar: React.FC = () => {
           </Dropdown>
 
           <Dropdown
-            open={openDropdown === 'roommates'}
+            open={openDropdown === "roommates"}
             onOpenChange={(visible) => {
-              if (visible) setOpenDropdown('roommates');
-              else if (openDropdown === 'roommates') setOpenDropdown(null);
+              if (visible) setOpenDropdown("roommates");
+              else if (openDropdown === "roommates") setOpenDropdown(null);
             }}
-            trigger={['click']}
+            trigger={["click"]}
             dropdownRender={renderRoommatesDropdown}
             overlayClassName={styles.customDropdown}
           >
-            <div 
-              className={styles.searchItem}
-              onClick={() => toggleDropdown('roommates')}
-            >
+            <div className={styles.searchItem} onClick={() => toggleDropdown("roommates")}>
               <Images.People color="black" size={getIconSize()} />
               <p>{roommates ? `${roommates.name} человек` : "Количество сожителей"}</p>
               <Images.ChevronDown color="black" size={getIconSize()} />

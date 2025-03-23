@@ -202,31 +202,29 @@
 }
 
 .mobileAddressDropdown {
-position: absolute;
-top: 2px;
-left: 0;
-padding: 16px;
-background: white;
-border-radius: 5px;
-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-display: flex;
-flex-direction: column;
-align-items: flex-end;
-gap: 15px;
-z-index: 100;
-
-.mobileAddressContainer {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  padding: 16px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  width: 100%;
+  align-items: flex-end;
+  gap: 15px;
+  z-index: 100;
 
-  .section {
-    width: 250px;
+  .mobileAddressContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+
+    .section {
+      width: 250px;
+    }
   }
-}
-
-
 }
 .confirmButton {
   background-color: #32343a;

@@ -24,7 +24,6 @@ interface CardProps {
     coordsY: string;
     isArchived: boolean;
     consideringOnlyNPeople: boolean;
-  
   };
   isLast?: boolean;
 }
@@ -40,7 +39,6 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
       setShareUrl(`${window.location.origin}/apartments/${card.announcementId}`);
     }
   }, [card?.announcementId]);
-
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -58,24 +56,20 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
     setIsModalOpen(false);
   };
 
-
-  const truncatedTitle = (card?.title ?? "").length > 26 
-    ? `${card?.title.substring(0, 26)}...`
-    : card?.title;
-
+  const truncatedTitle =
+    (card?.title ?? "").length > 26 ? `${card?.title.substring(0, 26)}...` : card?.title;
 
   return (
-    <div 
-      className={styles.cardWrapper}>
+    <div className={styles.cardWrapper}>
       <div className={styles.card}>
         <div className={styles.cardImage}>
-            <Image
-              src={card?.image ?? ''}
-              alt={card?.title || "Room Image"}
-              width={343}
-              height={220}
-              className={styles.image}
-            />
+          <Image
+            src={card?.image ?? ""}
+            alt={card?.title || "Room Image"}
+            width={343}
+            height={220}
+            className={styles.image}
+          />
           <Button className={styles.shareIcon} onPress={showModal} isIconOnly variant="bordered">
             <Images.Share color="white" size={isSmallMobile ? 18 : 20} />
           </Button>
@@ -96,9 +90,7 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
         <div className={styles.cardContent}>
           {/* Title & Location */}
           <div className={styles.cardTitle}>
-            <p>
-              {truncatedTitle}
-            </p>
+            <p>{truncatedTitle}</p>
           </div>
           <div className={styles.cardLocation}>
             <Images.Map size={isSmallMobile ? 18 : 20} color={"#929292"} />
