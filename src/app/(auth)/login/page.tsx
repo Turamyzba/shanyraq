@@ -49,7 +49,6 @@ export default function LoginPage() {
       console.log(res.data);
       router.push("/apartments");
     });
-    
   };
 
   return (

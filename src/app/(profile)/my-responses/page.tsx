@@ -24,7 +24,7 @@ const mockAnnouncements = [
     ownerName: "Батырхан",
     groupCount: 2,
     applicationDate: "27/11/2024",
-    genderRestriction:'female'
+    genderRestriction: "female",
   },
   {
     id: 2,
@@ -37,7 +37,7 @@ const mockAnnouncements = [
     ownerName: "Асхат",
     groupCount: 1,
     applicationDate: "25/11/2024",
-    genderRestriction:'male'
+    genderRestriction: "male",
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ const mockAnnouncements = [
     ownerName: "Ерлан",
     groupCount: 0,
     applicationDate: "20/11/2024",
-    genderRestriction:'male'
+    genderRestriction: "male",
   },
   {
     id: 4,
@@ -63,7 +63,7 @@ const mockAnnouncements = [
     ownerName: "Марат",
     groupCount: 1,
     applicationDate: "22/11/2024",
-    genderRestriction:'female'
+    genderRestriction: "female",
   },
   {
     id: 5,
@@ -76,7 +76,7 @@ const mockAnnouncements = [
     ownerName: "Дина",
     groupCount: 3,
     applicationDate: "18/11/2024",
-    genderRestriction:'female'
+    genderRestriction: "female",
   },
   {
     id: 6,
@@ -89,8 +89,8 @@ const mockAnnouncements = [
     ownerName: "Алмаз",
     groupCount: 2,
     applicationDate: "15/11/2024",
-    genderRestriction:'female'
-  }
+    genderRestriction: "female",
+  },
 ];
 
 export default function MyResponsesPage() {
@@ -113,7 +113,9 @@ export default function MyResponsesPage() {
 
   let filteredAnnouncements = announcements;
   if (activeTab !== "all") {
-    filteredAnnouncements = announcements.filter((announcement) => announcement.status === activeTab);
+    filteredAnnouncements = announcements.filter(
+      (announcement) => announcement.status === activeTab
+    );
   }
 
   return (
