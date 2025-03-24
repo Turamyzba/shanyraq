@@ -1,53 +1,47 @@
 import React from "react";
-import GroupCard from "./GroupCard";
+import { Group } from "../../../desktop/MyResponses/GroupDetails/types";
+import GroupItem from "./GroupItem";
 import styles from "./GroupDetails.module.scss";
-
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  age: number;
-  phone: string;
-  date: string;
-  avatar: string;
-  isOwner?: boolean;
-}
-
-interface Group {
-  id: number;
-  name: string;
-  members: Member[];
-  isUserMember: boolean;
-  isUserGroupCreator: boolean;
-}
 
 interface GroupListProps {
   groups: Group[];
-  onLeaveGroup: (groupId: number) => void;
+  onLeaveGroup?: (groupId: number) => void;
+  onRemoveMember?: (groupId: number, memberId: number) => void;
+  onAcceptApplicant?: (groupId: number, applicantId: number) => void;
+  onRejectApplicant?: (groupId: number, applicantId: number) => void;
 }
 
-const MobileGroupList: React.FC<GroupListProps> = ({ groups, onLeaveGroup }) => {
-  return (
-    <div className={styles.container}>
-      <div className={styles.groupsHeader}>
-        <h2 className={styles.groupsTitle}>
-          Количество групп: <span className={styles.groupsCount}>{groups.length}</span>
-        </h2>
-      </div>
+const GroupList: React.FC<GroupListProps> = ({
+  groups,
+  onLeaveGroup,
+  onRemoveMember,
+  onAcceptApplicant,
+  onRejectApplicant,
+}) => {
+  // Sort groups: first accepted, then pending, then rejected
+  const sortedGroups = [...groups].sort((a, b) => {
+    const statusOrder = { accepted: 0, pending: 1, rejected: 2 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
 
-      {groups.map((group) => (
-        <GroupCard
-          key={group.id}
-          group={group}
-          onLeaveGroup={
-            group.isUserMember && !group.isUserGroupCreator
-              ? () => onLeaveGroup(group.id)
-              : undefined
-          }
-        />
-      ))}
+  return (
+    <div className={styles.groupsContainer}>
+      <h3 className={styles.groupsTitle}>Группы ({groups.length})</h3>
+
+      <div className={styles.groupsList}>
+        {sortedGroups.map((group) => (
+          <GroupItem
+            key={group.id}
+            group={group}
+            onLeaveGroup={onLeaveGroup}
+            onRemoveMember={onRemoveMember}
+            onAcceptApplicant={onAcceptApplicant}
+            onRejectApplicant={onRejectApplicant}
+          />
+        ))}
+      </div>
     </div>
   );
 };
 
-export default MobileGroupList;
+export default GroupList;

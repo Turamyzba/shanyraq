@@ -1,23 +1,21 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 import dynamic from "next/dynamic";
-import { Button } from "antd";
-import styles from "./styles.module.scss";
 
-// Dynamically import components based on device type
-const DesktopGroupList = dynamic(
-  () => import("../../components/desktop/MyResponses/GroupDetails/GroupList"),
-  { ssr: false }
-);
-const MobileGroupList = dynamic(
-  () => import("../../components/mobile/MyResponses/GroupDetails/GroupList"),
+const DesktopGroupDetails = dynamic(
+  () => import("../../components/desktop/MyResponses/GroupDetails/GroupDetails"),
   { ssr: false }
 );
 
-// Sample data for the announcement detail
-const mockAnnouncementDetail = {
+const MobileGroupDetails = dynamic(
+  () => import("../../components/mobile/MyResponses/GroupDetails/GroupDetails"),
+  { ssr: false }
+);
+
+// Sample data for mocking
+const mockApartmentDetails = {
   id: 1,
   title: "Ищем 2 девушек",
   address: "Ул. Раймбека 181/23",
@@ -29,7 +27,7 @@ const mockAnnouncementDetail = {
   description: "Ищем 2 девушек на подселение",
   price: 150000,
   image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
-  status: "accepted", // pending, accepted, rejected
+  status: "accepted" as const, // pending, accepted, rejected
 };
 
 // Sample groups data
@@ -37,6 +35,7 @@ const mockGroups = [
   {
     id: 1,
     name: "Группа 1",
+    status: "accepted" as const,
     members: [
       {
         id: 1,
@@ -46,7 +45,7 @@ const mockGroups = [
         phone: "8777 777 77 77",
         date: "27/11/2024",
         avatar: "/avatars/user1.jpg",
-        isOwner: true,
+        role: "owner" as const,
       },
       {
         id: 2,
@@ -56,6 +55,7 @@ const mockGroups = [
         phone: "8777 545 74 78",
         date: "27/11/2024",
         avatar: "/avatars/user2.jpg",
+        role: "member" as const,
       },
       {
         id: 3,
@@ -65,14 +65,19 @@ const mockGroups = [
         phone: "8701 577 77 78",
         date: "27/11/2024",
         avatar: "/avatars/user3.jpg",
+        role: "member" as const,
+        isCurrentUser: true,
       },
     ],
+    applicants: [],
     isUserMember: true,
-    isUserGroupCreator: false,
+    isUserAdmin: false,
+    isUserSuperAdmin: false,
   },
   {
     id: 2,
     name: "Группа 2",
+    status: "accepted" as const,
     members: [
       {
         id: 4,
@@ -82,7 +87,8 @@ const mockGroups = [
         phone: "8700 123 45 67",
         date: "26/11/2024",
         avatar: "/avatars/user4.jpg",
-        isOwner: true,
+        role: "superadmin" as const,
+        isCurrentUser: true,
       },
       {
         id: 5,
@@ -92,115 +98,98 @@ const mockGroups = [
         phone: "8707 987 65 43",
         date: "26/11/2024",
         avatar: "/avatars/user5.jpg",
+        role: "member" as const,
+      },
+    ],
+    applicants: [
+      {
+        id: 6,
+        name: "Жанар",
+        email: "zhanar@gmail.com",
+        age: 23,
+        phone: "8700 222 33 44",
+        date: "25/11/2024",
+        avatar: "/avatars/user6.jpg",
+      },
+      {
+        id: 7,
+        name: "Асет",
+        email: "aset@mail.ru",
+        age: 27,
+        phone: "8701 333 44 55",
+        date: "24/11/2024",
+        avatar: "/avatars/user7.jpg",
       },
     ],
     isUserMember: true,
-    isUserGroupCreator: true,
+    isUserAdmin: true,
+    isUserSuperAdmin: true,
+  },
+  {
+    id: 3,
+    name: "Группа 3",
+    status: "pending" as const,
+    members: [
+      {
+        id: 8,
+        name: "Дина",
+        email: null,
+        age: null,
+        phone: null,
+        date: null,
+        avatar: "/avatars/user8.jpg",
+        role: "owner" as const,
+      },
+      {
+        id: 9,
+        name: "Айдос",
+        email: null,
+        age: null,
+        phone: null,
+        date: null,
+        avatar: "/avatars/user9.jpg",
+        role: "admin" as const,
+      },
+      {
+        id: 10,
+        name: "Ваше Имя",
+        email: "your.email@gmail.com",
+        age: 24,
+        phone: "8700 111 22 33",
+        date: "23/11/2024",
+        avatar: "/avatars/user10.jpg",
+        role: "member" as const,
+        isCurrentUser: true,
+      },
+    ],
+    applicants: [],
+    isUserMember: true,
+    isUserAdmin: false,
+    isUserSuperAdmin: false,
   },
 ];
 
 export default function ResponseGroupsPage() {
   const params = useParams();
-  const router = useRouter();
-  const announcementId = params.id as string;
-  const [announcementDetail, setAnnouncementDetail] = useState(mockAnnouncementDetail);
-  const [groups, setGroups] = useState(mockGroups);
+  const responseId = params.id as string;
   const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   useEffect(() => {
     setIsMounted(true);
-    // In a real app, you would fetch the data here based on announcementId
-  }, [announcementId]);
-
-  const handleLeaveGroup = (groupId: number) => {
-    // In a real app, you would call an API to leave the group
-    setGroups(groups.filter((group) => group.id !== groupId));
-  };
+  }, [responseId]);
 
   if (!isMounted) {
     return <div className="loading-placeholder">Загрузка...</div>;
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <Button
-          className={styles.backButton}
-          onClick={() => router.push("/my-responses")}
-          icon={<BackIcon />}
-        >
-          Назад
-        </Button>
-        <h1 className={styles.title}>Группы объявления</h1>
-      </div>
-
-      <div className={styles.apartmentDetails}>
-        <div className={styles.apartmentImage}>
-          <img src={announcementDetail.image} alt={announcementDetail.title} />
-        </div>
-        <div className={styles.apartmentInfo}>
-          <div className={styles.infoMain}>
-            <div className={styles.infoLeft}>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{announcementDetail.address}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{announcementDetail.district}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{announcementDetail.city}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{announcementDetail.roomDetails}</span>
-              </div>
-            </div>
-            <div className={styles.infoRight}>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  Можно заехать с {announcementDetail.moveInDate}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Депозит {announcementDetail.deposit}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>{announcementDetail.description}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoStatus}>
-                  Статус:
-                  <span className={`${styles.statusText} ${styles[announcementDetail.status]}`}>
-                    {announcementDetail.status === "pending" && "В ожидании"}
-                    {announcementDetail.status === "accepted" && "Принята"}
-                    {announcementDetail.status === "rejected" && "Отклонена"}
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className={styles.price}>{announcementDetail.price.toLocaleString()} ₸</div>
-        </div>
-      </div>
-
+    <>
       {isMobile ? (
-        <MobileGroupList groups={groups} onLeaveGroup={handleLeaveGroup} />
+        <MobileGroupDetails apartmentDetails={mockApartmentDetails} groups={mockGroups} />
       ) : (
-        <DesktopGroupList groups={groups} onLeaveGroup={handleLeaveGroup} />
+        <DesktopGroupDetails apartmentDetails={mockApartmentDetails} groups={mockGroups} />
       )}
-    </div>
+    </>
   );
 }
-
-const BackIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12.5 16.6L6.66666 10.7667L12.5 4.93335"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeMiterlimit="10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
