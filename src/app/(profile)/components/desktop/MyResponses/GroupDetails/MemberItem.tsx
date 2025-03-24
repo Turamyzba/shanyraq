@@ -18,12 +18,14 @@ const MemberItem: React.FC<MemberItemProps> = ({ member, isPending, canRemove, o
     if (role === "owner") badgeClass = `${styles.roleBadge} ${styles.ownerBadge}`;
     if (role === "admin") badgeClass = `${styles.roleBadge} ${styles.adminBadge}`;
     if (role === "superadmin") badgeClass = `${styles.roleBadge} ${styles.superAdminBadge}`;
+    if (role === "invited") badgeClass = `${styles.roleBadge} ${styles.memberBadge}`;
 
     const roleText = {
       owner: "Хозяин жилья",
       admin: "Администратор",
       superadmin: "Создатель группы",
       member: "Участник",
+      invited: "Приглашен",
     };
 
     return <span className={badgeClass}>{roleText[role]}</span>;
@@ -73,7 +75,7 @@ const MemberItem: React.FC<MemberItemProps> = ({ member, isPending, canRemove, o
             danger
           >
             <TrashIcon />
-            Удалить
+            {member.role === "invited" ? "Отменить приглашение" : "Удалить"}
           </Button>
         )}
     </div>

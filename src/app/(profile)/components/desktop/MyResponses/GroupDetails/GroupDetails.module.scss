@@ -1,37 +1,6 @@
 .container {
-  padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.backButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: transparent;
-  font-size: 16px;
-  color: #252525;
-  cursor: pointer;
-  padding: 0;
-  margin-right: 16px;
-}
-
-.backButton:hover {
-  color: #1aa683;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #252525;
-  margin: 0;
 }
 
 .apartmentDetails {
@@ -116,6 +85,11 @@
   background-color: #fee2e2;
 }
 
+.draft {
+  color: #6b7280;
+  background-color: #f3f4f6;
+}
+
 .price {
   font-size: 24px;
   font-weight: 700;
@@ -141,6 +115,7 @@
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  margin-bottom: 24px;
 }
 
 .groupHeader {
@@ -427,6 +402,37 @@
   background-color: #178f71;
 }
 
+// Draft-specific styles
+.draftActions {
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.completeDraftButton {
+  background-color: #1aa683;
+  border: none;
+  flex: 1;
+}
+
+.completeDraftButton:hover {
+  background-color: #178f71;
+}
+
+.editDraftButton {
+  background-color: white;
+  border: 1px solid #1aa683;
+  color: #1aa683;
+  flex: 1;
+}
+
+.editDraftButton:hover {
+  background-color: #f0fdf4;
+  color: #1aa683;
+  border-color: #1aa683;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 16px;
@@ -486,5 +492,9 @@
   .groupStatusBadges {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .draftActions {
+    flex-direction: column;
   }
 }

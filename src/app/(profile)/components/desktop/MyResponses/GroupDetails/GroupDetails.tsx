@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "antd";
 import { Group, ApartmentDetails, ModalConfig } from "./types";
 import ApartmentDetailsComponent from "./ApartmentDetails";
@@ -13,7 +12,6 @@ interface GroupDetailsProps {
 }
 
 const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups }) => {
-  const router = useRouter();
   const [groupsData, setGroupsData] = useState<Group[]>(groups);
   const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
 
@@ -113,17 +111,6 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <Button
-          className={styles.backButton}
-          onClick={() => router.push("/my-responses")}
-          icon={<BackIcon />}
-        >
-          Назад
-        </Button>
-        <h1 className={styles.title}>Группы объявления</h1>
-      </div>
-
       <ApartmentDetailsComponent details={apartmentDetails} />
 
       <GroupList
@@ -138,18 +125,5 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
     </div>
   );
 };
-
-const BackIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12.5 16.6L6.66666 10.7667L12.5 4.93335"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeMiterlimit="10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 export default GroupDetails;

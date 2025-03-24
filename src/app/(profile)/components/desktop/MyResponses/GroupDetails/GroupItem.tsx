@@ -24,6 +24,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
   const displayedAvatars = group.members.slice(0, avatarLimit);
   const hasMoreAvatars = group.members.length > avatarLimit;
   const isPending = group.status === "pending";
+  const isDraft = group.status === "draft";
 
   // Only admins and superadmins can remove members
   const canRemoveMembers = group.isUserAdmin || group.isUserSuperAdmin;
@@ -33,6 +34,22 @@ const GroupItem: React.FC<GroupItemProps> = ({
 
   // Users can leave groups if they're members but not superadmins
   const canLeaveGroup = group.isUserMember && !group.isUserSuperAdmin;
+
+  // Get status text based on group status
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "В ожидании";
+      case "accepted":
+        return "Принята";
+      case "rejected":
+        return "Отклонена";
+      case "draft":
+        return "Черновик";
+      default:
+        return "";
+    }
+  };
 
   return (
     <div className={styles.groupCard}>
@@ -68,7 +85,9 @@ const GroupItem: React.FC<GroupItemProps> = ({
               }`}
             >
               {group.isUserSuperAdmin
-                ? "Вы создатель группы"
+                ? isDraft
+                  ? "Вы создатель черновика"
+                  : "Вы создатель группы"
                 : group.isUserAdmin
                   ? "Вы администратор"
                   : "Вы участник группы"}
@@ -76,9 +95,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
           )}
 
           <div className={`${styles.groupStatusBadge} ${styles[group.status]}`}>
-            {group.status === "pending" && "В ожидании"}
-            {group.status === "accepted" && "Принята"}
-            {group.status === "rejected" && "Отклонена"}
+            {getStatusText(group.status)}
           </div>
         </div>
       </div>
@@ -86,11 +103,12 @@ const GroupItem: React.FC<GroupItemProps> = ({
       <MembersList
         members={group.members}
         isPending={isPending}
+        isDraft={isDraft}
         canRemoveMembers={canRemoveMembers}
         onRemoveMember={(memberId) => onRemoveMember && onRemoveMember(group.id, memberId)}
       />
 
-      {group.applicants.length > 0 && (
+      {group.applicants.length > 0 && !isDraft && (
         <ApplicantsList
           applicants={group.applicants}
           isPending={isPending}
@@ -104,7 +122,16 @@ const GroupItem: React.FC<GroupItemProps> = ({
         />
       )}
 
-      {canLeaveGroup && (
+      {isDraft && (
+        <div className={styles.draftActions}>
+          <Button type="primary" className={styles.completeDraftButton}>
+            Завершить черновик
+          </Button>
+          <Button className={styles.editDraftButton}>Редактировать</Button>
+        </div>
+      )}
+
+      {canLeaveGroup && !isDraft && (
         <div className={styles.leaveGroupSection}>
           <Button
             onClick={() => onLeaveGroup && onLeaveGroup(group.id)}
