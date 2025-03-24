@@ -23,7 +23,7 @@ const GroupsList: React.FC<GroupsListProps> = ({
       title: "Пользователь",
       key: "user",
       fixed: "left" as const,
-      width: 240,
+      width: 320,
       render: (user: User) => (
         <div className={styles.tableUser}>
           <div
@@ -43,7 +43,7 @@ const GroupsList: React.FC<GroupsListProps> = ({
     {
       title: "Телеграм",
       key: "telegram",
-      width: 160,
+      width: 100,
       render: (user: User) => (
         <a
           href={`https://t.me/${user.telegram.substring(1)}`}
@@ -71,7 +71,7 @@ const GroupsList: React.FC<GroupsListProps> = ({
       title: "Дата",
       dataIndex: "date",
       key: "date",
-      width: 120,
+      width: 100,
     },
     {
       title: "Действия",
@@ -93,14 +93,15 @@ const GroupsList: React.FC<GroupsListProps> = ({
       key: "remove",
       fixed: "right" as const,
       width: 60,
-      render: (user: User, _, index: number, group: Group) =>
-        !user.isAdmin && (
+      render: (user: User, record: any) => {
+        return (
           <Button
             className={styles.removeButton}
-            onClick={() => onRemoveMember(group.id, user.id)}
+            onClick={() => onRemoveMember(record.group.id, user.id)}
             icon={<TrashIcon />}
           />
-        ),
+        );
+      },
     },
   ];
 
@@ -109,7 +110,7 @@ const GroupsList: React.FC<GroupsListProps> = ({
       title: "Пользователь",
       key: "user",
       fixed: "left" as const,
-      width: 240,
+      width: 320,
       render: (user: User) => (
         <div className={styles.tableUser}>
           <div
@@ -126,7 +127,7 @@ const GroupsList: React.FC<GroupsListProps> = ({
     {
       title: "Телеграм",
       key: "telegram",
-      width: 160,
+      width: 100,
       render: (user: User) => (
         <a
           href={`https://t.me/${user.telegram.substring(1)}`}
@@ -154,7 +155,7 @@ const GroupsList: React.FC<GroupsListProps> = ({
       title: "Дата",
       dataIndex: "date",
       key: "date",
-      width: 120,
+      width: 100,
     },
     {
       title: "Действия",
@@ -201,11 +202,11 @@ const GroupsList: React.FC<GroupsListProps> = ({
             <Collapse
               defaultActiveKey={["members"]}
               ghost
-              expandIconPosition="end"
+              expandIconPosition="start"
               items={[
                 {
                   key: "members",
-                  label: "Участники группы",
+                  label: <div className={styles.collapseHeader}>Участники группы</div>,
                   children: (
                     <div>
                       <Table
@@ -216,9 +217,8 @@ const GroupsList: React.FC<GroupsListProps> = ({
                         rowKey="id"
                         scroll={{ x: "max-content", y: 400 }}
                       />
-                      {group.newApplications.length > 0 && (
+                      {group.newApplications && group.newApplications.length > 0 && (
                         <>
-                          {" "}
                           <h4 className={styles.applicationsSectionTitle}>Новые заявки</h4>
                           <div className={styles.groupNewApplications}>
                             <Table

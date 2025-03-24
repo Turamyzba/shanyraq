@@ -19,15 +19,15 @@
   width: 40px !important;
   height: 40px !important;
   border: none;
-  background-color: #1AA683;
+  background-color: #1aa683;
   border-radius: 50%;
   color: #fff;
   margin-right: 16px;
 }
 .backButton:hover {
-    background-color: #1aa683 !important;
-    color: #fff !important;
-  }
+  background-color: #1aa683 !important;
+  color: #fff !important;
+}
 .title {
   font-size: 24px;
   font-weight: 600;
@@ -125,7 +125,7 @@
 }
 
 .telegramLink {
-  color: #1AA683;
+  color: #1aa683;
   text-decoration: none;
 }
 
@@ -234,15 +234,10 @@
 .adminBadge,
 .groupBadge {
   font-size: 12px;
-  color: #6b7280;
-  background-color: #f3f4f6;
+  background-color: #e9f2f0;
+  color: #1aa683;
   padding: 2px 8px;
   border-radius: 4px;
-}
-
-.groupBadge {
-  background-color: #e9f2f0;
-  color: #1AA683;
 }
 
 .groupRequest {
@@ -273,11 +268,10 @@
   height: auto;
   padding: 6px 8px;
   text-align: center;
-
 }
-.actionButton:hover{
-    color: #1aa683 !important;
-    border: 1px solid #1aa683 !important;
+.actionButton:hover {
+  color: #1aa683 !important;
+  border: 1px solid #1aa683 !important;
 }
 .acceptButton,
 .rejectButton,
@@ -297,10 +291,10 @@
   color: white;
 }
 .acceptButton:hover {
-    background-color: #178f71 !important;
-    border: none;
-    color: white;
-  }
+  background-color: #178f71 !important;
+  border: none;
+  color: white;
+}
 .rejectButton {
   background-color: white;
   border: 1px solid #ef4444;
@@ -313,15 +307,14 @@
   color: #ef4444;
 }
 
-.groupNewApplications {
-  padding: 20px;
-}
-
 .applicationsSectionTitle {
   font-size: 16px;
+  margin-top: 20px !important;
+  margin-left: 15px !important;
   font-weight: 500;
   color: #252525;
   margin: 0;
+  margin-bottom: 20px;
 }
 
 .questionnaireModal,
@@ -375,4 +368,37 @@
 
 .nestedTable {
   margin-top: 10px;
+}
+.collapseHeader {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 500;
+
+  color: #252525;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+:global(.ant-collapse-header) {
+  padding: 12px 0 !important;
+  background-color: transparent !important;
+}
+
+:global(.ant-collapse-content-box) {
+  padding-top: 0 !important;
+}
+
+:global(.ant-collapse) {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+:global(.ant-collapse-item) {
+  border-bottom: none !important;
+}
+
+:global(.ant-collapse-header-text) {
+  width: 100%;
 }

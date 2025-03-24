@@ -104,7 +104,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
           <div>
             <div className={styles.userName}>
               {user.username}
-              {user.groupApplicants && (
+              {user.groupApplicants && user.groupApplicants.length > 0 && (
                 <span className={styles.groupBadge}>
                   Группа ({user.groupApplicants.length + 1})
                 </span>
@@ -196,7 +196,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
     <Collapse
       defaultActiveKey={["newApps"]}
       ghost
-      expandIconPosition="end"
+      expandIconPosition="start"
       className={styles.newApplicationsCollapse}
       items={[
         {
@@ -213,7 +213,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
                 scroll={{ x: "max-content", y: 400 }}
                 expandable={{
                   expandedRowRender: (record) =>
-                    record.groupApplicants ? (
+                    record.groupApplicants && record.groupApplicants.length > 0 ? (
                       <div className={styles.groupApplicantsContainer}>
                         <h4 className={styles.groupApplicantsTitle}>Соседи по группе:</h4>
                         <Table
