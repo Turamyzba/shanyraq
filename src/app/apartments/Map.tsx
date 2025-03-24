@@ -4,50 +4,48 @@ import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./Map.module.scss";
-
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import * as turf from "@turf/turf";
+import Supercluster from 'supercluster';
+import { useMediaQuery } from "react-responsive";
+
+interface Apartment {
+  id: number;
+  title: string;
+  cost: string;
+  image: string;
+  address: string;
+  selectedGender: string;
+  roomCount: number;
+  roommates: number;
+  arriveDate: string;
+  coordinates?: [number, number];
+}
 
 interface MapProps {
   update?: boolean;
+  apartments?: Apartment[];
+  isLoading?: boolean;
+  onPointsSelected?: (points: [number, number][]) => void;
 }
 
-const mockMarkers = [
-  {
-    id: 1,
-    title: "Уютная квартира в центре",
-    cost: "180 000",
-    image: "/apartment1.jpg",
-    coords: [76.9286, 43.2383] as [number, number], // Centered on Almaty
-  },
-  {
-    id: 2,
-    title: "Современная студия",
-    cost: "220 000",
-    image: "/apartment2.jpg",
-    coords: [77.0, 43.2] as [number, number],
-  },
-  {
-    id: 3,
-    title: "Комната с панорамным видом",
-    cost: "150 000",
-    image: "/apartment3.jpg",
-    coords: [76.85, 43.25] as [number, number],
-  },
-];
-
-const Map: React.FC<MapProps> = ({ update }) => {
-  // Provide your Mapbox token here or via an env variable
+const Map: React.FC<MapProps> = ({ update, apartments = [], isLoading = false, onPointsSelected }) => {
   mapboxgl.accessToken =
     process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ||
     "pk.eyJ1IjoibWVpcm1hbi1pcy1yZWF0b3IiLCJhIjoiY2x5NjVpaWNlMDVneDJ0c2F6cTVxNzZqNSJ9.WVkGzQEf4yJGjr98WSgzpA";
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const [calculatedArea, setCalculatedArea] = useState("");
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const popupsRef = useRef<mapboxgl.Popup[]>([]);
+  const drawRef = useRef<any>(null);
+  const [selectedPoints, setSelectedPoints] = useState<[number, number][]>([]);
+  const superclusterRef = useRef<Supercluster | null>(null);
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isSmallMobile = useMediaQuery({ maxWidth: 480 });
 
-  // Initialize the map on mount
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
@@ -58,25 +56,18 @@ const Map: React.FC<MapProps> = ({ update }) => {
       zoom: 12,
     });
 
-    // Add markers with redesigned popups using our mock data
-    mockMarkers.forEach((marker) => {
-      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <div class="${styles.popup}">
-          <a href="/announcement/${marker.id}" class="${styles.popupLink}">
-            <div class="${styles.popupCard}">
-              <img src="${marker.image}" alt="${marker.title}" class="${styles.popupImage}" />
-              <h3 class="${styles.popupTitle}">${marker.title}</h3>
-              <p class="${styles.popupPrice}">${marker.cost} <span>₸</span></p>
-            </div>
-          </a>
-        </div>
-      `);
-
-      new mapboxgl.Marker({ color: "#3FB1CE" })
-        .setLngLat(marker.coords)
-        .setPopup(popup)
-        .addTo(mapRef.current!);
-    });
+    const map = mapRef.current;
+    map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+    
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        trackUserLocation: true
+      }),
+      'bottom-right'
+    );
 
     const draw = new MapboxDraw({
       displayControlsDefault: false,
@@ -84,45 +75,274 @@ const Map: React.FC<MapProps> = ({ update }) => {
         polygon: true,
         trash: true,
       },
-      defaultMode: "draw_polygon",
+      defaultMode: "simple_select",
     });
-    mapRef.current.addControl(draw);
-
-    // 4) Set up draw event handlers
-    mapRef.current.on("draw.create", handleDraw);
-    mapRef.current.on("draw.delete", handleDraw);
-    mapRef.current.on("draw.update", handleDraw);
+    
+    drawRef.current = draw;
+    map.addControl(draw);
 
     function handleDraw(e: any) {
       const data = draw.getAll();
       if (data.features.length > 0) {
-        // Use Turf.js to calculate area (square meters by default)
-        const area = turf.area(data);
-        // Restrict the area to 2 decimal points
-        const rounded = Math.round(area * 100) / 100;
-        setCalculatedArea(`${rounded} square meters`);
+        const points: [number, number][] = [];
+        
+        data.features.forEach(feature => {
+          if (feature.geometry.type === 'Polygon') {
+            feature.geometry.coordinates[0].forEach((coord) => {
+              points.push([coord[0], coord[1]] as [number, number]);
+            });
+          }
+        });
+        
+        setSelectedPoints(points);
+        if (onPointsSelected) {
+          onPointsSelected(points);
+        }
       } else {
-        setCalculatedArea("");
-        // If not deleting, show an alert prompting user to draw
-        if (e.type !== "draw.delete") {
-          alert("Click the map to draw a polygon.");
+        setSelectedPoints([]);
+        if (onPointsSelected) {
+          onPointsSelected([]);
         }
       }
     }
 
+    const trashButton = document.querySelector('.mapbox-gl-draw_trash');
+    if (trashButton) {
+      trashButton.addEventListener('click', () => {
+        // Clear all selected points
+        setSelectedPoints([]);
+        if (onPointsSelected) {
+          onPointsSelected([]);
+        }
+      });
+    }
+
+    map.on("draw.create", handleDraw);
+    map.on("draw.delete", handleDraw);
+    map.on("draw.update", handleDraw);
+
+    map.on('load', () => {
+      updateMarkers();
+    });
+
     return () => {
+      markersRef.current.forEach(marker => marker.remove());
+      popupsRef.current.forEach(popup => popup.remove());
       mapRef.current?.remove();
     };
   }, []);
 
-  // When the "update" prop changes, trigger a map resize
+  useEffect(() => {
+    if (mapRef.current && mapRef.current.loaded() && apartments.length > 0) {
+      updateMarkers();
+    }
+  }, [apartments]);
+
   useEffect(() => {
     if (mapRef.current) {
       mapRef.current.resize();
     }
   }, [update]);
 
-  return <div className={styles.mapContainer} ref={mapContainerRef} />;
+  const toggleDrawingMode = () => {
+    if (!drawRef.current) return;
+    
+    const currentMode = drawRef.current.getMode();
+    if (currentMode === 'simple_select' || currentMode === 'direct_select') {
+      drawRef.current.changeMode('draw_polygon');
+      setIsDrawingMode(true);
+    } else {
+      drawRef.current.changeMode('simple_select');
+      setIsDrawingMode(false);
+    }
+  };
+
+  const updateMarkers = () => {
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+    
+    popupsRef.current.forEach(popup => popup.remove());
+    popupsRef.current = [];
+
+    if (!mapRef.current || apartments.length === 0) return;
+
+    const map = mapRef.current;
+    
+    const points = apartments.map(apt => {
+      const coords: [number, number] = apt.coordinates || 
+        [76.9286 + (Math.random() * 0.2 - 0.1), 43.2383 + (Math.random() * 0.2 - 0.1)];
+      
+      return {
+        type: 'Feature',
+        properties: {
+          id: apt.id,
+          apartment: apt
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: coords
+        }
+      };
+    }) as any;
+
+    superclusterRef.current = new Supercluster({
+      radius: 60,
+      maxZoom: 16
+    });
+    
+    superclusterRef.current.load(points);
+    
+    updateClusterMarkers();
+    
+    map.on('zoom', updateClusterMarkers);
+    map.on('moveend', updateClusterMarkers);
+  };
+
+  const updateClusterMarkers = () => {
+    if (!mapRef.current || !superclusterRef.current) return;
+    
+    const map = mapRef.current;
+    const supercluster = superclusterRef.current;
+    
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+    
+    popupsRef.current.forEach(popup => popup.remove());
+    popupsRef.current = [];
+    
+    const bounds = map.getBounds() as any;
+    const zoom = Math.floor(map.getZoom());
+    
+    const clusters = supercluster.getClusters(
+      [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()],
+      zoom
+    );
+    
+    clusters.forEach(cluster => {
+      const [longitude, latitude] = cluster.geometry.coordinates;
+      
+      if (cluster.properties.cluster) {
+        const pointCount = cluster.properties.point_count;
+        
+        const el = document.createElement('div');
+        let size = 'small';
+        
+        if (pointCount > 10) size = 'large';
+        else if (pointCount > 5) size = 'medium';
+        
+        el.className = `${styles.clusterMarker} ${styles[size]}`;
+        el.textContent = pointCount.toString();
+        
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat([longitude, latitude])
+          .addTo(map);
+          
+        el.addEventListener('click', () => {
+          const expansionZoom = supercluster.getClusterExpansionZoom(
+            cluster.properties.cluster_id
+          );
+          map.flyTo({
+            center: [longitude, latitude],
+            zoom: expansionZoom + 0.5
+          });
+        });
+        
+        markersRef.current.push(marker);
+      } else {
+        const apartment = cluster.properties.apartment;
+        
+        const marker = new mapboxgl.Marker({ color: '#1AA683' })
+          .setLngLat([longitude, latitude])
+          .addTo(map);
+          
+        marker.getElement().addEventListener('click', () => {
+          // Remove any existing popups to prevent multiple popups
+          popupsRef.current.forEach(popup => popup.remove());
+          popupsRef.current = [];
+          
+          const popup = new mapboxgl.Popup({
+            offset: 25,
+            maxWidth: '240px',
+            closeButton: true,
+            closeOnClick: false,
+            className: styles.popup
+          });
+          
+          popup.setLngLat([longitude, latitude]);
+          
+          const popupNode = document.createElement('div');
+          popupNode.className = styles.mapCardWrapper;
+          
+          const miniCard = document.createElement('div');
+          miniCard.className = styles.miniCardContent;
+          miniCard.innerHTML = `
+            <div class="${styles.miniCardImage}">
+              <img src="${apartment.image || 'https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg'}" alt="${apartment.title || ''}" width="240" height="120" />
+            </div>
+            <div class="${styles.miniCardInfo}">
+              <h3>${apartment.title || ''}</h3>
+              <p class="${styles.miniCardAddress}"><span class="${styles.icon}">📍</span> ${apartment.address || ''}</p>
+              <p class="${styles.miniCardPrice}">${apartment.cost || ''} <span class="${styles.currency}">₸</span></p>
+              <a href="/apartments/${apartment.id}" class="${styles.miniCardLink}">Подробнее</a>
+            </div>
+          `;
+          
+          popupNode.appendChild(miniCard);
+          
+          popup.setDOMContent(popupNode);
+          
+          popup.addTo(map);
+          popupsRef.current.push(popup);
+        });
+        
+        markersRef.current.push(marker);
+      }
+    });
+  };
+
+  const clearAllSelections = () => {
+    if (drawRef.current) {
+      // Delete all features
+      drawRef.current.deleteAll();
+      
+      // Clear the selected points
+      setSelectedPoints([]);
+      
+      // Notify parent component
+      if (onPointsSelected) {
+        onPointsSelected([]);
+      }
+    }
+  };
+
+  return (
+    <div className={styles.mapContainer} ref={mapContainerRef}>
+      <div className={styles.mapControls}>
+        <button 
+          className={`${styles.drawButton} ${isDrawingMode ? styles.drawActiveButton : ''}`} 
+          onClick={toggleDrawingMode}
+        >
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+            <path d="M2 2l7.586 7.586"></path>
+            <circle cx="11" cy="11" r="2"></circle>
+          </svg>
+        </button>
+        <button 
+          className={styles.drawButton} 
+          onClick={clearAllSelections}
+        >
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Map;

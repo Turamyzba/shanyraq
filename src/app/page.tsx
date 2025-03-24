@@ -11,72 +11,27 @@ import CardSkeleton from "../components/common/LandingCardSkeleton";
 import { useMediaQuery } from "react-responsive";
 import { useRouter } from "next/navigation";
 import SearchBar from "@/components/common/SearchBar";
-import { getGreatDeals, LandingCard } from "@/lib/api/landingService";
-
-const appAdvantages = [
-  {
-    id: 1,
-    title: "Удобный поиск соседей",
-    description:
-      "Наше приложение позволяет быстро найти подходящих соседей, фильтруя по предпочтениям, местоположению и типу жилья, что экономит время и усилия.",
-  },
-  {
-    id: 2,
-    title: "Безопасность и проверка данных",
-    description:
-      "В Shanyraq мы уделяем особое внимание безопасности пользователей. Все аккаунты проходят верификацию, что гарантирует надежность информации и безопасность общения.",
-  },
-  {
-    id: 3,
-    title: "Интерактивная карта",
-    description:
-      "Интерактивная карта позволяет пользователям легко находить комнаты и квартиры в нужных районах города, а также оценивать близость к транспорту, магазинам и другим важным объектам.",
-  },
-  {
-    id: 4,
-    title: "Функция мгновенных уведомлений",
-    description:
-      "Получайте мгновенные уведомления о новых объявлениях, которые соответствуют вашим критериям поиска, чтобы не упустить лучшие варианты.",
-  },
-  {
-    id: 5,
-    title: "Отзывы и рейтинги",
-    description:
-      "Каждый пользователь может оставлять отзывы о своем опыте проживания, что помогает выбрать надежных и комфортных соседей, а также избежать неприятных ситуаций.",
-  },
-  {
-    id: 6,
-    title: "Простота в использовании",
-    description:
-      "Приложение имеет интуитивно понятный интерфейс, который позволяет пользователям легко размещать объявления, просматривать предложения и общаться с потенциальными соседями.",
-  },
-  {
-    id: 7,
-    title: "Поддержка разных форматов жилья",
-    description:
-      "Мы предлагаем не только квартиры, но и комнаты, койко-места, а также совместное проживание в различных типах жилья — от студий до многокомнатных квартир.",
-  },
-];
+import { useLazyGetGreatDealsQuery } from "@/store/features/landing/landingApi";
+import { LandingCard, appAdvantages } from "@/types/landing";
 
 export default function LandingPage() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [cardData, setCardData] = useState<LandingCard[]>([]);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
+  const router = useRouter();
+  const [getGreatDeals] = useLazyGetGreatDealsQuery();
+
+  const [greatDeals, setGreatDeals] = useState<LandingCard[]>([]);
   const [expandedKeys, setExpandedKeys] = useState(new Set(["1"]));
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
-  const fetchGreatDeals = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getGreatDeals();
-      setCardData(data);
-    } catch (err: any) {
-      console.log(err?.message || "Something went wrong");
-    } finally {
+  const fetchGreatDeals = () => {
+    setIsLoading(true);
+    getGreatDeals().then(({ data }) => {
+      setGreatDeals(data?.data as LandingCard[]);
+    }).finally(() => {
       setIsLoading(false);
-    }
+    })
   };
 
   useEffect(() => {
@@ -100,7 +55,6 @@ export default function LandingPage() {
   return (
     <Container>
       <div className={styles.landing}>
-        {/* Hero Section */}
         <div className={styles.hero}>
           <div className={styles.heroContent}>
             <h1>Найди идеального сожителя!</h1>
@@ -111,7 +65,6 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Offers Section */}
         <div className={styles.offers}>
           <div className={styles.offersHeader}>
             <h2>Выгодные предложения</h2>
@@ -134,19 +87,18 @@ export default function LandingPage() {
                       <CardSkeleton />
                     </div>
                   ))
-              : cardData.map((card, index) => (
+              : greatDeals.map((card, index) => (
                   <div className="card-wrapper" key={card.announcementId}>
                     <Card
                       key={card.announcementId}
                       card={card}
-                      isLast={index === cardData.length - 1}
+                      isLast={index === greatDeals.length - 1}
                     />
                   </div>
                 ))}
           </div>
         </div>
 
-        {/* CTA Section */}
         <div className={styles.cta}>
           <div className={styles.ctaContent}>
             <div className={styles.ctaBar}></div>
@@ -162,7 +114,6 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Benefits Section */}
         <div className={styles.benefits}>
           <h2>Наши преимущества</h2>
           <div className={styles.benefitsContent}>

@@ -1,60 +1,236 @@
 .mapContainer {
   width: 100%;
-  height: 80vh; // Adjust height as needed
+  height: 80vh;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  
+  @media (max-width: 768px) {
+    height: 70vh;
+    border-radius: 0;
+    margin: 0 -10px;
+    width: calc(100% + 20px);
+  }
 }
 
-/* Popup Container */
-.popup {
-  font-family: Arial, sans-serif;
-  padding: 8px;
+.mapLoading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
-/* Link wrapper for the popup */
-.popupLink {
-  text-decoration: none;
-  color: inherit;
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #1AA683;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-/* Popup Card Design */
-.popupCard {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.mapControls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: 5px;
 }
 
-/* Popup Image */
-.popupImage {
+.drawButton {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  &:hover {
+    background: #f5f5f5;
+  }
+  
+  svg {
+    min-width: 20px;
+    min-height: 20px;
+    color: #1AA683;
+  }
+}
+
+.drawActiveButton {
+  background: #f0f0f0;
+  border: 2px solid #1AA683;
+}
+
+.marker {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #1AA683;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.clusterMarker {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #1AA683;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  
+  &.small {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+  
+  &.medium {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  &.large {
+    width: 50px;
+    height: 50px;
+    font-size: 16px;
+  }
+}
+
+.mapCardWrapper {
   width: 100%;
-  max-width: 300px;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  padding: 0;
 }
 
-/* Popup Title */
-.popupTitle {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0 0 4px;
-  color: #252525;
+.miniCardContent {
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
 }
 
-/* Popup Price */
-.popupPrice {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 10px 0 0;
-  color: #252525;
+.miniCardImage {
+  width: 100%;
+  height: 120px;
+  
+  img {
+    width: 100%;
+    border-radius: 8px;
+    height: 120px;
+    object-fit: cover;
+  }
 }
 
-.popupPrice span {
-  text-decoration: underline;
+.miniCardInfo {
+  padding: 10px;
+  
+  h3 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #252525;
+  }
+  
+  .miniCardAddress {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #929292;
+    
+    .icon {
+      font-size: 12px;
+    }
+  }
+  
+  .miniCardPrice {
+    font-size: 16px;
+    font-weight: 700;
+    color: #252525;
+    margin: 8px 0;
+    
+    .currency {
+      text-decoration: underline;
+      margin-left: 2px;
+    }
+  }
+  
+  .miniCardLink {
+    display: inline-block;
+    font-size: 12px;
+    color: #1AA683;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.drawingTools {
+  display: flex;
+  gap: 8px;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.drawButton, .clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 4px;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    background: #e0e0e0;
+  }
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  &.active {
+    background: #1AA683;
+    color: white;
+  }
+}
+
+.clearButton {
+  background: #f5f5f5;
+  
+  &:hover {
+    background: #ffebee;
+    color: #d32f2f;
+  }
 }

@@ -106,3 +106,39 @@ textarea:focus {
   border-color: #1aa683;
   outline: none;
 }
+
+.mapboxgl-popup {
+  max-width: auto !important;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  position: relative;
+}
+
+.mapboxgl-popup-content {
+  padding: 0 !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.mapboxgl-popup-close-button {
+  font-size: 16px !important;
+  color: white !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  border-radius: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  top: 5px !important;
+  right: 5px !important;
+  z-index: 100 !important;
+  position: absolute !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+}

@@ -10,7 +10,7 @@ import { Tabs, Tab, Checkbox, addToast } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
-// import result from "../../../result.json"
+import { useMediaQuery } from "react-responsive";
 
 interface AddressNode {
   Id: number;
@@ -27,8 +27,11 @@ interface AddressNode {
   Children: AddressNode[];
 }
 
-export default function Filter() {
-  // Basic Filter States
+interface FilterProps {
+  onSubmit?: (filterData: any) => void;
+}
+
+export default function Filter({ onSubmit }: FilterProps) {
   const [selectedGender, setSelectedGender] = useState("");
   const genders = [
     { value: "Мужчина", label: "Мужчина" },
@@ -40,7 +43,8 @@ export default function Filter() {
   const [selectedDistrict, setSelectedDistrict] = useState<AddressNode | null>(null);
   const [selectedMicroDistrict, setSelectedMicroDistrict] = useState<AddressNode | null>(null);
   const [selectedStreet, setSelectedStreet] = useState<AddressNode | null>(null);
-  const regions: AddressNode[] = [];
+  const [regions, setRegions] = useState<AddressNode[]>([]);
+  const [isLoadingRegions, setIsLoadingRegions] = useState(false);
 
   const [priceRange, setPriceRange] = useState([0, 500000]);
   const handlePriceSliderChange = (event: any, newValue: number | number[]) => {
@@ -53,42 +57,18 @@ export default function Filter() {
   const incrementRooms = () => setRooms((prev) => Math.min(prev + 1, 10));
   const decrementRooms = () => setRooms((prev) => Math.max(prev - 1, 1));
 
-  // Age Range
   const [ageRange, setAgeRange] = useState([18, 50]);
   const handleAgeSliderChange = (event: any, newValue: number | number[]) => {
     setAgeRange(newValue as number[]);
   };
 
-  // Move-in Date & Checkboxes (using Hero UI Calendar & Checkbox)
   let [moveInDate, setMoveInDate] = useState(parseDate("2024-03-07"));
 
   const [isToday, setIsToday] = useState(false);
   const [isTomorrow, setIsTomorrow] = useState(false);
-  //   const toggleToday = () => {
-  //     setIsToday((prev) => !prev);
-  //     if (!isToday) {
-  //       setIsTomorrow(false);
-  //       setMoveInDate(new Date().toISOString().split("T")[0]);
-  //     } else {
-  //       setMoveInDate("");
-  //     }
-  //   };
-  //   const toggleTomorrow = () => {
-  //     setIsTomorrow((prev) => !prev);
-  //     if (!isTomorrow) {
-  //       setIsToday(false);
-  //       const tomorrow = new Date();
-  //       tomorrow.setDate(tomorrow.getDate() + 1);
-  //       setMoveInDate(tomorrow.toISOString().split("T")[0]);
-  //     } else {
-  //       setMoveInDate("");
-  //     }
-  //   };
 
-  // More Filters Toggle
   const [moreFilters, setMoreFilters] = useState(false);
 
-  // Additional Filters
   const [roomSize, setRoomSize] = useState(["", "60"]);
   const handleRoomSizeChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newRoomSize = [...roomSize];
@@ -105,28 +85,24 @@ export default function Filter() {
   const [isNotFirstFloor, setIsNotFirstFloor] = useState(false);
   const [isNotLastFloor, setIsNotLastFloor] = useState(false);
 
-  // Long Term vs Short Term using Hero UI Tabs
-  const [termType, setTermType] = useState("long"); // "long" or "short"
+  const [termType, setTermType] = useState("long");
 
-  // Additional Options using Hero UI Checkbox
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [utilitiesIncluded, setUtilitiesIncluded] = useState(false);
   const [forStudents, setForStudents] = useState(false);
   const [onlyEmptyApartments, setOnlyEmptyApartments] = useState(false);
   const [badHabitsAllowed, setBadHabitsAllowed] = useState(false);
 
-  // Property Type selection (Apartment/House)
   const [propertyType, setPropertyType] = useState("");
+  
+  const isSmallMobile = useMediaQuery({ maxWidth: 480 });
 
-  // Additional Switch—for example, auto-update search
-  const [autoUpdate, setAutoUpdate] = useState(false);
-
-  // Reset All Filters
   const resetFilters = () => {
     setSelectedGender("");
-    // setRegion("");
-    // setDistrict("");
-    // setMicroDistrict("");
+    setSelectedRegion(null);
+    setSelectedDistrict(null);
+    setSelectedMicroDistrict(null);
+    setSelectedStreet(null);
     setPriceRange([0, 500000]);
     setSelectedHousemate("1");
     setRooms(1);
@@ -142,18 +118,18 @@ export default function Filter() {
     setPetsAllowed(false);
     setUtilitiesIncluded(false);
     setForStudents(false);
+    setOnlyEmptyApartments(false);
     setBadHabitsAllowed(false);
     setPropertyType("");
-    setAutoUpdate(false);
   };
 
-  // Dummy Submit & Save Handlers
   const handleSubmit = () => {
-    const queryObject = {
+    const filterData = {
       selectedGender,
-      // region,
-      // district,
-      // microDistrict,
+      region: selectedRegion?.NameRus,
+      district: selectedDistrict?.NameRus,
+      microDistrict: selectedMicroDistrict?.NameRus,
+      street: selectedStreet?.NameRus,
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
       numberOfPeopleAreYouAccommodating: parseInt(selectedHousemate),
@@ -169,48 +145,34 @@ export default function Filter() {
       arePetsAllowed: petsAllowed,
       isCommunalServiceIncluded: utilitiesIncluded,
       intendedForStudents: forStudents,
+      onlyEmptyApartments: onlyEmptyApartments,
       badHabitsAllowed: badHabitsAllowed,
       typeOfHousing: propertyType,
-      autoUpdate,
     };
-    console.log("Filter submitted:", queryObject);
+    
+    if (onSubmit) {
+      onSubmit(filterData);
+    } else {
+      addToast({
+        title: "Фильтр применен!",
+        variant: "flat",
+        radius: "sm",
+        timeout: 2000,
+        color: "success",
+      });
+    }
   };
 
   const saveFilter = () => {
-    const queryObject = {
+    const filterData = {
       selectedGender,
-      // region,
-      // district,
-      // microDistrict,
+      region: selectedRegion?.NameRus,
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
-      numberOfPeopleAreYouAccommodating: selectedHousemate,
-      quantityOfRooms: rooms,
-      minAge: ageRange[0],
-      maxAge: ageRange[1],
-      arriveDate: moveInDate,
-      minArea: roomSize[0] ? parseInt(roomSize[0]) : 0,
-      maxArea: roomSize[1] ? parseInt(roomSize[1]) : 500,
-      notTheFirstFloor: isNotFirstFloor,
-      notTheTopFloor: isNotLastFloor,
-      forALongTime: termType === "long",
-      arePetsAllowed: petsAllowed,
-      isCommunalServiceIncluded: utilitiesIncluded,
-      intendedForStudents: forStudents,
-      badHabitsAllowed: badHabitsAllowed,
-      typeOfHousing: propertyType,
-      autoUpdate,
     };
-    // if (sessionStorage.getItem("savedFilter")) {
-    //   alert(
-    //     "Фильтр уже был сохранен ранее. Перезагрузите страницу или очистите, чтобы сохранить заново."
-    //   );
-    //   return;
-    // }
-    // sessionStorage.setItem("savedFilter", JSON.stringify(queryObject));
+    
     addToast({
       title: "Поиск сохранен!",
-      description: "Toast displayed successfully",
       variant: "flat",
       radius: "sm",
       timeout: 2000,
@@ -228,7 +190,6 @@ export default function Filter() {
           </button>
         </div>
 
-        {/* Gender Section */}
         <div className={styles.section}>
           <MySelect
             options={genders}
@@ -239,28 +200,25 @@ export default function Filter() {
           />
         </div>
 
-        {/* Region Section */}
         <div className={styles.section}>
           <MySelect
             label="Регион"
-            placeholder="Выберите регион"
-            // Notice we use `region.Id` and `region.NameKaz` instead of `region.id` / `region.nameKaz`.
+            placeholder={isLoadingRegions ? "Загрузка..." : "Выберите регион"}
             options={regions.map((region) => ({
               value: region.HasChild ? region.Id.toString() : `${region.Id}$`,
-              label: region.NameKaz || "",
+              label: region.NameRus || "",
             }))}
             value={selectedRegion?.Id ? selectedRegion.Id.toString() : ""}
             onChange={(optionValue) => {
               const selected = regions.find((region) => region.Id?.toString() === optionValue);
               setSelectedRegion(selected || null);
-              // Reset district & microdistrict
               setSelectedDistrict(null);
               setSelectedMicroDistrict(null);
             }}
+            disabled={isLoadingRegions}
           />
         </div>
 
-        {/* District Section */}
         {selectedRegion && selectedRegion.HasChild && (
           <div className={styles.section}>
             <MySelect
@@ -268,7 +226,7 @@ export default function Filter() {
               placeholder="Выберите район"
               options={selectedRegion.Children.map((district) => ({
                 value: district.HasChild ? district.Id.toString() : `${district.Id}$`,
-                label: district.NameKaz || "",
+                label: district.NameRus || "",
               }))}
               value={selectedDistrict?.Id ? selectedDistrict.Id.toString() : ""}
               onChange={(optionValue) => {
@@ -276,14 +234,12 @@ export default function Filter() {
                   (district) => district.Id?.toString() === optionValue
                 );
                 setSelectedDistrict(selected || null);
-                // Reset microdistrict
                 setSelectedMicroDistrict(null);
               }}
             />
           </div>
         )}
 
-        {/* Microdistrict Section */}
         {selectedDistrict && selectedDistrict.HasChild && (
           <div className={styles.section}>
             <MySelect
@@ -291,7 +247,7 @@ export default function Filter() {
               placeholder="Выберите микрорайон"
               options={selectedDistrict.Children.map((micro) => ({
                 value: micro.HasChild ? micro.Id.toString() : `${micro.Id}$`,
-                label: micro.NameKaz,
+                label: micro.NameRus,
               }))}
               value={selectedMicroDistrict?.Id?.toString() || ""}
               onChange={(option) => {
@@ -305,28 +261,6 @@ export default function Filter() {
           </div>
         )}
 
-        {/* Microdistrict Section */}
-        {selectedMicroDistrict && selectedMicroDistrict.HasChild && (
-          <div className={styles.section}>
-            <MySelect
-              label="Улицы"
-              placeholder="Выберите Улицы"
-              options={selectedMicroDistrict.Children.map((street) => ({
-                value: street.Id.toString(),
-                label: street.NameKaz,
-              }))}
-              value={selectedStreet?.Id?.toString() || ""}
-              onChange={(option) => {
-                const selected = selectedMicroDistrict.Children.find(
-                  (street) => street.Id.toString() === option
-                );
-                setSelectedStreet(selected || null);
-              }}
-            />
-          </div>
-        )}
-
-        {/* Price Section */}
         <div className={styles.section}>
           <p className={styles.label}>Выберите цену</p>
           <div className={styles.priceInputs}>
@@ -359,7 +293,6 @@ export default function Filter() {
           </div>
         </div>
 
-        {/* Housemates Section */}
         <div className={styles.section}>
           <p className={styles.label}>Количество сожителей</p>
           <ul className={styles.housemates}>
@@ -378,7 +311,6 @@ export default function Filter() {
           </ul>
         </div>
 
-        {/* Rooms Section */}
         <div className={styles.section}>
           <p className={styles.label}>Количество комнат</p>
           <div className={styles.roomControls}>
@@ -392,7 +324,6 @@ export default function Filter() {
           </div>
         </div>
 
-        {/* Age Section */}
         <div className={styles.section}>
           <p className={styles.label}>Возраст</p>
           <div className={styles.relative}>
@@ -411,7 +342,6 @@ export default function Filter() {
           </div>
         </div>
 
-        {/* Long vs Short Term */}
         <div className={styles.section}>
           <p className={styles.label}>Продолжительность</p>
           <Tabs
@@ -427,7 +357,6 @@ export default function Filter() {
           </Tabs>
         </div>
 
-        {/* Move-in Date Section */}
         <div className={styles.section}>
           <p className={styles.label}>Дата начала заселения</p>
           <MyCalendar
@@ -442,14 +371,20 @@ export default function Filter() {
           <div className={styles.checkboxFloorGroup}>
             <Checkbox
               checked={isToday}
-              //   onChange={() => toggleToday()}
+              onChange={() => {
+                setIsToday(!isToday);
+                if (!isToday) setIsTomorrow(false);
+              }}
               aria-label="Сегодня"
             >
               <p className={styles.label}>Сегодня</p>
             </Checkbox>
             <Checkbox
               checked={isTomorrow}
-              //   onChange={() => toggleTomorrow()}
+              onChange={() => {
+                setIsTomorrow(!isTomorrow);
+                if (!isTomorrow) setIsToday(false);
+              }}
               aria-label="Завтра"
             >
               <p className={styles.label}>Завтра</p>
@@ -457,10 +392,8 @@ export default function Filter() {
           </div>
         </div>
 
-        {/* More Filters Section */}
         {moreFilters && (
           <>
-            {/* Room Size */}
             <div className={styles.section}>
               <p className={styles.label}>Площадь комнат</p>
               <div className={styles.priceInputs}>
@@ -479,7 +412,6 @@ export default function Filter() {
               </div>
             </div>
 
-            {/* Floor */}
             <div className={styles.section}>
               <p className={styles.label}>Этаж</p>
               <div className={styles.priceInputs}>
@@ -514,7 +446,6 @@ export default function Filter() {
               </div>
             </div>
 
-            {/* Additional Options */}
             <div className={styles.section}>
               <div className={styles.checkboxGroup}>
                 <MyCheckBox
@@ -555,7 +486,6 @@ export default function Filter() {
             </div>
 
             <div className={styles.section}>
-              {/* Property Type */}
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>Тип жилья</p>
                 <Checkbox
@@ -573,8 +503,6 @@ export default function Filter() {
                   <p className={styles.label}>Дом</p>
                 </Checkbox>
               </div>
-
-              {/* From Owner? */}
 
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>От кого?</p>
@@ -597,7 +525,6 @@ export default function Filter() {
           </>
         )}
 
-        {/* More Filters & Save Buttons */}
         <div className={styles.buttonGroup}>
           <MyButton
             className={styles.moreFiltersButton}
@@ -612,7 +539,6 @@ export default function Filter() {
           </MyButton>
         </div>
 
-        {/* Submit Button */}
         <MyButton className={styles.submitButton} onClick={handleSubmit}>
           Найти
         </MyButton>

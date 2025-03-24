@@ -14,6 +14,7 @@ interface MyHeroSelectProps {
   onChange: (newValue: string) => void;
   options: Option[];
   className?: string;
+  disabled?: boolean;
 }
 
 export default function MyHeroSelect({
@@ -23,6 +24,7 @@ export default function MyHeroSelect({
   onChange,
   options,
   className,
+  disabled
 }: MyHeroSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -36,6 +38,7 @@ export default function MyHeroSelect({
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       className={className}
+      disabled={disabled}
       classNames={{
         trigger: `
           w-full
