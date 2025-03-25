@@ -1,25 +1,8 @@
-// src/app/(profile)/my-responses/[id]/page.tsx
+// src/app/(profile)/mockData/groupsData.ts
 
-"use client";
-import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
-import dynamic from "next/dynamic";
-import GroupDetailsPageLayout from "../../components/desktop/MyResponses/GroupDetails/GroupDetailsPageLayout";
+import { ApartmentDetails, Group } from "../components/desktop/MyResponses/GroupDetails/types";
 
-// Use dynamic imports for desktop and mobile components
-const DesktopGroupDetails = dynamic(
-  () => import("../../components/desktop/MyResponses/GroupDetails/GroupDetails"),
-  { ssr: false }
-);
-
-const MobileGroupDetails = dynamic(
-  () => import("../../components/mobile/MyResponses/GroupDetails/GroupDetails"),
-  { ssr: false }
-);
-
-// Mock data is imported from a separate file - for this example, we're keeping it inline
-const mockApartmentDetails = {
+export const mockApartmentDetails: ApartmentDetails = {
   id: 1,
   title: "Просторная квартира в центре",
   address: "Ул. Раймбека 181/23",
@@ -347,68 +330,30 @@ export const mockGroupsData = {
   ]
 };
 
-export default function ResponseGroupsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const [activeTab, setActiveTab] = useState("all");
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const getGroupsByTab = () => {
-    switch (activeTab) {
-      case "all":
-        return [
-          ...mockGroupsData.accepted,
-          ...mockGroupsData.pending,
-          ...mockGroupsData.rejected,
-          ...mockGroupsData.draft
-        ];
-      case "accepted":
-        return mockGroupsData.accepted;
-      case "pending":
-        return mockGroupsData.pending;
-      case "rejected":
-        return mockGroupsData.rejected;
-      case "draft":
-        return mockGroupsData.draft;
-      default:
-        return [
-          ...mockGroupsData.accepted,
-          ...mockGroupsData.pending,
-          ...mockGroupsData.rejected,
-          ...mockGroupsData.draft
-        ];
-    }
-  };
-
-  const filteredGroups = getGroupsByTab();
-
-  if (!isMounted) {
-    return <div>Загрузка...</div>;
+// Helper function to get groups based on tab filter
+export const getMockGroups = (tabKey: string): Group[] => {
+  switch (tabKey) {
+    case "all":
+      return [
+        ...mockGroupsData.accepted,
+        ...mockGroupsData.pending,
+        ...mockGroupsData.rejected,
+        ...mockGroupsData.draft
+      ];
+    case "accepted":
+      return mockGroupsData.accepted;
+    case "pending":
+      return mockGroupsData.pending;
+    case "rejected":
+      return mockGroupsData.rejected;
+    case "draft":
+      return mockGroupsData.draft;
+    default:
+      return [
+        ...mockGroupsData.accepted,
+        ...mockGroupsData.pending,
+        ...mockGroupsData.rejected,
+        ...mockGroupsData.draft
+      ];
   }
-
-  return (
-    <GroupDetailsPageLayout
-      router={router}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
-      apartmentDetails={mockApartmentDetails}
-    >
-      {isMobile ? (
-        <MobileGroupDetails 
-          apartmentDetails={mockApartmentDetails} 
-          groups={filteredGroups} 
-        />
-      ) : (
-        <DesktopGroupDetails 
-          apartmentDetails={mockApartmentDetails} 
-          groups={filteredGroups} 
-        />
-      )}
-    </GroupDetailsPageLayout>
-  );
-}
+};
