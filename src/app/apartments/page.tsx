@@ -39,7 +39,7 @@ export default function ApartmentsPage() {
   const [showListings, setShowListings] = useState(false);
   const [open, setOpen] = useState(false);
   const [filteredApartments, setFilteredApartments] = useState<Card[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasMoreData, setHasMoreData] = useState(true);
   
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -73,14 +73,15 @@ export default function ApartmentsPage() {
     }
   }, [isMobile, isMap]);
 
-  const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
+  const fetchFilterApartmentsWithoutLoading = async (filterData: any, isLoadMore = false) => {
     const requestData = mapStateToFilterRequest(filterData);
-      
-    getFilteredAnnouncements(requestData).then(({ data }) => {
+    
+    try {
+      const { data } = await getFilteredAnnouncements(requestData);
       const newApartments = data?.data?.announcements as Card[];
       const newPage = data?.data?.page as number;
       dispatch(setCurrentPage(newPage));
-
+  
       if (newApartments.length === 0) {
         setHasMoreData(false);
       }
@@ -90,15 +91,44 @@ export default function ApartmentsPage() {
         setFilteredApartments(newApartments);
         setHasMoreData(true);
       }
-    })
-  
+    } catch (error) {
+      console.error("Error fetching apartments:", error);
+    }
   };
 
+const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
+  const requestData = mapStateToFilterRequest(filterData);
+  setIsLoading(true);
+  
+  try {
+    const { data } = await getFilteredAnnouncements(requestData);
+    const newApartments = data?.data?.announcements as Card[];
+    const newPage = data?.data?.page as number;
+    dispatch(setCurrentPage(newPage));
+
+    if (newApartments.length === 0) {
+      setHasMoreData(false);
+    }
+    if (isLoadMore) {
+      setFilteredApartments([...filteredApartments, ...newApartments]);
+    } else {
+      setFilteredApartments(newApartments);
+      setHasMoreData(true);
+    }
+  } catch (error) {
+    console.error("Error fetching apartments:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
   useEffect(() => {
-    setIsLoading(true)
     fetchFilterApartments(filterState, false);
-    setIsLoading(false)
-  }, [page, sort]);
+  }, [sort]);
+
+  useEffect(() => {
+    fetchFilterApartmentsWithoutLoading(filterState, true);
+  }, [page]);
 
 
   const handleIsMap = () => {
@@ -132,7 +162,7 @@ export default function ApartmentsPage() {
       selectedMapPoints: points
     };
 
-    fetchFilterApartments({filter: updatedFilterState}, false);
+    fetchFilterApartmentsWithoutLoading({filter: updatedFilterState}, false);
   };
   
   const loadMoreApartments = () => {

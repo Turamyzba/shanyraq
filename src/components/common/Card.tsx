@@ -141,7 +141,7 @@ const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMor
       {isLast && (
         <div className={styles.lastOverlay}>
           <Button onPress={loadMoreApartments} className={styles.viewAllButton}>
-            Загрузить еще 23 объявлений
+            Загрузить еще 21 объявлений
           </Button>
         </div>
       )}
