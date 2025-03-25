@@ -1,3 +1,5 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/MemberItem.tsx
+
 import React from "react";
 import { Button } from "antd";
 import { Member, MemberRole } from "./types";
@@ -7,29 +9,43 @@ interface MemberItemProps {
   member: Member;
   isPending: boolean;
   canRemove: boolean;
+  canPromoteToAdmin: boolean;
   onRemove?: (memberId: number) => void;
+  onPromoteToAdmin?: (memberId: number) => void;
 }
 
-const MemberItem: React.FC<MemberItemProps> = ({ member, isPending, canRemove, onRemove }) => {
+const MemberItem: React.FC<MemberItemProps> = ({
+  member,
+  isPending,
+  canRemove,
+  canPromoteToAdmin,
+  onRemove,
+  onPromoteToAdmin,
+}) => {
   const getRoleBadge = (role?: MemberRole) => {
     if (!role) return null;
 
     let badgeClass = styles.roleBadge;
     if (role === "owner") badgeClass = `${styles.roleBadge} ${styles.ownerBadge}`;
     if (role === "admin") badgeClass = `${styles.roleBadge} ${styles.adminBadge}`;
-    if (role === "superadmin") badgeClass = `${styles.roleBadge} ${styles.superAdminBadge}`;
     if (role === "invited") badgeClass = `${styles.roleBadge} ${styles.memberBadge}`;
 
     const roleText = {
       owner: "Хозяин жилья",
       admin: "Администратор",
-      superadmin: "Создатель группы",
       member: "Участник",
       invited: "Приглашен",
     };
 
     return <span className={badgeClass}>{roleText[role]}</span>;
   };
+
+  const showPromoteButton = canPromoteToAdmin && member.role === "member" && !member.isCurrentUser;
+  const showRemoveButton =
+    canRemove &&
+    member.role !== "owner" &&
+    (member.role !== "admin" || canPromoteToAdmin) &&
+    !member.isCurrentUser;
 
   return (
     <div className={styles.memberCard}>
@@ -65,10 +81,18 @@ const MemberItem: React.FC<MemberItemProps> = ({ member, isPending, canRemove, o
         </div>
       )}
 
-      {canRemove &&
-        member.role !== "owner" &&
-        member.role !== "superadmin" &&
-        !member.isCurrentUser && (
+      <div className={styles.memberActions}>
+        {showPromoteButton && (
+          <Button
+            className={styles.promoteButton}
+            onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
+          >
+            <AdminIcon />
+            Сделать админом
+          </Button>
+        )}
+
+        {showRemoveButton && (
           <Button
             className={styles.removeButton}
             onClick={() => onRemove && onRemove(member.id)}
@@ -78,6 +102,7 @@ const MemberItem: React.FC<MemberItemProps> = ({ member, isPending, canRemove, o
             {member.role === "invited" ? "Отменить приглашение" : "Удалить"}
           </Button>
         )}
+      </div>
     </div>
   );
 };
@@ -100,6 +125,18 @@ const TrashIcon = () => (
     />
     <path
       d="M15.8333 5.00008V16.6667C15.8333 17.1088 15.6577 17.5327 15.3451 17.8453C15.0326 18.1578 14.6087 18.3334 14.1667 18.3334H5.83333C5.39131 18.3334 4.96738 18.1578 4.65482 17.8453C4.34226 17.5327 4.16667 17.1088 4.16667 16.6667V5.00008"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const AdminIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M16.6667 5.83333L7.5 15L3.33333 10.8333L4.16667 10L7.5 13.3333L15.8333 5"
       stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"

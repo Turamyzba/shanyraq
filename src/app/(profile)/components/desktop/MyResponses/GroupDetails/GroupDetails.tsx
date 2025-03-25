@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupDetails.tsx
+
+import React, { useState, useEffect } from "react";
 import { Button } from "antd";
 import { Group, ApartmentDetails, ModalConfig } from "./types";
 import ApartmentDetailsComponent from "./ApartmentDetails";
@@ -12,10 +14,19 @@ interface GroupDetailsProps {
 }
 
 const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups }) => {
-  const [groupsData, setGroupsData] = useState<Group[]>(groups);
+  const [groupsData, setGroupsData] = useState<Group[]>([]);
   const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
+  
+  // Update local state when props change
+  useEffect(() => {
+    if (groups && Array.isArray(groups)) {
+      setGroupsData(groups);
+    }
+  }, [groups]);
 
   const handleLeaveGroup = (groupId: number) => {
+    if (!groupId) return;
+    
     setModalConfig({
       isOpen: true,
       title: "Покинуть группу",
@@ -23,13 +34,15 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
       confirmText: "Покинуть",
       cancelText: "Отмена",
       confirmAction: () => {
-        setGroupsData(groupsData.filter((group) => group.id !== groupId));
+        setGroupsData(prevGroups => prevGroups.filter((group) => group.id !== groupId));
         setModalConfig(null);
       },
     });
   };
 
   const handleRemoveMember = (groupId: number, memberId: number) => {
+    if (!groupId || !memberId) return;
+    
     setModalConfig({
       isOpen: true,
       title: "Удалить участника",
@@ -37,8 +50,8 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
       confirmText: "Удалить",
       cancelText: "Отмена",
       confirmAction: () => {
-        setGroupsData(
-          groupsData.map((group) => {
+        setGroupsData(prevGroups => 
+          prevGroups.map((group) => {
             if (group.id === groupId) {
               return {
                 ...group,
@@ -53,7 +66,40 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
     });
   };
 
+  const handlePromoteToAdmin = (groupId: number, memberId: number) => {
+    if (!groupId || !memberId) return;
+    
+    setModalConfig({
+      isOpen: true,
+      title: "Сделать администратором",
+      message: "Вы уверены, что хотите сделать этого участника администратором группы?",
+      confirmText: "Подтвердить",
+      cancelText: "Отмена",
+      confirmAction: () => {
+        setGroupsData(prevGroups =>
+          prevGroups.map((group) => {
+            if (group.id === groupId) {
+              return {
+                ...group,
+                members: group.members.map((member) => {
+                  if (member.id === memberId) {
+                    return { ...member, role: "admin" };
+                  }
+                  return member;
+                }),
+              };
+            }
+            return group;
+          })
+        );
+        setModalConfig(null);
+      },
+    });
+  };
+
   const handleAcceptApplicant = (groupId: number, applicantId: number) => {
+    if (!groupId || !applicantId) return;
+    
     setModalConfig({
       isOpen: true,
       title: "Принять участника",
@@ -61,10 +107,10 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
       confirmText: "Принять",
       cancelText: "Отмена",
       confirmAction: () => {
-        setGroupsData(
-          groupsData.map((group) => {
+        setGroupsData(prevGroups =>
+          prevGroups.map((group) => {
             if (group.id === groupId) {
-              const applicant = group.applicants.find((a) => a.id === applicantId);
+              const applicant = group.applicants?.find((a) => a.id === applicantId);
               if (!applicant) return group;
 
               return {
@@ -82,6 +128,8 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
   };
 
   const handleRejectApplicant = (groupId: number, applicantId: number) => {
+    if (!groupId || !applicantId) return;
+    
     setModalConfig({
       isOpen: true,
       title: "Отклонить заявку",
@@ -89,8 +137,8 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
       confirmText: "Отклонить",
       cancelText: "Отмена",
       confirmAction: () => {
-        setGroupsData(
-          groupsData.map((group) => {
+        setGroupsData(prevGroups =>
+          prevGroups.map((group) => {
             if (group.id === groupId) {
               return {
                 ...group,
@@ -109,6 +157,18 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
     setModalConfig(null);
   };
 
+  // If no groups data is available yet, show loading or empty state
+  if (!groupsData || groupsData.length === 0) {
+    return (
+      <div className={styles.container}>
+        <ApartmentDetailsComponent details={apartmentDetails} />
+        <div className={styles.emptyState}>
+          Нет доступных групп
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <ApartmentDetailsComponent details={apartmentDetails} />
@@ -117,11 +177,14 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
         groups={groupsData}
         onLeaveGroup={handleLeaveGroup}
         onRemoveMember={handleRemoveMember}
+        onPromoteToAdmin={handlePromoteToAdmin}
         onAcceptApplicant={handleAcceptApplicant}
         onRejectApplicant={handleRejectApplicant}
       />
 
-      <ActionModals modalConfig={modalConfig} onCancel={closeModal} />
+      {modalConfig && (
+        <ActionModals modalConfig={modalConfig} onCancel={closeModal} />
+      )}
     </div>
   );
 };

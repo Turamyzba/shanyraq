@@ -1,4 +1,6 @@
-export type MemberRole = "member" | "admin" | "superadmin" | "owner" | "invited";
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/types.ts
+
+export type MemberRole = "member" | "admin" | "owner" | "invited";
 export type ApplicationStatus = "pending" | "accepted" | "rejected";
 export type GroupStatus = "pending" | "accepted" | "rejected" | "draft";
 
@@ -23,6 +25,7 @@ export interface Group {
   isUserMember: boolean;
   isUserAdmin: boolean;
   isUserSuperAdmin: boolean;
+  isUserOwner: boolean;
   isDraft?: boolean;
 }
 

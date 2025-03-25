@@ -1,3 +1,5 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupItem.tsx
+
 import React from "react";
 import { Button } from "antd";
 import { Group } from "./types";
@@ -9,6 +11,7 @@ interface GroupItemProps {
   group: Group;
   onLeaveGroup?: (groupId: number) => void;
   onRemoveMember?: (groupId: number, memberId: number) => void;
+  onPromoteToAdmin?: (groupId: number, memberId: number) => void;
   onAcceptApplicant?: (groupId: number, applicantId: number) => void;
   onRejectApplicant?: (groupId: number, applicantId: number) => void;
 }
@@ -17,6 +20,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
   group,
   onLeaveGroup,
   onRemoveMember,
+  onPromoteToAdmin,
   onAcceptApplicant,
   onRejectApplicant,
 }) => {
@@ -26,14 +30,17 @@ const GroupItem: React.FC<GroupItemProps> = ({
   const isPending = group.status === "pending";
   const isDraft = group.status === "draft";
 
-  // Only admins and superadmins can remove members
-  const canRemoveMembers = group.isUserAdmin || group.isUserSuperAdmin;
+  // Only admins and owners can remove members
+  const canRemoveMembers = group.isUserAdmin || group.isUserOwner;
 
-  // Only admins and superadmins can manage applicants
-  const canManageApplicants = group.isUserAdmin || group.isUserSuperAdmin;
+  // Only owners can promote to admin
+  const canPromoteToAdmin = group.isUserOwner;
 
-  // Users can leave groups if they're members but not superadmins
-  const canLeaveGroup = group.isUserMember && !group.isUserSuperAdmin;
+  // Only admins and owners can manage applicants
+  const canManageApplicants = group.isUserAdmin || group.isUserOwner;
+
+  // Users can leave groups if they're members but not owner
+  const canLeaveGroup = group.isUserMember && !group.isUserOwner;
 
   // Get status text based on group status
   const getStatusText = (status: string) => {
@@ -77,17 +84,17 @@ const GroupItem: React.FC<GroupItemProps> = ({
           {group.isUserMember && (
             <div
               className={`${styles.userStatusBadge} ${
-                group.isUserSuperAdmin
-                  ? styles.superAdminBadge
+                group.isUserOwner
+                  ? styles.ownerBadge
                   : group.isUserAdmin
                     ? styles.adminBadge
                     : styles.memberBadge
               }`}
             >
-              {group.isUserSuperAdmin
+              {group.isUserOwner
                 ? isDraft
                   ? "Вы создатель черновика"
-                  : "Вы создатель группы"
+                  : "Вы хозяин группы"
                 : group.isUserAdmin
                   ? "Вы администратор"
                   : "Вы участник группы"}
@@ -105,7 +112,9 @@ const GroupItem: React.FC<GroupItemProps> = ({
         isPending={isPending}
         isDraft={isDraft}
         canRemoveMembers={canRemoveMembers}
+        canPromoteToAdmin={canPromoteToAdmin}
         onRemoveMember={(memberId) => onRemoveMember && onRemoveMember(group.id, memberId)}
+        onPromoteToAdmin={(memberId) => onPromoteToAdmin && onPromoteToAdmin(group.id, memberId)}
       />
 
       {group.applicants.length > 0 && !isDraft && (

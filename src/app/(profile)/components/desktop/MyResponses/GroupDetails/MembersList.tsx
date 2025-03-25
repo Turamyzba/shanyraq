@@ -1,3 +1,5 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/MembersList.tsx
+
 import React from "react";
 import { Collapse } from "antd";
 import { Member } from "./types";
@@ -9,7 +11,9 @@ interface MembersListProps {
   isPending: boolean;
   isDraft?: boolean;
   canRemoveMembers: boolean;
+  canPromoteToAdmin: boolean;
   onRemoveMember?: (memberId: number) => void;
+  onPromoteToAdmin?: (memberId: number) => void;
 }
 
 const { Panel } = Collapse;
@@ -19,7 +23,9 @@ const MembersList: React.FC<MembersListProps> = ({
   isPending,
   isDraft = false,
   canRemoveMembers,
+  canPromoteToAdmin,
   onRemoveMember,
+  onPromoteToAdmin,
 }) => {
   if (!members.length) return null;
 
@@ -52,7 +58,9 @@ const MembersList: React.FC<MembersListProps> = ({
                 member={member}
                 isPending={isPending}
                 canRemove={canRemoveMembers}
+                canPromoteToAdmin={canPromoteToAdmin}
                 onRemove={onRemoveMember}
+                onPromoteToAdmin={onPromoteToAdmin}
               />
             ))}
           </div>
@@ -82,6 +90,7 @@ const MembersList: React.FC<MembersListProps> = ({
                   member={member}
                   isPending={true}
                   canRemove={canRemoveMembers}
+                  canPromoteToAdmin={false}
                   onRemove={onRemoveMember}
                 />
               ))}

@@ -1,3 +1,5 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupList.tsx
+
 import React from "react";
 import { Group } from "./types";
 import GroupItem from "./GroupItem";
@@ -7,6 +9,7 @@ interface GroupListProps {
   groups: Group[];
   onLeaveGroup?: (groupId: number) => void;
   onRemoveMember?: (groupId: number, memberId: number) => void;
+  onPromoteToAdmin?: (groupId: number, memberId: number) => void;
   onAcceptApplicant?: (groupId: number, applicantId: number) => void;
   onRejectApplicant?: (groupId: number, applicantId: number) => void;
 }
@@ -15,12 +18,13 @@ const GroupList: React.FC<GroupListProps> = ({
   groups,
   onLeaveGroup,
   onRemoveMember,
+  onPromoteToAdmin,
   onAcceptApplicant,
   onRejectApplicant,
 }) => {
   // Sort groups: first accepted, then pending, then rejected
   const sortedGroups = [...groups].sort((a, b) => {
-    const statusOrder = { accepted: 0, pending: 1, rejected: 2 };
+    const statusOrder = { accepted: 0, pending: 1, rejected: 2, draft: 3 };
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
@@ -35,6 +39,7 @@ const GroupList: React.FC<GroupListProps> = ({
             group={group}
             onLeaveGroup={onLeaveGroup}
             onRemoveMember={onRemoveMember}
+            onPromoteToAdmin={onPromoteToAdmin}
             onAcceptApplicant={onAcceptApplicant}
             onRejectApplicant={onRejectApplicant}
           />

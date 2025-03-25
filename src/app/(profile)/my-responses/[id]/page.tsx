@@ -15,7 +15,6 @@ const MobileGroupDetails = dynamic(
   { ssr: false }
 );
 
-// Sample data for the apartment
 const mockApartmentDetails = {
   id: 1,
   title: "Просторная квартира в центре",
@@ -28,16 +27,15 @@ const mockApartmentDetails = {
   description: "Ищем 2 девушек на подселение",
   price: 150000,
   image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
-  status: "accepted" as const,
+  status: "accepted",
 };
 
-// Enhanced mock groups data with more examples for each status type
 const mockGroupsData = {
   accepted: [
     {
       id: 1,
       name: "Группа соседей",
-      status: "accepted" as const,
+      status: "accepted",
       members: [
         {
           id: 1,
@@ -47,7 +45,7 @@ const mockGroupsData = {
           phone: "8777 777 77 77",
           date: "27/11/2024",
           avatar: "/avatars/user1.jpg",
-          role: "owner" as const,
+          role: "owner",
         },
         {
           id: 2,
@@ -57,7 +55,7 @@ const mockGroupsData = {
           phone: "8777 545 74 78",
           date: "27/11/2024",
           avatar: "/avatars/user2.jpg",
-          role: "member" as const,
+          role: "member",
         },
         {
           id: 3,
@@ -67,7 +65,7 @@ const mockGroupsData = {
           phone: "8701 577 77 78",
           date: "27/11/2024",
           avatar: "/avatars/user3.jpg",
-          role: "member" as const,
+          role: "member",
           isCurrentUser: true,
         },
       ],
@@ -79,7 +77,7 @@ const mockGroupsData = {
     {
       id: 2,
       name: "Компания друзей",
-      status: "accepted" as const,
+      status: "accepted",
       members: [
         {
           id: 4,
@@ -89,7 +87,7 @@ const mockGroupsData = {
           phone: "8700 123 45 67",
           date: "26/11/2024",
           avatar: "/avatars/user4.jpg",
-          role: "superadmin" as const,
+          role: "owner",
           isCurrentUser: true,
         },
         {
@@ -100,7 +98,17 @@ const mockGroupsData = {
           phone: "8707 987 65 43",
           date: "26/11/2024",
           avatar: "/avatars/user5.jpg",
-          role: "member" as const,
+          role: "admin",
+        },
+        {
+          id: 21,
+          name: "Даурен",
+          email: "dauren@mail.ru",
+          age: 23,
+          phone: "8777 888 99 00",
+          date: "26/11/2024",
+          avatar: "/avatars/user21.jpg",
+          role: "member",
         },
       ],
       applicants: [
@@ -124,15 +132,16 @@ const mockGroupsData = {
         },
       ],
       isUserMember: true,
-      isUserAdmin: true,
+      isUserAdmin: false,
       isUserSuperAdmin: true,
+      isUserOwner: true,
     }
   ],
   pending: [
     {
       id: 3,
       name: "Новые соседи",
-      status: "pending" as const,
+      status: "pending",
       members: [
         {
           id: 8,
@@ -142,7 +151,7 @@ const mockGroupsData = {
           phone: "8705 111 22 33",
           date: "23/11/2024",
           avatar: "/avatars/user8.jpg",
-          role: "owner" as const,
+          role: "owner",
         },
         {
           id: 9,
@@ -152,7 +161,7 @@ const mockGroupsData = {
           phone: "8777 333 44 55",
           date: "23/11/2024",
           avatar: "/avatars/user9.jpg",
-          role: "admin" as const,
+          role: "admin",
         },
         {
           id: 10,
@@ -162,7 +171,7 @@ const mockGroupsData = {
           phone: "8700 111 22 33",
           date: "23/11/2024",
           avatar: "/avatars/user10.jpg",
-          role: "member" as const,
+          role: "member",
           isCurrentUser: true,
         },
       ],
@@ -170,11 +179,12 @@ const mockGroupsData = {
       isUserMember: true,
       isUserAdmin: false,
       isUserSuperAdmin: false,
+      isUserOwner: false,
     },
     {
       id: 4,
       name: "Студенческая группа",
-      status: "pending" as const,
+      status: "pending",
       members: [
         {
           id: 11,
@@ -184,7 +194,7 @@ const mockGroupsData = {
           phone: "8700 444 55 66",
           date: "22/11/2024",
           avatar: "/avatars/user11.jpg",
-          role: "superadmin" as const,
+          role: "owner",
           isCurrentUser: true,
         },
         {
@@ -195,7 +205,7 @@ const mockGroupsData = {
           phone: "8777 888 99 00",
           date: "22/11/2024",
           avatar: "/avatars/user12.jpg",
-          role: "member" as const,
+          role: "member",
         },
       ],
       applicants: [
@@ -210,15 +220,16 @@ const mockGroupsData = {
         }
       ],
       isUserMember: true,
-      isUserAdmin: true,
-      isUserSuperAdmin: true,
+      isUserAdmin: false,
+      isUserSuperAdmin: false,
+      isUserOwner: true,
     }
   ],
   rejected: [
     {
       id: 5,
       name: "Отклоненная группа",
-      status: "rejected" as const,
+      status: "rejected",
       members: [
         {
           id: 14,
@@ -228,8 +239,7 @@ const mockGroupsData = {
           phone: "8707 111 22 33",
           date: "21/11/2024",
           avatar: "/avatars/user14.jpg",
-          role: "superadmin" as const,
-          isCurrentUser: true,
+          role: "owner",
         },
         {
           id: 15,
@@ -239,20 +249,22 @@ const mockGroupsData = {
           phone: "8700 555 66 77",
           date: "21/11/2024",
           avatar: "/avatars/user15.jpg",
-          role: "member" as const,
+          role: "member",
+          isCurrentUser: true,
         },
       ],
       applicants: [],
       isUserMember: true,
-      isUserAdmin: true,
-      isUserSuperAdmin: true,
+      isUserAdmin: false,
+      isUserSuperAdmin: false,
+      isUserOwner: false,
     }
   ],
   draft: [
     {
       id: 6,
       name: "Черновик группы",
-      status: "draft" as const,
+      status: "draft",
       members: [
         {
           id: 16,
@@ -262,7 +274,7 @@ const mockGroupsData = {
           phone: "8700 111 22 33",
           date: "20/11/2024",
           avatar: "/avatars/user16.jpg",
-          role: "superadmin" as const,
+          role: "owner",
           isCurrentUser: true,
         },
         {
@@ -273,19 +285,20 @@ const mockGroupsData = {
           phone: "8777 123 45 67",
           date: "20/11/2024",
           avatar: "/avatars/user17.jpg",
-          role: "invited" as const,
+          role: "invited",
         },
       ],
       applicants: [],
       isUserMember: true,
-      isUserAdmin: true,
-      isUserSuperAdmin: true,
+      isUserAdmin: false,
+      isUserSuperAdmin: false,
+      isUserOwner: true,
       isDraft: true,
     },
     {
       id: 7,
       name: "Новая группа друзей",
-      status: "draft" as const,
+      status: "draft",
       members: [
         {
           id: 18,
@@ -295,7 +308,7 @@ const mockGroupsData = {
           phone: "8700 987 65 43",
           date: "19/11/2024", 
           avatar: "/avatars/user18.jpg",
-          role: "superadmin" as const,
+          role: "owner",
           isCurrentUser: true,
         },
         {
@@ -306,7 +319,7 @@ const mockGroupsData = {
           phone: "8707 987 65 43",
           date: "19/11/2024",
           avatar: "/avatars/user19.jpg",
-          role: "member" as const,
+          role: "member",
         },
         {
           id: 20,
@@ -316,44 +329,40 @@ const mockGroupsData = {
           phone: "8747 123 45 67",
           date: "19/11/2024",
           avatar: "/avatars/user20.jpg",
-          role: "invited" as const,
+          role: "invited",
         },
       ],
       applicants: [],
       isUserMember: true,
-      isUserAdmin: true,
-      isUserSuperAdmin: true,
+      isUserAdmin: false,
+      isUserSuperAdmin: false,
+      isUserOwner: true,
       isDraft: true,
     }
   ]
 };
 
-// Combine all groups for the "all" tab
-const allGroups = [
-  ...mockGroupsData.accepted,
-  ...mockGroupsData.pending,
-  ...mockGroupsData.rejected,
-  ...mockGroupsData.draft
-];
-
-type TabType = "all" | "accepted" | "pending" | "rejected" | "draft";
-
 export default function ResponseGroupsPage() {
   const params = useParams();
   const router = useRouter();
-  const responseId = params.id as string;
+  const responseId = params.id;
   const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
-  const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
     setIsMounted(true);
-  }, [responseId]);
+  }, []);
 
-  const getGroupsByTab = (): typeof allGroups => {
+  const getGroupsByTab = () => {
     switch (activeTab) {
       case "all":
-        return allGroups;
+        return [
+          ...mockGroupsData.accepted,
+          ...mockGroupsData.pending,
+          ...mockGroupsData.rejected,
+          ...mockGroupsData.draft
+        ];
       case "accepted":
         return mockGroupsData.accepted;
       case "pending":
@@ -363,22 +372,23 @@ export default function ResponseGroupsPage() {
       case "draft":
         return mockGroupsData.draft;
       default:
-        return allGroups;
+        return [
+          ...mockGroupsData.accepted,
+          ...mockGroupsData.pending,
+          ...mockGroupsData.rejected,
+          ...mockGroupsData.draft
+        ];
     }
   };
 
   const filteredGroups = getGroupsByTab();
 
-  const tabItems = [
-    { key: "all", label: "Все" },
-    { key: "accepted", label: "Принятые" },
-    { key: "pending", label: "В ожидании" },
-    { key: "rejected", label: "Отклоненные" },
-    { key: "draft", label: "Черновик" },
-  ];
+  const handleTabChange = (tabKey) => {
+    setActiveTab(tabKey);
+  };
 
   if (!isMounted) {
-    return <div className="loading-placeholder">Загрузка...</div>;
+    return <div className={styles.loadingPlaceholder}>Загрузка...</div>;
   }
 
   return (
@@ -396,22 +406,49 @@ export default function ResponseGroupsPage() {
 
       <div className={styles.tabsContainer}>
         <div className={styles.tabs}>
-          {tabItems.map((tab) => (
-            <button
-              key={tab.key}
-              className={`${styles.tab} ${activeTab === tab.key ? styles.activeTab : ""}`}
-              onClick={() => setActiveTab(tab.key as TabType)}
-            >
-              {tab.label}
-            </button>
-          ))}
+          <button
+            className={`${styles.tab} ${activeTab === "all" ? styles.activeTab : ""}`}
+            onClick={() => handleTabChange("all")}
+          >
+            Все
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "accepted" ? styles.activeTab : ""}`}
+            onClick={() => handleTabChange("accepted")}
+          >
+            Принятые
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "pending" ? styles.activeTab : ""}`}
+            onClick={() => handleTabChange("pending")}
+          >
+            В ожидании
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "rejected" ? styles.activeTab : ""}`}
+            onClick={() => handleTabChange("rejected")}
+          >
+            Отклоненные
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "draft" ? styles.activeTab : ""}`}
+            onClick={() => handleTabChange("draft")}
+          >
+            Черновик
+          </button>
         </div>
       </div>
 
       {isMobile ? (
-        <MobileGroupDetails apartmentDetails={mockApartmentDetails} groups={filteredGroups} />
+        <MobileGroupDetails 
+          apartmentDetails={mockApartmentDetails} 
+          groups={filteredGroups} 
+        />
       ) : (
-        <DesktopGroupDetails apartmentDetails={mockApartmentDetails} groups={filteredGroups} />
+        <DesktopGroupDetails 
+          apartmentDetails={mockApartmentDetails} 
+          groups={filteredGroups} 
+        />
       )}
     </div>
   );

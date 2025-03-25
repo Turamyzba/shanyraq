@@ -498,3 +498,33 @@
     flex-direction: column;
   }
 }
+.promoteButton {
+  background-color: #e0f2fe;
+  border: 1px solid #0284c7;
+  color: #0284c7;
+  padding: 4px 8px;
+  height: auto;
+  border-radius: 5px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.promoteButton:hover {
+  background-color: #bfdbfe;
+  color: #0284c7;
+  border-color: #0284c7;
+}
+
+.memberActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+// Make sure the owner badge has proper styling
+.ownerBadge {
+  background-color: #fef3c7;
+  color: #d97706;
+}
