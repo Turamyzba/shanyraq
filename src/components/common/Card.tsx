@@ -161,7 +161,7 @@ function getRoomWord(count: number): string {
 }
 
 function getGender(code: string): string {
-  const gender = genderOptions.find((g) => (g.code = code));
+  const gender = genderOptions.find((g) => g.code === code);
   return gender?.namerus || "";
 }
 
