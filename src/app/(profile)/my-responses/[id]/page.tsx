@@ -135,7 +135,7 @@ const mockGroupsData = {
       isUserAdmin: false,
       isUserSuperAdmin: true,
       isUserOwner: true,
-    }
+    },
   ],
   pending: [
     {
@@ -217,13 +217,13 @@ const mockGroupsData = {
           phone: "8701 999 88 77",
           date: "20/11/2024",
           avatar: "/avatars/user13.jpg",
-        }
+        },
       ],
       isUserMember: true,
       isUserAdmin: false,
       isUserSuperAdmin: false,
       isUserOwner: true,
-    }
+    },
   ],
   rejected: [
     {
@@ -258,7 +258,7 @@ const mockGroupsData = {
       isUserAdmin: false,
       isUserSuperAdmin: false,
       isUserOwner: false,
-    }
+    },
   ],
   draft: [
     {
@@ -306,7 +306,7 @@ const mockGroupsData = {
           email: "samat@gmail.com",
           age: 27,
           phone: "8700 987 65 43",
-          date: "19/11/2024", 
+          date: "19/11/2024",
           avatar: "/avatars/user18.jpg",
           role: "owner",
           isCurrentUser: true,
@@ -338,8 +338,8 @@ const mockGroupsData = {
       isUserSuperAdmin: false,
       isUserOwner: true,
       isDraft: true,
-    }
-  ]
+    },
+  ],
 };
 
 export default function ResponseGroupsPage() {
@@ -361,7 +361,7 @@ export default function ResponseGroupsPage() {
           ...mockGroupsData.accepted,
           ...mockGroupsData.pending,
           ...mockGroupsData.rejected,
-          ...mockGroupsData.draft
+          ...mockGroupsData.draft,
         ];
       case "accepted":
         return mockGroupsData.accepted;
@@ -376,7 +376,7 @@ export default function ResponseGroupsPage() {
           ...mockGroupsData.accepted,
           ...mockGroupsData.pending,
           ...mockGroupsData.rejected,
-          ...mockGroupsData.draft
+          ...mockGroupsData.draft,
         ];
     }
   };
@@ -394,10 +394,7 @@ export default function ResponseGroupsPage() {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.header}>
-        <button 
-          className={styles.backButton} 
-          onClick={() => router.push("/my-responses")}
-        >
+        <button className={styles.backButton} onClick={() => router.push("/my-responses")}>
           <BackIcon />
           <span>Назад</span>
         </button>
@@ -440,15 +437,9 @@ export default function ResponseGroupsPage() {
       </div>
 
       {isMobile ? (
-        <MobileGroupDetails 
-          apartmentDetails={mockApartmentDetails} 
-          groups={filteredGroups} 
-        />
+        <MobileGroupDetails apartmentDetails={mockApartmentDetails} groups={filteredGroups} />
       ) : (
-        <DesktopGroupDetails 
-          apartmentDetails={mockApartmentDetails} 
-          groups={filteredGroups} 
-        />
+        <DesktopGroupDetails apartmentDetails={mockApartmentDetails} groups={filteredGroups} />
       )}
     </div>
   );

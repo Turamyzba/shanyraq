@@ -233,4 +233,3 @@ const TrashIcon = () => (
 );
 
 export default GroupsList;
-
