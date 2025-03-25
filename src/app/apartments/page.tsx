@@ -2,170 +2,322 @@
 import React, { useState, useEffect } from "react";
 import Container from "@/components/layouts/Container";
 import Filter from "./Filter";
-import Card from "@/components/common/Card";
-import CardSkeleton from "@/components/common/CardSkeleton";
+import CardComponent from "@/components/common/Card";
 import Images from "@/components/common/Images";
 import styles from "./Apartments.module.scss";
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
+import { Drawer } from "antd";
 import MyButton from "@/components/ui/MyButton";
 import Map from "./Map";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useMediaQuery } from "react-responsive";
+import {
+  mapStateToFilterRequest,
+  useLazyGetFilteredAnnouncementsQuery,
+} from "@/store/features/filter/filterApi";
+import {
+  setSelectedMapPoints,
+  resetFilter,
+  setCurrentPage,
+  setCurrentOrder,
+} from "@/store/features/filter/filterSlice";
+import { Card } from "@/types/common";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 const sortItems = [
   { value: "1", label: "Самые подходящие" },
   { value: "3", label: "По новизне" },
-  { value: "4", label: "По убыванию цены" },
   { value: "2", label: "По возрастанию цены" },
-];
-
-const mockAnnouncements = [
-  {
-    id: 1,
-    title: "Уютная квартира в центре",
-    cost: "180 000",
-    image: "/apartment1.jpg",
-    address: "Алматы, Самал-2",
-    selectedGender: "Мужчины",
-    roomCount: 2,
-    roommates: 1,
-    arriveDate: "01.04.2024",
-  },
-  {
-    id: 2,
-    title: "Современная студия",
-    cost: "220 000",
-    image: "/apartment2.jpg",
-    address: "Астана, Байконур",
-    selectedGender: "Любой",
-    roomCount: 1,
-    roommates: 2,
-    arriveDate: "10.03.2024",
-  },
-  {
-    id: 3,
-    title: "Комната с панорамным видом",
-    cost: "150 000",
-    image: "/apartment3.jpg",
-    address: "Шымкент, Аль-Фараби",
-    selectedGender: "Женщины",
-    roomCount: 3,
-    roommates: 1,
-    arriveDate: "05.04.2024",
-  },
-  {
-    id: 4,
-    title: "Уютная квартира в центре",
-    cost: "180 000",
-    image: "/apartment1.jpg",
-    address: "Алматы, Самал-2",
-    selectedGender: "Мужчины",
-    roomCount: 2,
-    roommates: 1,
-    arriveDate: "01.04.2024",
-  },
-  {
-    id: 5,
-    title: "Современная студия",
-    cost: "220 000",
-    image: "/apartment2.jpg",
-    address: "Астана, Байконур",
-    selectedGender: "Любой",
-    roomCount: 1,
-    roommates: 2,
-    arriveDate: "10.03.2024",
-  },
-  {
-    id: 6,
-    title: "Комната с панорамным видом",
-    cost: "150 000",
-    image: "/apartment3.jpg",
-    address: "Шымкент, Аль-Фараби",
-    selectedGender: "Женщины",
-    roomCount: 3,
-    roommates: 1,
-    arriveDate: "05.04.2024",
-  },
+  { value: "4", label: "По убыванию цены" },
 ];
 
 export default function ApartmentsPage() {
-  const [selectedSort, setSelectedSort] = useState("1");
   const [isMap, setIsMap] = useState(false);
   const [hideFilter, setHideFilter] = useState(true);
+  const [showListings, setShowListings] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [filteredApartments, setFilteredApartments] = useState<Card[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasMoreData, setHasMoreData] = useState(true);
+
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
   const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
 
+  const [getFilteredAnnouncements] = useLazyGetFilteredAnnouncementsQuery();
+
+  const dispatch = useAppDispatch();
+  const filterState = useAppSelector((state) => state.filter);
+  const { page, sort } = filterState;
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (isMobile) {
+      setHideFilter(true);
+    } else {
+      setHideFilter(false);
+      onClose();
+      if (!isMap) {
+        setShowListings(false);
+      }
+    }
+  }, [isMobile, isMap]);
+
+  const fetchFilterApartmentsWithoutLoading = async (filterData: any, isLoadMore = false) => {
+    const requestData = mapStateToFilterRequest(filterData);
+
+    try {
+      const { data } = await getFilteredAnnouncements(requestData);
+      const newApartments = data?.data?.announcements as Card[];
+      const newPage = data?.data?.page as number;
+      dispatch(setCurrentPage(newPage));
+
+      if (newApartments.length === 0) {
+        setHasMoreData(false);
+      }
+      if (isLoadMore) {
+        setFilteredApartments([...filteredApartments, ...newApartments]);
+      } else {
+        setFilteredApartments(newApartments);
+        setHasMoreData(true);
+      }
+    } catch (error) {
+      console.error("Error fetching apartments:", error);
+    }
+  };
+
+  const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
+    const requestData = mapStateToFilterRequest(filterData);
+    setIsLoading(true);
+
+    try {
+      const { data } = await getFilteredAnnouncements(requestData);
+      const newApartments = data?.data?.announcements as Card[];
+      const newPage = data?.data?.page as number;
+      dispatch(setCurrentPage(newPage));
+
+      if (newApartments.length === 0) {
+        setHasMoreData(false);
+      }
+      if (isLoadMore) {
+        setFilteredApartments([...filteredApartments, ...newApartments]);
+      } else {
+        setFilteredApartments(newApartments);
+        setHasMoreData(true);
+      }
+    } catch (error) {
+      console.error("Error fetching apartments:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFilterApartments(filterState, false);
+  }, [sort]);
+
+  useEffect(() => {
+    fetchFilterApartmentsWithoutLoading(filterState, true);
+  }, [page]);
+
   const handleIsMap = () => {
-    if (isMap) setHideFilter(true);
     setIsMap(!isMap);
+    if (!isMap) {
+      setShowListings(true);
+    } else {
+      setShowListings(false);
+    }
+  };
+
+  const handleFilterSubmit = (filterData: any) => {
+    if (isMobile) {
+      onClose();
+    }
+    dispatch(setCurrentPage(1));
+    fetchFilterApartments(filterData);
+  };
+
+  const handleResetFilter = () => {
+    dispatch(resetFilter());
+    dispatch(setCurrentPage(1));
+    fetchFilterApartments(filterState);
+  };
+
+  const handleMapPointsSelected = (points: { x: number; y: number }[]) => {
+    dispatch(setSelectedMapPoints(points));
+
+    const updatedFilterState = {
+      ...filterState,
+      selectedMapPoints: points,
+    };
+
+    fetchFilterApartmentsWithoutLoading({ filter: updatedFilterState }, false);
+  };
+
+  const loadMoreApartments = () => {
+    if (isLoading || !hasMoreData) return;
+
+    const nextPage = page + 1;
+    dispatch(setCurrentPage(nextPage));
   };
 
   return (
     <Container>
       <div className={styles.wrapper}>
-        {hideFilter && <Filter />}
+        {!hideFilter && !isMobile && (
+          <Filter onSubmit={handleFilterSubmit} onResetFilter={handleResetFilter} />
+        )}
+
+        {showListings && isMap && hideFilter && !isMobile && (
+          <div className={styles.mapListings}>
+            <h3>Найдено {filteredApartments.length} объявлений</h3>
+            <div className={styles.mapCardsList}>
+              {filteredApartments.slice(0, 5).map((apartment) => (
+                <CardComponent key={apartment.announcementId} card={apartment} mini={true} />
+              ))}
+              {filteredApartments.length > 5 && (
+                <div className={styles.viewMoreButton}>
+                  <Button color="primary" size="sm">
+                    Еще {filteredApartments.length - 5} объявлений
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className={styles.rightColumn}>
-          <div className={styles.sortControls}>
-            <Dropdown>
-              <DropdownTrigger>
-                <Button className="capitalize" variant="bordered" size="sm">
-                  {sortItems.find((sort) => sort.value === selectedSort)?.label}
-                  <Images.ChevronDown size={20} color={"#5c5c5c"} />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Выбор города"
-                selectionMode="single"
-                selectedKeys={selectedSort}
-                variant="flat"
-                onSelectionChange={(keys) => {
-                  if (keys.currentKey) {
-                    setSelectedSort(keys.currentKey);
-                  }
-                }}
-              >
-                {sortItems.map((sort) => (
-                  <DropdownItem key={sort.value} textValue={sort.label}>
-                    {sort.label}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+          <div className={styles.topBar}>
+            <div className={styles.sortControls}>
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button className="capitalize" variant="bordered" size="sm">
+                    {sortItems.find((s) => s.value === sort.toString())?.label}
+                    <Images.ChevronDown size={20} color={"#5c5c5c"} />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  disallowEmptySelection
+                  aria-label="Выбор сортировки"
+                  selectionMode="single"
+                  selectedKeys={sort.toString()}
+                  variant="flat"
+                  onSelectionChange={(keys) => {
+                    if (keys.currentKey) {
+                      dispatch(setCurrentPage(1));
+                      dispatch(setCurrentOrder(+keys.currentKey));
+                    }
+                  }}
+                >
+                  {sortItems.map((sort) => (
+                    <DropdownItem key={sort.value} textValue={sort.label}>
+                      {sort.label}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
 
-            <div>
-              {isMap && (
+              <div className={styles.controlButtons}>
+                {(isMobile || isMap) && (
+                  <MyButton
+                    type="button"
+                    variant="bordered"
+                    size="sm"
+                    onClick={() => (isMobile ? showDrawer() : setHideFilter(!hideFilter))}
+                  >
+                    <Images.Filter color="#5c5c5c" size={18} />
+                    <span style={{ marginLeft: "8px" }}>Фильтры</span>
+                  </MyButton>
+                )}
+
                 <MyButton
                   type="button"
-                  onClick={() => setHideFilter(!hideFilter)}
-                  isIconOnly
+                  onClick={handleIsMap}
                   variant="bordered"
                   size="sm"
+                  aria-label={isMap ? "Показать список" : "Показать карту"}
                 >
-                  <Images.Filter />
+                  {isMap ? (
+                    <>
+                      <Images.List />
+                      <span style={{ marginLeft: "8px" }}>Список</span>
+                    </>
+                  ) : (
+                    <>
+                      <Images.Map />
+                      <span style={{ marginLeft: "8px" }}>Карта</span>
+                    </>
+                  )}
                 </MyButton>
-              )}
-
-              <MyButton type="button" onClick={handleIsMap} isIconOnly variant="bordered" size="sm">
-                {isMap ? <Images.List /> : <Images.Map />}
-              </MyButton>
+              </div>
             </div>
           </div>
 
-          {!isMap ? (
-            <div className={styles.gridContainer}>
-              <div className={styles.cardGrid}>
-                {mockAnnouncements.map((announcement) => (
-                  <Card key={announcement.id} card={announcement} />
-                  // <CardSkeleton />
-                ))}
-              </div>
+          {isLoading ? (
+            <div className={styles.loadingScreen}>
+              <Spin indicator={antIcon} />
             </div>
           ) : (
-            <Map update={hideFilter} />
+            <>
+              {!isMap ? (
+                <>
+                  <div className={styles.gridContainer}>
+                    <div className={styles.cardGrid}>
+                      {filteredApartments.map((apartment, index) => (
+                        <CardComponent
+                          key={apartment.announcementId}
+                          card={apartment}
+                          isLast={hasMoreData && index === filteredApartments.length - 1}
+                          loadMoreApartments={loadMoreApartments}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  {isLoading && (
+                    <div className={styles.loadingMore}>
+                      <Spin indicator={antIcon} />
+                    </div>
+                  )}
+
+                  {!hasMoreData && filteredApartments.length > 0 && (
+                    <div className={styles.noMoreData}>
+                      <p>Больше объявлений не найдено</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className={styles.mapContent}>
+                  <Map
+                    update={hideFilter || isMobile}
+                    apartments={filteredApartments}
+                    isLoading={false}
+                    onPointsSelected={handleMapPointsSelected}
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
+
+      <Drawer
+        title="Basic Drawer"
+        placement="bottom"
+        closable={false}
+        onClose={onClose}
+        size="large"
+        open={open}
+      >
+        <Filter onSubmit={handleFilterSubmit} onResetFilter={handleResetFilter} />
+      </Drawer>
     </Container>
   );
 }

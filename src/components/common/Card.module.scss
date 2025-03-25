@@ -1,10 +1,11 @@
 .cardWrapper {
   position: relative;
+  width: 100%;
 }
 
 .card {
-  min-height: 345px;
-  min-width: 267px;
+  // height: 345px;
+  width: 280px;
   background: white;
   border-radius: 10px;
   padding: 16px;
@@ -12,17 +13,29 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.2); // updated shadow from old version
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
 
-  /* Image Section */
+  @media (max-width: 1024px) {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  @media (max-width: 768px) {
+    height: auto;
+    min-height: 320px;
+    padding: 12px;
+  }
+
   .cardImage {
     position: relative;
+    max-width: 280px;
+    height: 180px !important;
 
     .image {
       border-radius: 10px;
       object-fit: cover;
-      max-width: 240px;
-      max-height: 130px;
+      height: 100%;
     }
 
     .modalText {
@@ -35,60 +48,87 @@
       top: 10px;
       right: 10px;
       z-index: 10;
+      background-color: rgba(0, 0, 0, 0.3);
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
     }
   }
 
-  /* Card Content */
   .cardContent {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     width: 100%;
+    margin-top: 12px;
+    flex: 1;
   }
 
   .cardTitle {
-    font-size: 16px; // updated from 20px
-    font-weight: 600; // matches Tailwind's font-semibold
+    font-size: 16px;
+    font-weight: 600;
     color: #252525;
     text-align: left;
-    margin-top: 10px;
+
+    p {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+    }
   }
 
   .cardLocation {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px; // updated from 16px
+    font-size: 14px;
     color: #929292;
-    font-weight: 400; // updated from 500
+    font-weight: 400;
+
+    p {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
   }
 
-  /* Room Info */
   .roomInfo {
     display: flex;
     width: 100%;
     justify-content: space-between;
 
+    @media (max-width: 768px) {
+      flex-wrap: wrap;
+      row-gap: 10px;
+    }
+
     .infoItem {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      font-size: 12px; // updated from 14px
+      gap: 4px;
+      font-size: 12px;
       font-weight: 400;
       color: #929292;
-      line-height: 17.5px; // added to match old version
+
+      p {
+        margin: 0;
+      }
     }
   }
 
-  /* Price */
   .price {
-    font-size: 16px; // updated from 24px
+    font-size: 18px;
     font-weight: 700;
     color: #252525;
     display: flex;
     align-items: center;
-    line-height: 20px; // added line-height
+    margin: 0;
 
     .currency {
       text-decoration: underline;
@@ -96,16 +136,24 @@
     }
   }
 
-  /* Learn More */
   .learnMore {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 12px; // updated from 14px
-    font-weight: 500; // updated from 700
+    font-size: 12px;
+    font-weight: 500;
     color: #999999;
     cursor: pointer;
-    line-height: 17.5px; // added line-height
+    margin-top: auto;
+    width: 100%;
+
+    button {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      margin-top: 12px;
+    }
 
     &:hover {
       color: #1aa683;
@@ -113,7 +161,35 @@
   }
 }
 
-/* Last Overlay */
+.miniCard {
+  height: auto;
+  width: 100%;
+  max-width: 280px;
+  padding: 12px;
+  box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.15);
+
+  .cardImage {
+    height: 120px;
+  }
+
+  .cardContent {
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .cardTitle {
+    font-size: 14px;
+  }
+
+  .cardLocation {
+    font-size: 12px;
+  }
+
+  .roomInfo {
+    display: none;
+  }
+}
+
 .lastOverlay {
   position: absolute;
   top: 0;
@@ -128,13 +204,28 @@
   z-index: 50;
 
   .viewAllButton {
-    padding: 20px 24px;
+    padding: 18px 22px;
     background: #1aa683;
     color: white;
     font-size: 16px;
     font-weight: 500;
     border-radius: 10px;
     cursor: pointer;
+
+    @media (max-width: 991px) {
+      padding: 17px 20px;
+      font-size: 15px;
+    }
+
+    @media (max-width: 768px) {
+      padding: 15px 18px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 12px 16px;
+      font-size: 13px;
+    }
 
     &:hover {
       background: #159a6b;

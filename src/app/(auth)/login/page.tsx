@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "@/store/features/user/userSlice";
 import { RootState, useAppSelector } from "@/store/store";
 import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { showToast } from "@/utils/notification";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,12 +35,9 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!email || !password) {
-      addToast({
+      showToast({
         title: "Ошибка",
         description: "Пожалуйста, заполните все поля",
-        variant: "flat",
-        radius: "sm",
-        timeout: 5000,
         color: "danger",
       });
       return;

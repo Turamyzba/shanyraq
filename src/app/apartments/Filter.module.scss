@@ -1,6 +1,6 @@
 .filter {
-  min-width: 450px;
-  max-width: 450px;
+  width: 400px;
+  flex-shrink: 0;
   background-color: #ffffff;
   border-radius: 10px;
   overflow-y: auto;
@@ -8,27 +8,50 @@
   position: sticky;
   top: 30px;
   box-shadow: 0px 4px 9px 0px #98a0b440;
-  padding: 32px 16px;
+  padding: 24px 16px;
   overflow-x: hidden;
+
+  @media (max-width: 1200px) {
+    width: 350px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    position: relative;
+    top: 0;
+    border-radius: 0;
+    box-shadow: none;
+    max-height: none;
+    padding: 20px 16px;
+  }
 }
 
 .filterContent {
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    gap: 15px;
+  }
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
-.header p {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 30px;
-  color: #252525;
+  p {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 30px;
+    color: #252525;
+    margin: 0;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
+  }
 }
 
 .resetButton {
@@ -51,6 +74,7 @@
   font-size: 14px;
   line-height: 17.5px;
   color: #252525;
+  margin: 0;
 }
 
 .priceInputs {
@@ -84,14 +108,16 @@
 
 .housemates {
   display: flex;
-  gap: 20px;
+  gap: 8px;
   list-style: none;
   padding: 0;
   margin: 0;
+  flex-wrap: wrap;
 }
 
 .housemateItem {
-  width: 48px;
+  flex: 1;
+  min-width: 40px;
   height: 34px;
   display: flex;
   align-items: center;
@@ -112,7 +138,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 100px;
+  width: 120px;
   height: 40px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -122,6 +148,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  padding: 8px;
 }
 
 .roomCount {
@@ -146,7 +173,12 @@
 
 .checkboxFloorGroup {
   display: flex;
-  gap: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    gap: 10px;
+  }
 }
 
 .checkboxGroup {
@@ -154,6 +186,10 @@
   flex-direction: column;
   gap: 16px;
   margin-top: 10px;
+
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
 }
 
 .checkboxLabel {
@@ -164,9 +200,19 @@
 
 .buttonGroup {
   display: flex;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
+
+  // @media (max-width: 1200px) {
+  //   flex-direction: column;
+  //   width: 100%;
+  // }
+
+  @media (max-width: 768px) {
+    margin-top: 15px;
+  }
 }
 
 .moreFiltersButton,
@@ -185,6 +231,21 @@
   background-color: transparent;
   cursor: pointer;
   transition: background-color 0.2s;
+
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    padding: 8px 0;
+    gap: 4px;
+  }
 }
 
 .moreFiltersButton:hover,
@@ -202,4 +263,13 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+
+  @media (max-width: 768px) {
+    padding: 12px;
+    font-size: 15px;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
 }

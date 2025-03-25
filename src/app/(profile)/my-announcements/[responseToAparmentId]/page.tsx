@@ -33,15 +33,7 @@ const ApartmentResponsesPage = () => {
     return <div className="loading-placeholder">Загрузка...</div>;
   }
 
-  return (
-    <>
-      {isMobile ? (
-        <MobileGroupsDetails />
-      ) : (
-        <DesktopGroupsDetails />
-      )}
-    </>
-  );
+  return <>{isMobile ? <MobileGroupsDetails /> : <DesktopGroupsDetails />}</>;
 };
 
 export default ApartmentResponsesPage;
