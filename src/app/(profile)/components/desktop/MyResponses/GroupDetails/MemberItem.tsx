@@ -1,5 +1,3 @@
-// src/app/(profile)/components/desktop/MyResponses/GroupDetails/MemberItem.tsx
-
 import React from "react";
 import { Button } from "antd";
 import { Member, MemberRole } from "./types";
@@ -25,14 +23,14 @@ const MemberItem: React.FC<MemberItemProps> = ({
   const getRoleBadge = (role?: MemberRole) => {
     if (!role) return null;
 
-    let badgeClass = styles.roleBadge;
-    if (role === "owner") badgeClass = `${styles.roleBadge} ${styles.ownerBadge}`;
-    if (role === "admin") badgeClass = `${styles.roleBadge} ${styles.adminBadge}`;
-    if (role === "invited") badgeClass = `${styles.roleBadge} ${styles.memberBadge}`;
+    let badgeClass = "";
+    if (role === "owner") badgeClass = styles.ownerBadge;
+    if (role === "admin") badgeClass = styles.adminBadge;
+    if (role === "member") badgeClass = styles.memberBadge;
 
     const roleText = {
       owner: "Хозяин жилья",
-      admin: "Администратор",
+      admin: "Админ группы",
       member: "Участник",
       invited: "Приглашен",
     };
@@ -41,55 +39,51 @@ const MemberItem: React.FC<MemberItemProps> = ({
   };
 
   const showPromoteButton = canPromoteToAdmin && member.role === "member" && !member.isCurrentUser;
-  const showRemoveButton =
-    canRemove &&
-    member.role !== "owner" &&
-    (member.role !== "admin" || canPromoteToAdmin) &&
-    !member.isCurrentUser;
+  const showRemoveButton = canRemove && member.role !== "owner" && !member.isCurrentUser;
 
   return (
     <div className={styles.memberCard}>
       <div className={styles.memberInfo}>
-        <div
-          className={styles.memberAvatar}
-          style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${member.id})` }}
-        />
-        <div className={styles.memberData}>
-          <div className={styles.memberName}>
-            {member.name}
-            {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
-            {getRoleBadge(member.role)}
+        <div className={styles.tableUser}>
+          <div
+            className={styles.userAvatar}
+            style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${member.id})` }}
+          ></div>
+          <div>
+            <div className={styles.userName}>
+              {member.name}
+              {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
+              {getRoleBadge(member.role)}
+            </div>
+            <div className={styles.userEmail}>{member.email}</div>
           </div>
-          {member.email && <div className={styles.memberEmail}>{member.email}</div>}
         </div>
       </div>
 
-      {!isPending && (
-        <div className={styles.memberDetails}>
-          <div className={styles.memberDetail}>
-            <span className={styles.detailLabel}>Возраст</span>
-            <span className={styles.detailValue}>{member.age ?? "Н/Д"}</span>
-          </div>
-          <div className={styles.memberDetail}>
-            <span className={styles.detailLabel}>Контакты</span>
-            <span className={styles.detailValue}>{member.phone ?? "Н/Д"}</span>
-          </div>
-          <div className={styles.memberDetail}>
-            <span className={styles.detailLabel}>Дата</span>
-            <span className={styles.detailValue}>{member.date ?? "Н/Д"}</span>
-          </div>
-        </div>
-      )}
+      <div className={styles.memberDetail}>
+        <span className={styles.detailValue}>{member.age ?? "Н/Д"}</span>
+      </div>
+
+      <div className={styles.memberDetail}>
+        <span className={styles.detailValue}>{member.phone ?? "Н/Д"}</span>
+      </div>
+
+      <div className={styles.memberDetail}>
+        <span className={styles.detailValue}>{member.date ?? "Н/Д"}</span>
+      </div>
+
+      <div className={styles.actionButtons}>
+        <Button className={styles.actionButton}>Посмотреть анкету</Button>
+        <Button className={styles.actionButton}>Сопроводительное письмо</Button>
+      </div>
 
       <div className={styles.memberActions}>
         {showPromoteButton && (
           <Button
             className={styles.promoteButton}
             onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
-          >
-            <AdminIcon />
-            Сделать админом
-          </Button>
+            icon={<AdminIcon />}
+          />
         )}
 
         {showRemoveButton && (
@@ -97,10 +91,8 @@ const MemberItem: React.FC<MemberItemProps> = ({
             className={styles.removeButton}
             onClick={() => onRemove && onRemove(member.id)}
             danger
-          >
-            <TrashIcon />
-            {member.role === "invited" ? "Отменить приглашение" : "Удалить"}
-          </Button>
+            icon={<TrashIcon />}
+          />
         )}
       </div>
     </div>
@@ -108,7 +100,7 @@ const MemberItem: React.FC<MemberItemProps> = ({
 };
 
 const TrashIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M2.5 5H4.16667H17.5"
       stroke="currentColor"
@@ -134,7 +126,7 @@ const TrashIcon = () => (
 );
 
 const AdminIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M16.6667 5.83333L7.5 15L3.33333 10.8333L4.16667 10L7.5 13.3333L15.8333 5"
       stroke="currentColor"

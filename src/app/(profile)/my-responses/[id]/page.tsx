@@ -1,5 +1,3 @@
-// src/app/(profile)/my-responses/[id]/page.tsx
-
 "use client";
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -7,7 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import dynamic from "next/dynamic";
 import GroupDetailsPageLayout from "../../components/desktop/MyResponses/GroupDetails/GroupDetailsPageLayout";
 
-// Use dynamic imports for desktop and mobile components
+// Используем динамический импорт для десктопной и мобильной версий
 const DesktopGroupDetails = dynamic(
   () => import("../../components/desktop/MyResponses/GroupDetails/GroupDetails"),
   { ssr: false }
@@ -18,7 +16,7 @@ const MobileGroupDetails = dynamic(
   { ssr: false }
 );
 
-// Mock data is imported from a separate file - for this example, we're keeping it inline
+// Мок-данные (обычно импортируются из отдельного файла)
 const mockApartmentDetails = {
   id: 1,
   title: "Просторная квартира в центре",

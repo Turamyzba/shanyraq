@@ -1,7 +1,5 @@
-// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupItem.tsx
-
 import React from "react";
-import { Button } from "antd";
+import { Button, Collapse } from "antd";
 import { Group } from "./types";
 import MembersList from "./MembersList";
 import ApplicantsList from "./ApplicantsList";
@@ -30,33 +28,17 @@ const GroupItem: React.FC<GroupItemProps> = ({
   const isPending = group.status === "pending";
   const isDraft = group.status === "draft";
 
-  // Only admins and owners can remove members
+  // Только админы и владельцы могут удалять участников
   const canRemoveMembers = group.isUserAdmin || group.isUserOwner;
 
-  // Only owners can promote to admin
+  // Только владельцы могут повышать до админа
   const canPromoteToAdmin = group.isUserOwner;
 
-  // Only admins and owners can manage applicants
+  // Только админы и владельцы могут управлять заявками
   const canManageApplicants = group.isUserAdmin || group.isUserOwner;
 
-  // Users can leave groups if they're members but not owner
+  // Пользователи могут покинуть группы, если они участники, но не владельцы
   const canLeaveGroup = group.isUserMember && !group.isUserOwner;
-
-  // Get status text based on group status
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "В ожидании";
-      case "accepted":
-        return "Принята";
-      case "rejected":
-        return "Отклонена";
-      case "draft":
-        return "Черновик";
-      default:
-        return "";
-    }
-  };
 
   return (
     <div className={styles.groupCard}>
@@ -64,13 +46,12 @@ const GroupItem: React.FC<GroupItemProps> = ({
         <div className={styles.groupTitle}>
           <h3>{group.name}</h3>
           <div className={styles.avatarsRow}>
-            {displayedAvatars.map((member, index) => (
+            {displayedAvatars.map((member) => (
               <div
                 key={member.id}
                 className={styles.avatar}
                 style={{
                   backgroundImage: `url(https://i.pravatar.cc/150?u=${member.id})`,
-                  zIndex: avatarLimit - index,
                 }}
               />
             ))}
@@ -92,17 +73,17 @@ const GroupItem: React.FC<GroupItemProps> = ({
               }`}
             >
               {group.isUserOwner
-                ? isDraft
-                  ? "Вы создатель черновика"
-                  : "Вы хозяин группы"
+                ? "Вы хозяин группы"
                 : group.isUserAdmin
                   ? "Вы администратор"
                   : "Вы участник группы"}
             </div>
           )}
-
           <div className={`${styles.groupStatusBadge} ${styles[group.status]}`}>
-            {getStatusText(group.status)}
+            {group.status === "pending" && "В ожидании"}
+            {group.status === "accepted" && "Принята"}
+            {group.status === "rejected" && "Отклонена"}
+            {group.status === "draft" && "Черновик"}
           </div>
         </div>
       </div>

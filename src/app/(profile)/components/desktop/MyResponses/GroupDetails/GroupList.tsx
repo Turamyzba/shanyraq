@@ -1,5 +1,3 @@
-// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupList.tsx
-
 import React from "react";
 import { Group } from "./types";
 import GroupItem from "./GroupItem";
@@ -22,14 +20,14 @@ const GroupList: React.FC<GroupListProps> = ({
   onAcceptApplicant,
   onRejectApplicant,
 }) => {
-  // Sort groups: first accepted, then pending, then rejected
+  // Сортировка групп: сначала принятые, затем ожидающие, затем отклоненные
   const sortedGroups = [...groups].sort((a, b) => {
     const statusOrder = { accepted: 0, pending: 1, rejected: 2, draft: 3 };
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
   return (
-    <div className={styles.container}>
+    <div>
       <h2 className={styles.groupsTitle}>Количество групп: {groups.length}</h2>
 
       <div className={styles.groupsList}>

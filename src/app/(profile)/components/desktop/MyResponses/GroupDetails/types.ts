@@ -1,5 +1,3 @@
-// src/app/(profile)/components/desktop/MyResponses/GroupDetails/types.ts
-
 export type MemberRole = "member" | "admin" | "owner" | "invited";
 export type ApplicationStatus = "pending" | "accepted" | "rejected";
 export type GroupStatus = "pending" | "accepted" | "rejected" | "draft";

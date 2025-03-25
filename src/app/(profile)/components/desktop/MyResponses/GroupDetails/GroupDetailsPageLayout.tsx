@@ -1,11 +1,10 @@
-// src/app/(profile)/components/desktop/MyResponses/GroupDetailsPageLayout.tsx
-
 import React, { ReactNode } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { Button } from "antd";
 import { ApartmentDetails } from "./types";
 import ApartmentDetailsComponent from "./ApartmentDetails";
-import styles from "./GroupDetailsPageLayout.module.scss";
-
+import styles from "./GroupDetails.module.scss";
+import './GroupDetails.scss'
 interface GroupDetailsPageLayoutProps {
   children: ReactNode;
   router: AppRouterInstance;
@@ -22,16 +21,18 @@ const GroupDetailsPageLayout: React.FC<GroupDetailsPageLayoutProps> = ({
   apartmentDetails,
 }) => {
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.container}>
       <div className={styles.header}>
-        <button className={styles.backButton} onClick={() => router.push("/my-responses")}>
-          <BackIcon />
-          <span>Назад</span>
-        </button>
+        <Button
+          type="text"
+          icon={<BackIcon />}
+          className={styles.backButton}
+          onClick={() => router.push("/my-responses")}
+        />
         <h1 className={styles.title}>Группы объявления</h1>
       </div>
 
-      {/* Apartment details displayed above tabs */}
+      {/* Информация о квартире отображается над табами */}
       <ApartmentDetailsComponent details={apartmentDetails} />
 
       <div className={styles.tabsContainer}>

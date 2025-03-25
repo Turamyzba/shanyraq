@@ -1,5 +1,3 @@
-// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupDetails.tsx
-
 import React, { useState, useEffect } from "react";
 import { Group, ApartmentDetails, ModalConfig } from "./types";
 import GroupList from "./GroupList";
@@ -15,7 +13,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
   const [groupsData, setGroupsData] = useState<Group[]>([]);
   const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
 
-  // Update local state when props change
+  // Обновляем локальное состояние при изменении props
   useEffect(() => {
     if (groups && Array.isArray(groups)) {
       setGroupsData(groups);
@@ -155,17 +153,8 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
     setModalConfig(null);
   };
 
-  // If no groups data is available yet, show loading or empty state
-  if (!groupsData || groupsData.length === 0) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.emptyState}>Нет доступных групп</div>
-      </div>
-    );
-  }
-
   return (
-    <div className={styles.container}>
+    <div>
       <GroupList
         groups={groupsData}
         onLeaveGroup={handleLeaveGroup}
