@@ -26,7 +26,7 @@ export const mapStateToFilterRequest = (state: FilterState | RootState): FilterR
   if (filter.maxPrice) cleanedRequestData.maxPrice = filter.maxPrice;
   if (filter.roommates?.id)
     cleanedRequestData.numberOfPeopleAreYouAccommodating = filter.roommates.id;
-  if (filter.rooms) cleanedRequestData.quantityOfRooms = filter.rooms.toString();
+  if (filter.rooms > 0) cleanedRequestData.quantityOfRooms = filter.rooms.toString();
   if (filter.minAge) cleanedRequestData.minAge = filter.minAge;
   if (filter.maxAge) cleanedRequestData.maxAge = filter.maxAge;
 
@@ -82,6 +82,7 @@ export const filterApi = api.injectEndpoints({
       },
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {

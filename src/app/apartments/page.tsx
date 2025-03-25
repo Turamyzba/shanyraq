@@ -6,7 +6,7 @@ import CardComponent from "@/components/common/Card";
 import Images from "@/components/common/Images";
 import styles from "./Apartments.module.scss";
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
-import { Drawer } from "antd";
+import { Drawer, Empty } from "antd";
 import MyButton from "@/components/ui/MyButton";
 import Map from "./Map";
 import { Spin } from "antd";
@@ -71,29 +71,6 @@ export default function ApartmentsPage() {
     }
   }, [isMobile, isMap]);
 
-  const fetchFilterApartmentsWithoutLoading = async (filterData: any, isLoadMore = false) => {
-    const requestData = mapStateToFilterRequest(filterData);
-
-    try {
-      const { data } = await getFilteredAnnouncements(requestData);
-      const newApartments = data?.data?.announcements as Card[];
-      const newPage = data?.data?.page as number;
-      dispatch(setCurrentPage(newPage));
-
-      if (newApartments.length === 0) {
-        setHasMoreData(false);
-      }
-      if (isLoadMore) {
-        setFilteredApartments([...filteredApartments, ...newApartments]);
-      } else {
-        setFilteredApartments(newApartments);
-        setHasMoreData(true);
-      }
-    } catch (error) {
-      console.error("Error fetching apartments:", error);
-    }
-  };
-
   const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
     const requestData = mapStateToFilterRequest(filterData);
     setIsLoading(true);
@@ -122,12 +99,24 @@ export default function ApartmentsPage() {
 
   useEffect(() => {
     fetchFilterApartments(filterState, false);
+  }, []);
+
+  useEffect(() => {
+    const isSortChange = sort > 1;
+    
+    if (isSortChange) {
+      fetchFilterApartments(filterState, false);
+    }
   }, [sort]);
 
   useEffect(() => {
-    fetchFilterApartmentsWithoutLoading(filterState, true);
+    const isPageChange = page > 1;
+    
+    if (isPageChange) {
+      fetchFilterApartments(filterState, true);
+    }
   }, [page]);
-
+  
   const handleIsMap = () => {
     setIsMap(!isMap);
     if (!isMap) {
@@ -148,18 +137,21 @@ export default function ApartmentsPage() {
   const handleResetFilter = () => {
     dispatch(resetFilter());
     dispatch(setCurrentPage(1));
+    dispatch(setCurrentOrder(1));
     fetchFilterApartments(filterState);
   };
 
   const handleMapPointsSelected = (points: { x: number; y: number }[]) => {
     dispatch(setSelectedMapPoints(points));
+    dispatch(setCurrentPage(1));
+    dispatch(setCurrentOrder(1));
 
     const updatedFilterState = {
       ...filterState,
       selectedMapPoints: points,
     };
 
-    fetchFilterApartmentsWithoutLoading({ filter: updatedFilterState }, false);
+    fetchFilterApartments({ filter: updatedFilterState }, false);
   };
 
   const loadMoreApartments = () => {
@@ -168,6 +160,7 @@ export default function ApartmentsPage() {
     const nextPage = page + 1;
     dispatch(setCurrentPage(nextPage));
   };
+  console.log(!(filteredApartments.length > 0))
 
   return (
     <Container>
@@ -260,36 +253,31 @@ export default function ApartmentsPage() {
               </div>
             </div>
           </div>
-
-          {isLoading ? (
-            <div className={styles.loadingScreen}>
-              <Spin indicator={antIcon} />
-            </div>
-          ) : (
-            <>
+          <>
               {!isMap ? (
                 <>
                   <div className={styles.gridContainer}>
                     <div className={styles.cardGrid}>
-                      {filteredApartments.map((apartment, index) => (
+                      {filteredApartments.map((apartment) => (
                         <CardComponent
                           key={apartment.announcementId}
                           card={apartment}
-                          isLast={hasMoreData && index === filteredApartments.length - 1}
-                          loadMoreApartments={loadMoreApartments}
                         />
                       ))}
+                      {filteredApartments.length > 0 && (
+                      <CardComponent
+                          key={filteredApartments[filteredApartments.length - 1].announcementId}
+                          card={filteredApartments[filteredApartments.length - 1]}
+                          isLast={true}
+                          disabledButton={isLoading}
+                          loadMoreApartments={loadMoreApartments}
+                        />
+                      )}
                     </div>
                   </div>
-                  {isLoading && (
-                    <div className={styles.loadingMore}>
-                      <Spin indicator={antIcon} />
-                    </div>
-                  )}
-
-                  {!hasMoreData && filteredApartments.length > 0 && (
-                    <div className={styles.noMoreData}>
-                      <p>Больше объявлений не найдено</p>
+                  {!(filteredApartments.length > 0) && (
+                    <div className={styles.empty}>
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </div>
                   )}
                 </>
@@ -304,6 +292,10 @@ export default function ApartmentsPage() {
                 </div>
               )}
             </>
+            {isLoading && (
+            <div className={styles.loadingScreen}>
+              <Spin indicator={antIcon} />
+            </div>
           )}
         </div>
       </div>

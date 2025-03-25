@@ -23,12 +23,12 @@ import {
   setGender,
   setMinPrice,
   setMaxPrice,
-  setRoommates,
+  // setRoommates,
   setAddress,
   setRooms,
   setMinAge,
   setMaxAge,
-  setMoveInDate,
+  // setMoveInDate,
   setTermType,
   setIsNotFirstFloor,
   setIsNotLastFloor,
@@ -45,13 +45,15 @@ import {
   initialState,
   setMinFloor,
   setMaxFloor,
+  setMoveInDate,
+  setRoommates,
 } from "@/store/features/filter/filterSlice";
 import { showToast } from "@/utils/notification";
 import SaveFilterModal from "@/components/common/SaveFilterModal";
 
 interface FilterProps {
   onSubmit?: (filterData: any) => void;
-  onResetFilter?: (filterData: any) => void;
+  onResetFilter?: () => void;
 }
 
 export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
@@ -62,7 +64,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   const [getAddresses, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
   const {
     address,
-    rooms = 1,
+    rooms,
     selectedGender,
     roommates,
     minPrice,
@@ -91,9 +93,142 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   const [microDistricts, setMicroDistricts] = useState<AddressType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [moreFilters, setMoreFilters] = useState(false);
+  
+  const [localRooms, setLocalRooms] = useState<number>(rooms || 1);
 
-  const [isToday, setIsToday] = useState(false);
-  const [isTomorrow, setIsTomorrow] = useState(false);
+const [isToday, setIsToday] = useState(false);
+const [isTomorrow, setIsTomorrow] = useState(false);
+
+useEffect(() => {
+  if (typeof rooms === 'number' && rooms > 0) {
+    setLocalRooms(rooms);
+  } else {
+    setLocalRooms(1);
+    dispatch(setRooms(1));
+  }
+}, [rooms, dispatch]);
+
+const incrementRooms = () => {
+  const newValue = Math.min(localRooms + 1, 10);
+  setLocalRooms(newValue);
+  dispatch(setRooms(newValue));
+};
+
+const decrementRooms = () => {
+  const newValue = Math.max(localRooms - 1, 1);
+  setLocalRooms(newValue);
+  dispatch(setRooms(newValue));
+};
+
+const getCalendarDateValue = (moveInDate: any) => {
+  try {
+    if (!moveInDate) {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return parseDate(`${year}-${month}-${day}`);
+    }
+    
+    if (typeof moveInDate === 'string') {
+      if (moveInDate.includes('T')) {
+        return parseDate(moveInDate.split('T')[0]);
+      }
+      return parseDate(moveInDate);
+    }
+    
+    if (moveInDate instanceof Date) {
+      const year = moveInDate.getFullYear();
+      const month = String(moveInDate.getMonth() + 1).padStart(2, '0');
+      const day = String(moveInDate.getDate()).padStart(2, '0');
+      return parseDate(`${year}-${month}-${day}`);
+    }
+    
+    if (typeof moveInDate === 'object' && moveInDate !== null) {
+      return moveInDate;
+    }
+  } catch (e) {
+    console.error("Error parsing date for calendar:", e);
+  }
+  
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return parseDate(`${year}-${month}-${day}`);
+};
+
+const handleDateChange = (date: any) => {
+  if (!date) return;
+  
+  try {
+    setIsToday(false);
+    setIsTomorrow(false);
+    
+    let dateStr;
+    
+    if (typeof date.toDate === 'function') {
+      const jsDate = date.toDate();
+      dateStr = jsDate.toISOString();
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      
+      const selectedDate = new Date(jsDate);
+      selectedDate.setHours(0, 0, 0, 0);
+      
+      if (selectedDate.getTime() === today.getTime()) {
+        setIsToday(true);
+      } else if (selectedDate.getTime() === tomorrow.getTime()) {
+        setIsTomorrow(true);
+      }
+    } 
+    else if (typeof date === 'string') {
+      dateStr = new Date(date).toISOString();
+    }
+    else if (date.toString) {
+      dateStr = date.toString();
+    }
+    else {
+      dateStr = new Date().toISOString();
+    }
+    
+    dispatch(setMoveInDate(dateStr));
+  } catch (e) {
+    console.error("Error handling date change:", e);
+  }
+};
+
+const handleTodayChange = () => {
+  const newIsToday = !isToday;
+  setIsToday(newIsToday);
+  
+  if (newIsToday) {
+    setIsTomorrow(false);
+    
+    const today = new Date();
+    dispatch(setMoveInDate(today.toISOString()));
+  } else {
+  }
+};
+
+const handleTomorrowChange = () => {
+  const newIsTomorrow = !isTomorrow;
+  setIsTomorrow(newIsTomorrow);
+  
+  if (newIsTomorrow) {
+    setIsToday(false);
+    
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dispatch(setMoveInDate(tomorrow.toISOString()));
+  } else {
+  }
+};
 
   const genderSelectOptions = genderOptions.map((gender) => ({
     value: gender.code,
@@ -131,19 +266,6 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   useEffect(() => {
     fetchRegions();
   }, []);
-
-  useEffect(() => {
-    if (isToday) {
-      const today = new Date();
-      setIsTomorrow(false);
-      dispatch(setMoveInDate(today.toISOString().split("T")[0]));
-    } else if (isTomorrow) {
-      setIsToday(false);
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      dispatch(setMoveInDate(tomorrow.toISOString().split("T")[0]));
-    }
-  }, [isToday, isTomorrow, dispatch]);
 
   const handleRegionSelect = async (regionId: string) => {
     const selected = regions.find((region) => region.id.toString() === regionId);
@@ -241,19 +363,10 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
     }
   };
 
-  const incrementRooms = () => rooms && dispatch(setRooms(Math.min(rooms + 1, 10)));
-  const decrementRooms = () => rooms && dispatch(setRooms(Math.max(rooms - 1, 1)));
-
   const handleAgeSliderChange = (event: any, newValue: number | number[]) => {
     if (Array.isArray(newValue)) {
       dispatch(setMinAge(newValue[0]));
       dispatch(setMaxAge(newValue[1]));
-    }
-  };
-
-  const handleDateChange = (date: any) => {
-    if (date) {
-      dispatch(setMoveInDate(date.toString()));
     }
   };
 
@@ -272,15 +385,19 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   };
 
   const resetFilters = () => {
-    dispatch(resetFilter());
+    if (onResetFilter) {
+      onResetFilter();
+    }
+    
     setIsToday(false);
     setIsTomorrow(false);
     setMoreFilters(false);
-
+    
     showToast({
       title: "Фильтры сброшены!",
     });
   };
+
 
   const handleSubmit = () => {
     if (onSubmit) {
@@ -421,7 +538,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
             <MyButton className={styles.roomControlButton} onClick={decrementRooms} isIconOnly>
               <Images.MinusIcon size={12} />
             </MyButton>
-            <span className={styles.roomCount}>{rooms}</span>
+            <span className={styles.roomCount}>{localRooms}</span>
             <MyButton className={styles.roomControlButton} onClick={incrementRooms} isIconOnly>
               <Images.PlusIcon size={12} />
             </MyButton>
@@ -432,8 +549,8 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
           <p className={styles.label}>Возраст</p>
           <div className={styles.relative}>
             <div className={styles.sliderLabels}>
-              <span>18</span>
-              <span>50</span>
+              <span>{minAge || "18"}</span>
+              <span>{maxAge || "50"}</span>
             </div>
             <MySlider
               value={[minAge || 18, maxAge || 50]}
@@ -466,7 +583,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
           <p className={styles.label}>Дата начала заселения</p>
           <MyCalendar
             aria-label="Дата заселения"
-            value={moveInDate}
+            value={getCalendarDateValue(moveInDate)}
             variant="bordered"
             color={"primary"}
             onChange={handleDateChange}
@@ -476,20 +593,14 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
           <div className={styles.checkboxFloorGroup}>
             <Checkbox
               checked={isToday}
-              onChange={() => {
-                setIsToday(!isToday);
-                if (isToday) setIsTomorrow(false);
-              }}
+              onChange={handleTodayChange}
               aria-label="Сегодня"
             >
               <p className={styles.label}>Сегодня</p>
             </Checkbox>
             <Checkbox
               checked={isTomorrow}
-              onChange={() => {
-                setIsTomorrow(!isTomorrow);
-                if (isTomorrow) setIsToday(false);
-              }}
+              onChange={handleTomorrowChange}
               aria-label="Завтра"
             >
               <p className={styles.label}>Завтра</p>

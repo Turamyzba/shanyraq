@@ -15,9 +15,10 @@ interface CardProps {
   mini?: boolean;
   isLast?: boolean;
   loadMoreApartments?: () => void;
+  disabledButton?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMoreApartments }) => {
+const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMoreApartments, disabledButton = false }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
 
@@ -145,7 +146,7 @@ const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMor
       </div>
       {isLast && (
         <div className={styles.lastOverlay}>
-          <Button onPress={loadMoreApartments} className={styles.viewAllButton}>
+          <Button onPress={loadMoreApartments} className={styles.viewAllButton} disabled={disabledButton} >
             Загрузить еще 21 объявлений
           </Button>
         </div>

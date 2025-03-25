@@ -10,7 +10,7 @@ export interface FilterState {
   maxPrice: number | null;
   roommates: RommatesState | null;
   address: AddressState;
-  rooms: number | null;
+  rooms: number;
   minAge: number | null;
   maxAge: number | null;
   moveInDate: string | null;
@@ -46,7 +46,7 @@ export const initialState: FilterState = {
     microDistrictId: null,
     microDistrictName: "",
   },
-  rooms: null,
+  rooms: 0,
   minAge: null,
   maxAge: null,
   moveInDate: null,
