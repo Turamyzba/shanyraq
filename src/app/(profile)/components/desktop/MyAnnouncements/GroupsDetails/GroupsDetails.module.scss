@@ -1,0 +1,404 @@
+// components/desktop/MyAnnouncements/GroupsDetails/GroupsDetails.module.scss
+
+.container {
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px !important;
+  height: 40px !important;
+  border: none;
+  background-color: #1aa683;
+  border-radius: 50%;
+  color: #fff;
+  margin-right: 16px;
+}
+.backButton:hover {
+  background-color: #1aa683 !important;
+  color: #fff !important;
+}
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #252525;
+  margin: 0;
+}
+
+.apartmentCard {
+  display: flex;
+  background-color: white;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.apartmentImage {
+  width: 240px;
+  height: 160px;
+  overflow: hidden;
+}
+
+.apartmentImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.apartmentInfo {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoContent {
+  display: flex;
+  flex: 1;
+  gap: 40px;
+}
+
+.infoColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoColumn p {
+  margin: 0;
+  font-size: 14px;
+  color: #252525;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #252525;
+  margin-left: 20px;
+}
+
+.newApplicationsSection {
+  background-color: white;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+  padding: 0px;
+}
+
+.newApplicationsCollapse {
+  margin-bottom: 24px;
+  padding: 0;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #252525;
+  margin: 0;
+  padding: 0 !important;
+}
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.tableUser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.telegramLink {
+  color: #1aa683;
+  text-decoration: none;
+}
+
+.telegramLink:hover {
+  text-decoration: underline;
+}
+
+.groupsTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #252525;
+  margin-bottom: 20px;
+}
+
+.groupsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.groupCard {
+  background-color: white;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.groupHeader {
+  padding: 20px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.groupTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.groupTitle h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #252525;
+}
+
+.avatarsRow {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+  margin-left: -10px;
+}
+
+.avatar:first-child {
+  margin-left: 0;
+}
+
+.moreAvatars {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-left: -10px;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+}
+
+.userAvatarLarge {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 10px;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 500;
+  color: #252525;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adminBadge,
+.groupBadge {
+  font-size: 12px;
+  background-color: #e9f2f0;
+  color: #1aa683;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.groupRequest {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.userEmail {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.actionButton {
+  min-width: 120px;
+  font-size: 12px;
+  white-space: normal;
+  height: auto;
+  padding: 6px 8px;
+  text-align: center;
+}
+.actionButton:hover {
+  color: #1aa683 !important;
+  border: 1px solid #1aa683 !important;
+}
+.acceptButton,
+.rejectButton,
+.removeButton {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.acceptButton {
+  background-color: #1aa683;
+  border: none;
+  color: white;
+}
+.acceptButton:hover {
+  background-color: #178f71 !important;
+  border: none;
+  color: white;
+}
+.rejectButton {
+  background-color: white;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.removeButton {
+  background-color: white;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.applicationsSectionTitle {
+  font-size: 16px;
+  margin-top: 20px !important;
+  margin-left: 15px !important;
+  font-weight: 500;
+  color: #252525;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.questionnaireModal,
+.coverLetterModal,
+.actionModalContent {
+  padding: 10px;
+}
+
+.userHeaderInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.userHeaderInfo h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.questionAnswer {
+  margin-bottom: 20px;
+}
+
+.questionAnswer h4 {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #252525;
+}
+
+.questionAnswer p {
+  color: #6b7280;
+  margin: 0;
+}
+
+.groupApplicantsContainer {
+  padding: 0;
+  padding-top: 15px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.groupApplicantsTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: #252525;
+  margin: 0 0 10px 15px;
+}
+
+.nestedTable {
+  margin-top: 10px;
+}
+.collapseHeader {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 500;
+
+  color: #252525;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+:global(.ant-collapse-header) {
+  padding: 12px 0 !important;
+  background-color: transparent !important;
+}
+
+:global(.ant-collapse-content-box) {
+  padding-top: 0 !important;
+}
+
+:global(.ant-collapse) {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+:global(.ant-collapse-item) {
+  border-bottom: none !important;
+}
+
+:global(.ant-collapse-header-text) {
+  width: 100%;
+}

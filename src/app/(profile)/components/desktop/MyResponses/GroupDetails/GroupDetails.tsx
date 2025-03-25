@@ -1,0 +1,192 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupDetails.tsx
+
+import React, { useState, useEffect } from "react";
+import { Button } from "antd";
+import { Group, ApartmentDetails, ModalConfig } from "./types";
+import ApartmentDetailsComponent from "./ApartmentDetails";
+import GroupList from "./GroupList";
+import ActionModals from "./ActionModals";
+import styles from "./GroupDetails.module.scss";
+
+interface GroupDetailsProps {
+  apartmentDetails: ApartmentDetails;
+  groups: Group[];
+}
+
+const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups }) => {
+  const [groupsData, setGroupsData] = useState<Group[]>([]);
+  const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
+  
+  // Update local state when props change
+  useEffect(() => {
+    if (groups && Array.isArray(groups)) {
+      setGroupsData(groups);
+    }
+  }, [groups]);
+
+  const handleLeaveGroup = (groupId: number) => {
+    if (!groupId) return;
+    
+    setModalConfig({
+      isOpen: true,
+      title: "Покинуть группу",
+      message: "Вы уверены, что хотите покинуть группу? Это действие невозможно отменить.",
+      confirmText: "Покинуть",
+      cancelText: "Отмена",
+      confirmAction: () => {
+        setGroupsData(prevGroups => prevGroups.filter((group) => group.id !== groupId));
+        setModalConfig(null);
+      },
+    });
+  };
+
+  const handleRemoveMember = (groupId: number, memberId: number) => {
+    if (!groupId || !memberId) return;
+    
+    setModalConfig({
+      isOpen: true,
+      title: "Удалить участника",
+      message: "Вы уверены, что хотите удалить этого участника из группы?",
+      confirmText: "Удалить",
+      cancelText: "Отмена",
+      confirmAction: () => {
+        setGroupsData(prevGroups => 
+          prevGroups.map((group) => {
+            if (group.id === groupId) {
+              return {
+                ...group,
+                members: group.members.filter((member) => member.id !== memberId),
+              };
+            }
+            return group;
+          })
+        );
+        setModalConfig(null);
+      },
+    });
+  };
+
+  const handlePromoteToAdmin = (groupId: number, memberId: number) => {
+    if (!groupId || !memberId) return;
+    
+    setModalConfig({
+      isOpen: true,
+      title: "Сделать администратором",
+      message: "Вы уверены, что хотите сделать этого участника администратором группы?",
+      confirmText: "Подтвердить",
+      cancelText: "Отмена",
+      confirmAction: () => {
+        setGroupsData(prevGroups =>
+          prevGroups.map((group) => {
+            if (group.id === groupId) {
+              return {
+                ...group,
+                members: group.members.map((member) => {
+                  if (member.id === memberId) {
+                    return { ...member, role: "admin" };
+                  }
+                  return member;
+                }),
+              };
+            }
+            return group;
+          })
+        );
+        setModalConfig(null);
+      },
+    });
+  };
+
+  const handleAcceptApplicant = (groupId: number, applicantId: number) => {
+    if (!groupId || !applicantId) return;
+    
+    setModalConfig({
+      isOpen: true,
+      title: "Принять участника",
+      message: "Принять этого пользователя в группу?",
+      confirmText: "Принять",
+      cancelText: "Отмена",
+      confirmAction: () => {
+        setGroupsData(prevGroups =>
+          prevGroups.map((group) => {
+            if (group.id === groupId) {
+              const applicant = group.applicants?.find((a) => a.id === applicantId);
+              if (!applicant) return group;
+
+              return {
+                ...group,
+                members: [...group.members, { ...applicant, role: "member" }],
+                applicants: group.applicants.filter((a) => a.id !== applicantId),
+              };
+            }
+            return group;
+          })
+        );
+        setModalConfig(null);
+      },
+    });
+  };
+
+  const handleRejectApplicant = (groupId: number, applicantId: number) => {
+    if (!groupId || !applicantId) return;
+    
+    setModalConfig({
+      isOpen: true,
+      title: "Отклонить заявку",
+      message: "Вы уверены, что хотите отклонить эту заявку?",
+      confirmText: "Отклонить",
+      cancelText: "Отмена",
+      confirmAction: () => {
+        setGroupsData(prevGroups =>
+          prevGroups.map((group) => {
+            if (group.id === groupId) {
+              return {
+                ...group,
+                applicants: group.applicants.filter((a) => a.id !== applicantId),
+              };
+            }
+            return group;
+          })
+        );
+        setModalConfig(null);
+      },
+    });
+  };
+
+  const closeModal = () => {
+    setModalConfig(null);
+  };
+
+  // If no groups data is available yet, show loading or empty state
+  if (!groupsData || groupsData.length === 0) {
+    return (
+      <div className={styles.container}>
+        <ApartmentDetailsComponent details={apartmentDetails} />
+        <div className={styles.emptyState}>
+          Нет доступных групп
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <ApartmentDetailsComponent details={apartmentDetails} />
+
+      <GroupList
+        groups={groupsData}
+        onLeaveGroup={handleLeaveGroup}
+        onRemoveMember={handleRemoveMember}
+        onPromoteToAdmin={handlePromoteToAdmin}
+        onAcceptApplicant={handleAcceptApplicant}
+        onRejectApplicant={handleRejectApplicant}
+      />
+
+      {modalConfig && (
+        <ActionModals modalConfig={modalConfig} onCancel={closeModal} />
+      )}
+    </div>
+  );
+};
+
+export default GroupDetails;

@@ -1,12 +1,100 @@
 .container {
-  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.groupsTitle {
-  font-size: 24px;
-  font-weight: 600;
+.apartmentDetails {
+  display: flex;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   margin-bottom: 24px;
+}
+
+.apartmentImage {
+  width: 240px;
+  height: 160px;
+  overflow: hidden;
+}
+
+.apartmentImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.apartmentInfo {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoMain {
+  display: flex;
+  flex: 1;
+  gap: 40px;
+}
+
+.infoLeft,
+.infoRight {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.infoLabel {
+  font-size: 14px;
   color: #252525;
+}
+
+.infoStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #252525;
+}
+
+.statusText {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.pending {
+  color: #f59e0b;
+  background-color: #fef3c7;
+}
+
+.accepted {
+  color: #10b981;
+  background-color: #d1fae5;
+}
+
+.rejected {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+.draft {
+  color: #6b7280;
+  background-color: #f3f4f6;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #252525;
+  margin-left: 20px;
 }
 
 .groupsList {
@@ -15,11 +103,19 @@
   gap: 24px;
 }
 
+.groupsTitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #252525;
+}
+
 .groupCard {
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  margin-bottom: 24px;
 }
 
 .groupHeader {
@@ -36,37 +132,13 @@
   justify-content: space-between;
   gap: 16px;
   flex: 1;
-
-  h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-    color: #252525;
-  }
 }
 
-.userStatus {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.creatorBadge {
-  background-color: #d1fae5;
-  color: #10b981;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.memberBadge {
-  background-color: #f3f4f6;
-  color: #6b7280;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 4px;
+.groupTitle h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #252525;
 }
 
 .avatarsRow {
@@ -81,11 +153,11 @@
   background-size: cover;
   background-position: center;
   border: 2px solid white;
-  margin-left: -10px;
+  margin-left: -8px;
+}
 
-  &:first-child {
-    margin-left: 0;
-  }
+.avatar:first-child {
+  margin-left: 0;
 }
 
 .moreAvatars {
@@ -99,7 +171,51 @@
   font-size: 12px;
   font-weight: 500;
   color: #6b7280;
-  margin-left: -10px;
+  margin-left: -8px;
+}
+
+.groupStatusBadges {
+  display: flex;
+  gap: 8px;
+}
+
+.userStatusBadge,
+.groupStatusBadge,
+.roleBadge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.memberBadge {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.adminBadge {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.superAdminBadge {
+  background-color: #e0e7ff;
+  color: #4338ca;
+}
+
+.ownerBadge {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.currentUserBadge {
+  font-size: 12px;
+  font-weight: 500;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
 }
 
 .collapse {
@@ -111,7 +227,14 @@
   border: none;
 }
 
-.membersList {
+.panelHeader {
+  font-size: 16px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.membersList,
+.applicantsList {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -154,15 +277,8 @@
   color: #252525;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
-}
-
-.ownerBadge {
-  font-size: 12px;
-  color: #6b7280;
-  background-color: #f3f4f6;
-  padding: 2px 8px;
-  border-radius: 4px;
 }
 
 .memberEmail {
@@ -173,7 +289,6 @@
 .memberDetails {
   display: flex;
   gap: 24px;
-  flex: 1;
 }
 
 .memberDetail {
@@ -215,8 +330,141 @@
   border-color: #ef4444;
 }
 
-/* Mobile styles */
+.removeButton {
+  background-color: white;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 4px 8px;
+  height: auto;
+  border-radius: 5px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.removeButton:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.applicantContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.applicantActions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.acceptButton,
+.rejectButton {
+  flex: 1;
+  height: 36px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.acceptButton {
+  background-color: #1aa683;
+  border: none;
+}
+
+.acceptButton:hover {
+  background-color: #178f71;
+}
+
+.rejectButton {
+  background-color: white;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.rejectButton:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.confirmButton {
+  background-color: #1aa683;
+  border: none;
+}
+
+.confirmButton:hover {
+  background-color: #178f71;
+}
+
+// Draft-specific styles
+.draftActions {
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.completeDraftButton {
+  background-color: #1aa683;
+  border: none;
+  flex: 1;
+}
+
+.completeDraftButton:hover {
+  background-color: #178f71;
+}
+
+.editDraftButton {
+  background-color: white;
+  border: 1px solid #1aa683;
+  color: #1aa683;
+  flex: 1;
+}
+
+.editDraftButton:hover {
+  background-color: #f0fdf4;
+  color: #1aa683;
+  border-color: #1aa683;
+}
+
 @media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .apartmentDetails {
+    flex-direction: column;
+  }
+
+  .apartmentImage {
+    width: 100%;
+    height: 200px;
+  }
+
+  .apartmentInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .infoMain {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .price {
+    margin-left: 0;
+    margin-top: 16px;
+    align-self: flex-end;
+  }
+
   .memberCard {
     flex-direction: column;
     align-items: flex-start;
@@ -234,4 +482,49 @@
     justify-content: space-between;
     width: 100%;
   }
+
+  .groupHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .groupStatusBadges {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .draftActions {
+    flex-direction: column;
+  }
+}
+.promoteButton {
+  background-color: #e0f2fe;
+  border: 1px solid #0284c7;
+  color: #0284c7;
+  padding: 4px 8px;
+  height: auto;
+  border-radius: 5px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.promoteButton:hover {
+  background-color: #bfdbfe;
+  color: #0284c7;
+  border-color: #0284c7;
+}
+
+.memberActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+// Make sure the owner badge has proper styling
+.ownerBadge {
+  background-color: #fef3c7;
+  color: #d97706;
 }

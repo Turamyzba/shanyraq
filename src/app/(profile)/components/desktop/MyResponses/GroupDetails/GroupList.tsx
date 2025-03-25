@@ -1,46 +1,47 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupList.tsx
+
 import React from "react";
-import GroupCard from "./GroupCard";
+import { Group } from "./types";
+import GroupItem from "./GroupItem";
 import styles from "./GroupDetails.module.scss";
-
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  age: number;
-  phone: string;
-  date: string;
-  avatar: string;
-  isOwner?: boolean;
-}
-
-interface Group {
-  id: number;
-  name: string;
-  members: Member[];
-  isUserMember: boolean;
-  isUserGroupCreator: boolean;
-}
 
 interface GroupListProps {
   groups: Group[];
-  onLeaveGroup: (groupId: number) => void;
+  onLeaveGroup?: (groupId: number) => void;
+  onRemoveMember?: (groupId: number, memberId: number) => void;
+  onPromoteToAdmin?: (groupId: number, memberId: number) => void;
+  onAcceptApplicant?: (groupId: number, applicantId: number) => void;
+  onRejectApplicant?: (groupId: number, applicantId: number) => void;
 }
 
-const GroupList: React.FC<GroupListProps> = ({ groups, onLeaveGroup }) => {
+const GroupList: React.FC<GroupListProps> = ({
+  groups,
+  onLeaveGroup,
+  onRemoveMember,
+  onPromoteToAdmin,
+  onAcceptApplicant,
+  onRejectApplicant,
+}) => {
+  // Sort groups: first accepted, then pending, then rejected
+  const sortedGroups = [...groups].sort((a, b) => {
+    const statusOrder = { accepted: 0, pending: 1, rejected: 2, draft: 3 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+
   return (
     <div className={styles.container}>
       <h2 className={styles.groupsTitle}>Количество групп: {groups.length}</h2>
 
       <div className={styles.groupsList}>
-        {groups.map((group) => (
-          <GroupCard
+        {sortedGroups.map((group) => (
+          <GroupItem
             key={group.id}
             group={group}
-            onLeaveGroup={
-              group.isUserMember && !group.isUserGroupCreator
-                ? () => onLeaveGroup(group.id)
-                : undefined
-            }
+            onLeaveGroup={onLeaveGroup}
+            onRemoveMember={onRemoveMember}
+            onPromoteToAdmin={onPromoteToAdmin}
+            onAcceptApplicant={onAcceptApplicant}
+            onRejectApplicant={onRejectApplicant}
           />
         ))}
       </div>
