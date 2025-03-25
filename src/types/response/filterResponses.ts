@@ -2,6 +2,6 @@
 import { Card } from "@/types/common";
 
 export type FilterResponse = {
-    announcements: Card[],
-    page: number
-}
+  announcements: Card[];
+  page: number;
+};

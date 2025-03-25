@@ -13,10 +13,7 @@ interface SaveFilterModalProps {
   onClose: () => void;
 }
 
-const SaveFilterModal: React.FC<SaveFilterModalProps> = ({ 
-  isOpen, 
-  onClose
-}) => {
+const SaveFilterModal: React.FC<SaveFilterModalProps> = ({ isOpen, onClose }) => {
   const [saveFilter, { isLoading }] = useSaveFilterMutation();
   const filterState = useAppSelector((state) => state.filter);
 
@@ -24,26 +21,20 @@ const SaveFilterModal: React.FC<SaveFilterModalProps> = ({
     try {
       // Convert Redux state to API request format
       const filterRequest = mapStateToFilterRequest(filterState);
-      
+
       // Call the API to save the filter
       await saveFilter(filterRequest).unwrap();
       onClose();
     } catch (error) {
       showToast({
         title: "Не удалось сохранить фильтр",
-        color: "danger"
+        color: "danger",
       });
     }
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={onClose}
-      size="sm"
-      placement="center"
-      backdrop="blur"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} size="sm" placement="center" backdrop="blur">
       <ModalContent>
         <ModalHeader className={styles.modalHeader}>
           <h2>Сохранить фильтр</h2>
@@ -56,18 +47,10 @@ const SaveFilterModal: React.FC<SaveFilterModalProps> = ({
           </div>
         </ModalBody>
         <ModalFooter>
-          <MyButton
-            onClick={onClose}
-            variant="bordered"
-            className={styles.cancelButton}
-          >
+          <MyButton onClick={onClose} variant="bordered" className={styles.cancelButton}>
             Отмена
           </MyButton>
-          <MyButton
-            onClick={handleSave}
-            isLoading={isLoading}
-            className={styles.saveButton}
-          >
+          <MyButton onClick={handleSave} isLoading={isLoading} className={styles.saveButton}>
             Сохранить
           </MyButton>
         </ModalFooter>

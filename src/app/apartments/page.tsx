@@ -5,24 +5,23 @@ import Filter from "./Filter";
 import CardComponent from "@/components/common/Card";
 import Images from "@/components/common/Images";
 import styles from "./Apartments.module.scss";
-import { 
-  Button, 
-  Dropdown, 
-  DropdownTrigger, 
-  DropdownMenu, 
-  DropdownItem
-} from "@heroui/react";
-import { Drawer } from 'antd';
+import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
+import { Drawer } from "antd";
 import MyButton from "@/components/ui/MyButton";
 import Map from "./Map";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
-import { 
-  mapStateToFilterRequest, 
-  useLazyGetFilteredAnnouncementsQuery
+import {
+  mapStateToFilterRequest,
+  useLazyGetFilteredAnnouncementsQuery,
 } from "@/store/features/filter/filterApi";
-import { setSelectedMapPoints, resetFilter, setCurrentPage, setCurrentOrder } from "@/store/features/filter/filterSlice";
+import {
+  setSelectedMapPoints,
+  resetFilter,
+  setCurrentPage,
+  setCurrentOrder,
+} from "@/store/features/filter/filterSlice";
 import { Card } from "@/types/common";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
@@ -41,17 +40,16 @@ export default function ApartmentsPage() {
   const [filteredApartments, setFilteredApartments] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasMoreData, setHasMoreData] = useState(true);
-  
+
   const isMobile = useMediaQuery({ maxWidth: 768 });
-  
+
   const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
 
-  const [ getFilteredAnnouncements ] = useLazyGetFilteredAnnouncementsQuery();
+  const [getFilteredAnnouncements] = useLazyGetFilteredAnnouncementsQuery();
 
   const dispatch = useAppDispatch();
   const filterState = useAppSelector((state) => state.filter);
   const { page, sort } = filterState;
-  
 
   const showDrawer = () => {
     setOpen(true);
@@ -75,13 +73,13 @@ export default function ApartmentsPage() {
 
   const fetchFilterApartmentsWithoutLoading = async (filterData: any, isLoadMore = false) => {
     const requestData = mapStateToFilterRequest(filterData);
-    
+
     try {
       const { data } = await getFilteredAnnouncements(requestData);
       const newApartments = data?.data?.announcements as Card[];
       const newPage = data?.data?.page as number;
       dispatch(setCurrentPage(newPage));
-  
+
       if (newApartments.length === 0) {
         setHasMoreData(false);
       }
@@ -96,31 +94,31 @@ export default function ApartmentsPage() {
     }
   };
 
-const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
-  const requestData = mapStateToFilterRequest(filterData);
-  setIsLoading(true);
-  
-  try {
-    const { data } = await getFilteredAnnouncements(requestData);
-    const newApartments = data?.data?.announcements as Card[];
-    const newPage = data?.data?.page as number;
-    dispatch(setCurrentPage(newPage));
+  const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
+    const requestData = mapStateToFilterRequest(filterData);
+    setIsLoading(true);
 
-    if (newApartments.length === 0) {
-      setHasMoreData(false);
+    try {
+      const { data } = await getFilteredAnnouncements(requestData);
+      const newApartments = data?.data?.announcements as Card[];
+      const newPage = data?.data?.page as number;
+      dispatch(setCurrentPage(newPage));
+
+      if (newApartments.length === 0) {
+        setHasMoreData(false);
+      }
+      if (isLoadMore) {
+        setFilteredApartments([...filteredApartments, ...newApartments]);
+      } else {
+        setFilteredApartments(newApartments);
+        setHasMoreData(true);
+      }
+    } catch (error) {
+      console.error("Error fetching apartments:", error);
+    } finally {
+      setIsLoading(false);
     }
-    if (isLoadMore) {
-      setFilteredApartments([...filteredApartments, ...newApartments]);
-    } else {
-      setFilteredApartments(newApartments);
-      setHasMoreData(true);
-    }
-  } catch (error) {
-    console.error("Error fetching apartments:", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   useEffect(() => {
     fetchFilterApartments(filterState, false);
@@ -130,7 +128,6 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
     fetchFilterApartmentsWithoutLoading(filterState, true);
   }, [page]);
 
-
   const handleIsMap = () => {
     setIsMap(!isMap);
     if (!isMap) {
@@ -139,7 +136,7 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
       setShowListings(false);
     }
   };
-  
+
   const handleFilterSubmit = (filterData: any) => {
     if (isMobile) {
       onClose();
@@ -147,27 +144,27 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
     dispatch(setCurrentPage(1));
     fetchFilterApartments(filterData);
   };
-  
+
   const handleResetFilter = () => {
     dispatch(resetFilter());
     dispatch(setCurrentPage(1));
     fetchFilterApartments(filterState);
   };
 
-  const handleMapPointsSelected = (points: {x: number, y: number}[]) => {
+  const handleMapPointsSelected = (points: { x: number; y: number }[]) => {
     dispatch(setSelectedMapPoints(points));
-    
+
     const updatedFilterState = {
       ...filterState,
-      selectedMapPoints: points
+      selectedMapPoints: points,
     };
 
-    fetchFilterApartmentsWithoutLoading({filter: updatedFilterState}, false);
+    fetchFilterApartmentsWithoutLoading({ filter: updatedFilterState }, false);
   };
-  
+
   const loadMoreApartments = () => {
     if (isLoading || !hasMoreData) return;
-    
+
     const nextPage = page + 1;
     dispatch(setCurrentPage(nextPage));
   };
@@ -175,11 +172,8 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
   return (
     <Container>
       <div className={styles.wrapper}>
-        {(!hideFilter && !isMobile) && (
-          <Filter 
-            onSubmit={handleFilterSubmit} 
-            onResetFilter={handleResetFilter}
-          />
+        {!hideFilter && !isMobile && (
+          <Filter onSubmit={handleFilterSubmit} onResetFilter={handleResetFilter} />
         )}
 
         {showListings && isMap && hideFilter && !isMobile && (
@@ -218,8 +212,8 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
                   variant="flat"
                   onSelectionChange={(keys) => {
                     if (keys.currentKey) {
-                      dispatch(setCurrentPage(1))
-                      dispatch(setCurrentOrder(+keys.currentKey))
+                      dispatch(setCurrentPage(1));
+                      dispatch(setCurrentOrder(+keys.currentKey));
                     }
                   }}
                 >
@@ -232,34 +226,34 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
               </Dropdown>
 
               <div className={styles.controlButtons}>
-              {(isMobile || isMap) && (
-                <MyButton 
-                type="button"
-                variant="bordered"
-                size="sm"
-                onClick={() => isMobile ? showDrawer() : setHideFilter(!hideFilter)}
-              >
-                <Images.Filter color="#5c5c5c" size={18} />
-                <span style={{ marginLeft: '8px' }}>Фильтры</span>
-              </MyButton>
-              )}
-                
-                <MyButton 
-                  type="button" 
+                {(isMobile || isMap) && (
+                  <MyButton
+                    type="button"
+                    variant="bordered"
+                    size="sm"
+                    onClick={() => (isMobile ? showDrawer() : setHideFilter(!hideFilter))}
+                  >
+                    <Images.Filter color="#5c5c5c" size={18} />
+                    <span style={{ marginLeft: "8px" }}>Фильтры</span>
+                  </MyButton>
+                )}
+
+                <MyButton
+                  type="button"
                   onClick={handleIsMap}
-                  variant="bordered" 
+                  variant="bordered"
                   size="sm"
                   aria-label={isMap ? "Показать список" : "Показать карту"}
                 >
                   {isMap ? (
                     <>
                       <Images.List />
-                      <span style={{ marginLeft: '8px' }}>Список</span>
+                      <span style={{ marginLeft: "8px" }}>Список</span>
                     </>
                   ) : (
                     <>
                       <Images.Map />
-                      <span style={{ marginLeft: '8px' }}>Карта</span>
+                      <span style={{ marginLeft: "8px" }}>Карта</span>
                     </>
                   )}
                 </MyButton>
@@ -275,31 +269,35 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
             <>
               {!isMap ? (
                 <>
-                <div className={styles.gridContainer}>
-                  <div className={styles.cardGrid}>
-                    {filteredApartments.map((apartment, index) => (
-                      <CardComponent key={apartment.announcementId} card={apartment} 
-                      isLast={hasMoreData && index === filteredApartments.length - 1} loadMoreApartments={loadMoreApartments} />
-                    ))}
+                  <div className={styles.gridContainer}>
+                    <div className={styles.cardGrid}>
+                      {filteredApartments.map((apartment, index) => (
+                        <CardComponent
+                          key={apartment.announcementId}
+                          card={apartment}
+                          isLast={hasMoreData && index === filteredApartments.length - 1}
+                          loadMoreApartments={loadMoreApartments}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-                {isLoading && (
-                  <div className={styles.loadingMore}>
-                    <Spin indicator={antIcon} />
-                  </div>
-                )}
-                
-                {!hasMoreData && filteredApartments.length > 0 && (
-                  <div className={styles.noMoreData}>
-                    <p>Больше объявлений не найдено</p>
-                  </div>
-                )}
+                  {isLoading && (
+                    <div className={styles.loadingMore}>
+                      <Spin indicator={antIcon} />
+                    </div>
+                  )}
+
+                  {!hasMoreData && filteredApartments.length > 0 && (
+                    <div className={styles.noMoreData}>
+                      <p>Больше объявлений не найдено</p>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className={styles.mapContent}>
-                  <Map 
-                    update={hideFilter || isMobile} 
-                    apartments={filteredApartments} 
+                  <Map
+                    update={hideFilter || isMobile}
+                    apartments={filteredApartments}
                     isLoading={false}
                     onPointsSelected={handleMapPointsSelected}
                   />
@@ -310,7 +308,7 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
         </div>
       </div>
 
-      <Drawer 
+      <Drawer
         title="Basic Drawer"
         placement="bottom"
         closable={false}
@@ -318,10 +316,7 @@ const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
         size="large"
         open={open}
       >
-        <Filter 
-          onSubmit={handleFilterSubmit} 
-          onResetFilter={handleResetFilter}
-        />
+        <Filter onSubmit={handleFilterSubmit} onResetFilter={handleResetFilter} />
       </Drawer>
     </Container>
   );

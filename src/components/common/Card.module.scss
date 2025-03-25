@@ -15,12 +15,12 @@
   align-items: flex-start;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.2);
   margin: 0 auto;
-  
+
   @media (max-width: 1024px) {
     width: 100%;
     max-width: 360px;
   }
-  
+
   @media (max-width: 768px) {
     height: auto;
     min-height: 320px;
@@ -49,7 +49,7 @@
       right: 10px;
       z-index: 10;
       background-color: rgba(0, 0, 0, 0.3);
-      
+
       &:hover {
         background-color: rgba(0, 0, 0, 0.5);
       }
@@ -70,11 +70,11 @@
     font-weight: 600;
     color: #252525;
     text-align: left;
-    
+
     p {
       margin: 0;
     }
-    
+
     @media (max-width: 768px) {
       font-size: 14px;
     }
@@ -87,11 +87,11 @@
     font-size: 14px;
     color: #929292;
     font-weight: 400;
-    
+
     p {
       margin: 0;
     }
-    
+
     @media (max-width: 768px) {
       font-size: 12px;
     }
@@ -101,7 +101,7 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    
+
     @media (max-width: 768px) {
       flex-wrap: wrap;
       row-gap: 10px;
@@ -115,11 +115,10 @@
       font-size: 12px;
       font-weight: 400;
       color: #929292;
-      
+
       p {
         margin: 0;
       }
-      
     }
   }
 
@@ -147,11 +146,11 @@
     cursor: pointer;
     margin-top: auto;
     width: 100%;
-    
+
     button {
       width: 100%;
     }
-    
+
     @media (max-width: 768px) {
       margin-top: 12px;
     }
@@ -168,28 +167,27 @@
   max-width: 280px;
   padding: 12px;
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.15);
-  
+
   .cardImage {
     height: 120px;
   }
-  
+
   .cardContent {
     gap: 8px;
     margin-top: 8px;
   }
-  
+
   .cardTitle {
     font-size: 14px;
   }
-  
+
   .cardLocation {
     font-size: 12px;
   }
-  
+
   .roomInfo {
     display: none;
   }
-  
 }
 
 .lastOverlay {

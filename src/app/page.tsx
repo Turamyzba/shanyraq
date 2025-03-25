@@ -28,11 +28,13 @@ export default function LandingPage() {
 
   const fetchGreatDeals = () => {
     setIsLoading(true);
-    getGreatDeals().then(({ data }) => {
-      setGreatDeals(data?.data as Card[]);
-    }).finally(() => {
-      setIsLoading(false);
-    })
+    getGreatDeals()
+      .then(({ data }) => {
+        setGreatDeals(data?.data as Card[]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {

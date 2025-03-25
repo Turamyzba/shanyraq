@@ -1,6 +1,6 @@
 // store/features/filter/filterSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GenderState, RommatesState, AddressState } from '@/types/common';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { GenderState, RommatesState, AddressState } from "@/types/common";
 
 export interface FilterState {
   page: number;
@@ -14,7 +14,7 @@ export interface FilterState {
   minAge: number | null;
   maxAge: number | null;
   moveInDate: string | null;
-  termType: 'long' | 'short' | null;
+  termType: "long" | "short" | null;
   minFloor: number | null;
   maxFloor: number | null;
   isNotFirstFloor: boolean;
@@ -40,11 +40,11 @@ export const initialState: FilterState = {
   roommates: null,
   address: {
     regionId: null,
-    regionName: 'Весь Казахстан',
+    regionName: "Весь Казахстан",
     districtId: null,
-    districtName: '',
+    districtName: "",
     microDistrictId: null,
-    microDistrictName: '',
+    microDistrictName: "",
   },
   rooms: null,
   minAge: null,
@@ -62,13 +62,13 @@ export const initialState: FilterState = {
   forStudents: false,
   onlyEmptyApartments: false,
   badHabitsAllowed: false,
-  propertyType: '',
-  role: '',
+  propertyType: "",
+  role: "",
   selectedMapPoints: null,
 };
 
 const filterSlice = createSlice({
-  name: 'filter',
+  name: "filter",
   initialState,
   reducers: {
     setCurrentPage: (state, action: PayloadAction<number>) => {
@@ -96,15 +96,15 @@ const filterSlice = createSlice({
       state.rooms = action.payload;
     },
     setMinAge: (state, action: PayloadAction<number>) => {
-        state.minAge = action.payload;
+      state.minAge = action.payload;
     },
     setMaxAge: (state, action: PayloadAction<number>) => {
-        state.maxAge = action.payload;
+      state.maxAge = action.payload;
     },
     setMoveInDate: (state, action: PayloadAction<string>) => {
       state.moveInDate = action.payload;
     },
-    setTermType: (state, action: PayloadAction<'long' | 'short' | null>) => {
+    setTermType: (state, action: PayloadAction<"long" | "short" | null>) => {
       state.termType = action.payload;
     },
     setMinFloor: (state, action: PayloadAction<number>) => {
@@ -120,10 +120,10 @@ const filterSlice = createSlice({
       state.isNotLastFloor = action.payload;
     },
     setMinArea: (state, action: PayloadAction<number>) => {
-        state.minArea = action.payload;
+      state.minArea = action.payload;
     },
     setMaxArea: (state, action: PayloadAction<number>) => {
-        state.maxArea = action.payload;
+      state.maxArea = action.payload;
     },
     setPetsAllowed: (state, action: PayloadAction<boolean>) => {
       state.petsAllowed = action.payload;
@@ -136,7 +136,7 @@ const filterSlice = createSlice({
     },
     setOnlyEmptyApartments: (state, action: PayloadAction<boolean>) => {
       state.onlyEmptyApartments = action.payload;
-    }, 
+    },
     setBadHabitsAllowed: (state, action: PayloadAction<boolean>) => {
       state.badHabitsAllowed = action.payload;
     },
@@ -151,7 +151,7 @@ const filterSlice = createSlice({
     },
     resetFilter: (state) => {
       return initialState;
-    }
+    },
   },
 });
 

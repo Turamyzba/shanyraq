@@ -24,7 +24,7 @@ export default function MyHeroSelect({
   onChange,
   options,
   className,
-  disabled
+  disabled,
 }: MyHeroSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
 

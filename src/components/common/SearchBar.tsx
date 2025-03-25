@@ -11,20 +11,26 @@ import MySelect from "@/components/ui/MySelect";
 import MyButton from "../ui/MyButton";
 import { Button } from "@heroui/react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { initialState, setGender, setPriceRange, setRoommates, setAddress } from "@/store/features/searchBar/searchBar";
+import {
+  initialState,
+  setGender,
+  setPriceRange,
+  setRoommates,
+  setAddress,
+} from "@/store/features/searchBar/searchBar";
 import { useLazyGetAddressesQuery } from "@/store/features/landing/landingApi";
 import { AddressType, genderOptions, roommateOptions } from "@/types/common";
 import { formatPrice } from "@/utils/helpers";
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
-  
+
   const [getAddresses, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
   const dispatch = useAppDispatch();
-  
+
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
-  
+
   const searchBarState = useAppSelector((state) => state.searchBar);
   const { gender, priceRange, roommates, address } = searchBarState;
 
@@ -45,29 +51,35 @@ const SearchBar: React.FC = () => {
   // --------------------------------------
   const fetchCities = async () => {
     setIsLoading(true);
-    getAddresses(1).then(({ data }) => {
-      setCitiesData(data?.data as AddressType[]);
-    }).finally(() => {
-      setIsLoading(false);
-    })
+    getAddresses(1)
+      .then(({ data }) => {
+        setCitiesData(data?.data as AddressType[]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const fetchDistricts = async (cityId: number) => {
     setIsLoading(true);
-    getAddresses(cityId).then(({ data }) => {
-      setDistrictsData(data?.data as AddressType[]);
-    }).finally(() => {
-      setIsLoading(false);
-    })
+    getAddresses(cityId)
+      .then(({ data }) => {
+        setDistrictsData(data?.data as AddressType[]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const fetchMicroDistricts = async (districtId: number) => {
     setIsLoading(true);
-    getAddresses(districtId).then(({ data }) => {
-      setMicroDistrictsData(data?.data as AddressType[]);
-    }).finally(() => {
-      setIsLoading(false);
-    })
+    getAddresses(districtId)
+      .then(({ data }) => {
+        setMicroDistrictsData(data?.data as AddressType[]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -132,15 +144,17 @@ const SearchBar: React.FC = () => {
     setDistrictsData([]);
     setMicroDistrictsData([]);
 
-    dispatch(setAddress({
-      ...address,
-      regionId: city.id,
-      regionName: city.namerus,
-      districtId: null,
-      districtName: "",
-      microDistrictId: null,
-      microDistrictName: "",
-    }));
+    dispatch(
+      setAddress({
+        ...address,
+        regionId: city.id,
+        regionName: city.namerus,
+        districtId: null,
+        districtName: "",
+        microDistrictId: null,
+        microDistrictName: "",
+      })
+    );
 
     if (city.haschild) {
       fetchDistricts(city.id);
@@ -152,13 +166,15 @@ const SearchBar: React.FC = () => {
     setMobileDistrict(null);
     setMobileMicroDistrict(null);
 
-    dispatch(setAddress({
-      ...address,
-      districtId: district.id,
-      districtName: district.namerus,
-      microDistrictId: null,
-      microDistrictName: "",
-    }));
+    dispatch(
+      setAddress({
+        ...address,
+        districtId: district.id,
+        districtName: district.namerus,
+        microDistrictId: null,
+        microDistrictName: "",
+      })
+    );
 
     if (district.haschild) {
       fetchMicroDistricts(district.id);
@@ -167,11 +183,13 @@ const SearchBar: React.FC = () => {
 
   const handleMicroDistrictSelect = (microDistrict: AddressType) => {
     setMobileMicroDistrict(null);
-    dispatch(setAddress({
-      ...address,
-      microDistrictId: microDistrict.id,
-      microDistrictName: microDistrict.namerus,
-    }));
+    dispatch(
+      setAddress({
+        ...address,
+        microDistrictId: microDistrict.id,
+        microDistrictName: microDistrict.namerus,
+      })
+    );
   };
 
   const handleSelectAllKazakhstan = () => {
@@ -284,16 +302,18 @@ const SearchBar: React.FC = () => {
     setMicroDistrictsData([]);
 
     if (nextRegion) {
-      dispatch(setAddress({
-        ...address,
-        regionId: nextRegion.id,
-        regionName: nextRegion.namerus,
-        districtId: null,
-        districtName: "",
-        microDistrictId: null,
-        microDistrictName: "",
-      }));
-  
+      dispatch(
+        setAddress({
+          ...address,
+          regionId: nextRegion.id,
+          regionName: nextRegion.namerus,
+          districtId: null,
+          districtName: "",
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
+
       if (nextRegion.haschild) {
         fetchDistricts(nextRegion.id);
       }
@@ -308,13 +328,15 @@ const SearchBar: React.FC = () => {
     setMobileMicroDistrict(null);
 
     if (nextDist) {
-      dispatch(setAddress({
-        ...address,
-        districtId: nextDist.id,
-        districtName: nextDist.namerus,
-        microDistrictId: null,
-        microDistrictName: "",
-      }));
+      dispatch(
+        setAddress({
+          ...address,
+          districtId: nextDist.id,
+          districtName: nextDist.namerus,
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
 
       if (nextDist.haschild) {
         fetchMicroDistricts(nextDist.id);
@@ -322,13 +344,15 @@ const SearchBar: React.FC = () => {
         setMicroDistrictsData([]);
       }
     } else {
-      dispatch(setAddress({
-        ...address,
-        districtId: null,
-        districtName: "",
-        microDistrictId: null,
-        microDistrictName: "",
-      }));
+      dispatch(
+        setAddress({
+          ...address,
+          districtId: null,
+          districtName: "",
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
       setMicroDistrictsData([]);
     }
   }
@@ -338,17 +362,21 @@ const SearchBar: React.FC = () => {
     setMobileMicroDistrict(nextMicro);
 
     if (nextMicro) {
-      dispatch(setAddress({
-        ...address,
-        microDistrictId: nextMicro.id,
-        microDistrictName: nextMicro.namerus,
-      }));
+      dispatch(
+        setAddress({
+          ...address,
+          microDistrictId: nextMicro.id,
+          microDistrictName: nextMicro.namerus,
+        })
+      );
     } else {
-      dispatch(setAddress({
-        ...address,
-        microDistrictId: null,
-        microDistrictName: "",
-      }));
+      dispatch(
+        setAddress({
+          ...address,
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
     }
   }
 
@@ -389,13 +417,15 @@ const SearchBar: React.FC = () => {
                       !address.districtId ? styles.activeItem : ""
                     }`}
                     onPress={() => {
-                      dispatch(setAddress({
-                        ...address,
-                        districtId: null,
-                        districtName: "",
-                        microDistrictId: null,
-                        microDistrictName: "",
-                      }));
+                      dispatch(
+                        setAddress({
+                          ...address,
+                          districtId: null,
+                          districtName: "",
+                          microDistrictId: null,
+                          microDistrictName: "",
+                        })
+                      );
                       setMicroDistrictsData([]);
                     }}
                   >
@@ -424,11 +454,13 @@ const SearchBar: React.FC = () => {
                       !address.microDistrictId ? styles.activeItem : ""
                     }`}
                     onPress={() =>
-                      dispatch(setAddress({
-                        ...address,
-                        microDistrictId: null,
-                        microDistrictName: "",
-                      }))
+                      dispatch(
+                        setAddress({
+                          ...address,
+                          microDistrictId: null,
+                          microDistrictName: "",
+                        })
+                      )
                     }
                   >
                     Все микрорайоны

@@ -20,7 +20,7 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMoreApartments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
-  
+
   useEffect(() => {
     if (typeof window !== "undefined" && card?.announcementId) {
       setShareUrl(`${window.location.origin}/apartments/${card?.announcementId}`);
@@ -55,10 +55,13 @@ const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMor
 
   return (
     <div className={styles.cardWrapper}>
-      <div className={`${styles.card} ${mini ? styles.miniCard : ''}`}>
+      <div className={`${styles.card} ${mini ? styles.miniCard : ""}`}>
         <div className={styles.cardImage}>
           <Image
-            src={card?.image || "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"}
+            src={
+              card?.image ||
+              "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"
+            }
             alt={card?.title || "Room Image"}
             width={imageWidth}
             height={imageHeight}
@@ -83,18 +86,18 @@ const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMor
         <div className={styles.cardContent}>
           <div className={styles.cardTitle}>
             <p>
-              {(card?.title ?? "").length > (mini ? 18 : 22) 
-                ? `${card?.title.substring(0, mini ? 18 : 22)}...` 
+              {(card?.title ?? "").length > (mini ? 18 : 22)
+                ? `${card?.title.substring(0, mini ? 18 : 22)}...`
                 : card?.title}
             </p>
           </div>
           <div className={styles.cardLocation}>
             <Images.Map size={mini ? 16 : 20} color={"#929292"} />
             <p>
-              {(card?.address ?? "").length > (mini ? 24 : 28) 
-                ? `${card?.address.substring(0, mini ? 24 : 28)}...` 
+              {(card?.address ?? "").length > (mini ? 24 : 28)
+                ? `${card?.address.substring(0, mini ? 24 : 28)}...`
                 : card?.address}
-              </p>
+            </p>
           </div>
 
           <div className={styles.roomInfo}>
@@ -105,9 +108,11 @@ const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMor
 
             <div className={styles.infoItem}>
               <Images.Apartment size={mini ? 16 : 20} />
-              <p>{card?.roomCount 
-                ? `${card.roomCount} ${getRoomWord(+card.roomCount)}` 
-                : "2 комнаты"}</p>
+              <p>
+                {card?.roomCount
+                  ? `${card.roomCount} ${getRoomWord(+card.roomCount)}`
+                  : "2 комнаты"}
+              </p>
             </div>
 
             <div className={styles.infoItem}>
@@ -156,7 +161,7 @@ function getRoomWord(count: number): string {
 }
 
 function getGender(code: string): string {
-  const gender = genderOptions.find( g => g.code = code)
+  const gender = genderOptions.find((g) => (g.code = code));
   return gender?.namerus || "";
 }
 

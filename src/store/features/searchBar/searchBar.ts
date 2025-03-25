@@ -4,7 +4,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { AddressState, GenderState, RommatesState } from "@/types/common";
 
 export interface SearchBarState {
-  address: AddressState ;
+  address: AddressState;
   gender: GenderState | null;
   roommates: RommatesState | null;
   priceRange: number[];

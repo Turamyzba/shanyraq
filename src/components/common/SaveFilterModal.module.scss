@@ -1,34 +1,35 @@
 .modalHeader {
-    border-bottom: 1px solid #eaeaea;
-    padding-bottom: 16px;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 16px;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.modalDescription {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.cancelButton,
+.saveButton {
+  min-width: 100px;
+}
+
+.saveButton {
+  background-color: #1aa683;
+  color: white;
+
+  &:hover {
+    background-color: darken(#1aa683, 10%);
   }
-  
-  .modalBody {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px 0;
+
+  &:disabled {
+    opacity: 0.6;
   }
-  
-  .modalDescription {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-  
-  .cancelButton, .saveButton {
-    min-width: 100px;
-  }
-  
-  .saveButton {
-    background-color: #1AA683;
-    color: white;
-    
-    &:hover {
-      background-color: darken(#1AA683, 10%);
-    }
-    
-    &:disabled {
-      opacity: 0.6;
-    }
-  }
+}

@@ -3,7 +3,7 @@
   justify-content: center;
   gap: 25px;
   margin-top: 20px;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 15px;
@@ -30,7 +30,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
@@ -44,7 +44,7 @@
   align-items: center;
   position: relative;
   width: 100%;
-  
+
   @media (max-width: 768px) {
     width: 100%;
     justify-content: space-between;
@@ -69,7 +69,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  
+
   @media (max-width: 768px) {
     padding: 0 10px;
   }
@@ -81,11 +81,11 @@
   gap: 10px;
   width: 100%;
   // justify-content: space-between;
-  
+
   @media (max-width: 1335px) {
     grid-template-columns: repeat(auto-fill, 280px);
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 15px;
@@ -94,7 +94,7 @@
 
 .mobileFilterButton {
   display: none !important;
-  
+
   @media (max-width: 768px) {
     display: flex !important;
     align-items: center;
@@ -105,7 +105,7 @@
     transform: translateX(-50%);
     z-index: 100;
     padding: 12px 24px !important;
-    background-color: #1AA683 !important;
+    background-color: #1aa683 !important;
     color: white !important;
     border-radius: 30px !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -116,7 +116,7 @@
   display: flex;
   width: 100%;
   gap: 20px;
-  
+
   @media (max-width: 768px) {
     height: 80vh;
   }
@@ -129,18 +129,18 @@
   padding: 15px;
   max-height: 80vh;
   overflow-y: auto;
-  
+
   h3 {
     font-size: 16px;
     font-weight: 600;
     color: #252525;
     margin: 0 0 15px 0;
   }
-  
+
   @media (max-width: 1200px) {
     width: 280px;
   }
-  
+
   @media (max-width: 768px) {
     width: 100%;
     margin-top: 15px;
@@ -163,24 +163,24 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #1AA683;
+  background: #1aa683;
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  
+
   &.small {
     width: 30px;
     height: 30px;
   }
-  
+
   &.medium {
     width: 40px;
     height: 40px;
   }
-  
+
   &.large {
     width: 50px;
     height: 50px;
@@ -200,15 +200,15 @@
 }
 
 .loadMoreButton {
-  background-color: #1AA683;
+  background-color: #1aa683;
   color: white;
   padding: 10px 20px;
   min-width: 200px;
-  
+
   &:hover {
-    background-color: darken(#1AA683, 10%);
+    background-color: darken(#1aa683, 10%);
   }
-  
+
   &:disabled {
     opacity: 0.6;
   }

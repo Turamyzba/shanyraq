@@ -6,7 +6,7 @@
   position: relative;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   flex: 1;
-  
+
   @media (max-width: 768px) {
     height: 70vh;
     border-radius: 0;
@@ -32,14 +32,18 @@
   width: 50px;
   height: 50px;
   border: 5px solid #f3f3f3;
-  border-top: 5px solid #1AA683;
+  border-top: 5px solid #1aa683;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .mapControls {
@@ -63,28 +67,28 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  
+
   &:hover {
     background: #f5f5f5;
   }
-  
+
   svg {
     min-width: 20px;
     min-height: 20px;
-    color: #1AA683;
+    color: #1aa683;
   }
 }
 
 .drawActiveButton {
   background: #f0f0f0;
-  border: 2px solid #1AA683;
+  border: 2px solid #1aa683;
 }
 
 .marker {
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #1AA683;
+  background: #1aa683;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
@@ -93,7 +97,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #1AA683;
+  background: #1aa683;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -101,19 +105,19 @@
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  
+
   &.small {
     width: 30px;
     height: 30px;
     font-size: 12px;
   }
-  
+
   &.medium {
     width: 40px;
     height: 40px;
     font-size: 14px;
   }
-  
+
   &.large {
     width: 50px;
     height: 50px;
@@ -135,7 +139,7 @@
 .miniCardImage {
   width: 100%;
   height: 120px;
-  
+
   img {
     width: 100%;
     border-radius: 8px;
@@ -146,44 +150,44 @@
 
 .miniCardInfo {
   padding: 10px;
-  
+
   h3 {
     margin: 0 0 4px;
     font-size: 14px;
     font-weight: 600;
     color: #252525;
   }
-  
+
   .miniCardAddress {
     display: flex;
     align-items: center;
     gap: 4px;
     font-size: 12px;
     color: #929292;
-    
+
     .icon {
       font-size: 12px;
     }
   }
-  
+
   .miniCardPrice {
     font-size: 16px;
     font-weight: 700;
     color: #252525;
     margin: 8px 0;
-    
+
     .currency {
       text-decoration: underline;
       margin-left: 2px;
     }
   }
-  
+
   .miniCardLink {
     display: inline-block;
     font-size: 12px;
-    color: #1AA683;
+    color: #1aa683;
     text-decoration: none;
-    
+
     &:hover {
       text-decoration: underline;
     }
@@ -196,10 +200,11 @@
   background: white;
   padding: 8px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.drawButton, .clearButton {
+.drawButton,
+.clearButton {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,25 +215,25 @@
   background: #f5f5f5;
   cursor: pointer;
   transition: all 0.2s;
-  
+
   &:hover {
     background: #e0e0e0;
   }
-  
+
   svg {
     width: 20px;
     height: 20px;
   }
-  
+
   &.active {
-    background: #1AA683;
+    background: #1aa683;
     color: white;
   }
 }
 
 .clearButton {
   background: #f5f5f5;
-  
+
   &:hover {
     background: #ffebee;
     color: #d32f2f;

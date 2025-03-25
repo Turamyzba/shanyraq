@@ -12,23 +12,23 @@ import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
 import { useLazyGetAddressesQuery } from "@/store/features/landing/landingApi";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { 
-  AddressType, 
-  genderOptions, 
-  roommateOptions, 
+import {
+  AddressType,
+  genderOptions,
+  roommateOptions,
   propertyTypeOptions,
-  ownerTypeOptions
-} from '@/types/common';
-import { 
-  setGender, 
-  setMinPrice, 
-  setMaxPrice, 
-  setRoommates, 
-  setAddress, 
-  setRooms, 
-  setMinAge, 
-  setMaxAge, 
-  setMoveInDate, 
+  ownerTypeOptions,
+} from "@/types/common";
+import {
+  setGender,
+  setMinPrice,
+  setMaxPrice,
+  setRoommates,
+  setAddress,
+  setRooms,
+  setMinAge,
+  setMaxAge,
+  setMoveInDate,
   setTermType,
   setIsNotFirstFloor,
   setIsNotLastFloor,
@@ -44,7 +44,7 @@ import {
   resetFilter,
   initialState,
   setMinFloor,
-  setMaxFloor
+  setMaxFloor,
 } from "@/store/features/filter/filterSlice";
 import { showToast } from "@/utils/notification";
 import SaveFilterModal from "@/components/common/SaveFilterModal";
@@ -58,20 +58,40 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useAppDispatch();
   const filterState = useAppSelector((state) => state.filter);
-  
+
   const [getAddresses, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
-  const { address, rooms = 1, selectedGender, roommates, minPrice,
-    maxPrice, propertyType, role, minAge, maxAge, minArea, maxArea, moveInDate = new Date(), termType, 
-    petsAllowed, forStudents, isNotFirstFloor, isNotLastFloor, utilitiesIncluded, onlyEmptyApartments, badHabitsAllowed,
-    minFloor, maxFloor,
+  const {
+    address,
+    rooms = 1,
+    selectedGender,
+    roommates,
+    minPrice,
+    maxPrice,
+    propertyType,
+    role,
+    minAge,
+    maxAge,
+    minArea,
+    maxArea,
+    moveInDate = new Date(),
+    termType,
+    petsAllowed,
+    forStudents,
+    isNotFirstFloor,
+    isNotLastFloor,
+    utilitiesIncluded,
+    onlyEmptyApartments,
+    badHabitsAllowed,
+    minFloor,
+    maxFloor,
   } = filterState;
-  
+
   const [regions, setRegions] = useState<AddressType[]>([]);
   const [districts, setDistricts] = useState<AddressType[]>([]);
   const [microDistricts, setMicroDistricts] = useState<AddressType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [moreFilters, setMoreFilters] = useState(false);
-  
+
   const [isToday, setIsToday] = useState(false);
   const [isTomorrow, setIsTomorrow] = useState(false);
 
@@ -82,20 +102,24 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
 
   const fetchRegions = async () => {
     setIsLoading(true);
-    getAddresses(1).then(({ data }) => {
-      setRegions(data?.data as AddressType[]);
-    }).finally(() => {
-      setIsLoading(false);
-    });
+    getAddresses(1)
+      .then(({ data }) => {
+        setRegions(data?.data as AddressType[]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const fetchDistricts = async (cityId: number) => {
     setIsLoading(true);
-    getAddresses(cityId).then(({ data }) => {
-      setDistricts(data?.data as AddressType[]);
-    }).finally(() => {
-      setIsLoading(false);
-    });
+    getAddresses(cityId)
+      .then(({ data }) => {
+        setDistricts(data?.data as AddressType[]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const fetchMicroDistricts = async (districtId: number) => {
@@ -112,12 +136,12 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
     if (isToday) {
       const today = new Date();
       setIsTomorrow(false);
-      dispatch(setMoveInDate(today.toISOString().split('T')[0]));
+      dispatch(setMoveInDate(today.toISOString().split("T")[0]));
     } else if (isTomorrow) {
       setIsToday(false);
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      dispatch(setMoveInDate(tomorrow.toISOString().split('T')[0]));
+      dispatch(setMoveInDate(tomorrow.toISOString().split("T")[0]));
     }
   }, [isToday, isTomorrow, dispatch]);
 
@@ -125,17 +149,19 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
     const selected = regions.find((region) => region.id.toString() === regionId);
     setDistricts([]);
     setMicroDistricts([]);
-    
+
     if (selected) {
-      dispatch(setAddress({
-        regionId: selected.id,
-        regionName: selected.namerus,
-        districtId: null,
-        districtName: '',
-        microDistrictId: null,
-        microDistrictName: '',
-      }));
-      
+      dispatch(
+        setAddress({
+          regionId: selected.id,
+          regionName: selected.namerus,
+          districtId: null,
+          districtName: "",
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
+
       if (selected.haschild) {
         fetchDistricts(selected.id);
       }
@@ -146,54 +172,58 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
 
   const handleDistrictSelect = async (districtId: string) => {
     if (!districts.length) return;
-    
-    const selected = districts.find(
-      (district) => district.id.toString() === districtId
-    );
+
+    const selected = districts.find((district) => district.id.toString() === districtId);
     setMicroDistricts([]);
-    
+
     if (selected) {
-      dispatch(setAddress({
-        ...address,
-        districtId: selected.id,
-        districtName: selected.namerus,
-        microDistrictId: null,
-        microDistrictName: '',
-      }));
-      
+      dispatch(
+        setAddress({
+          ...address,
+          districtId: selected.id,
+          districtName: selected.namerus,
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
+
       if (selected.haschild) {
         fetchMicroDistricts(selected.id);
       }
     } else {
-      dispatch(setAddress({
-        ...address,
-        districtId: null,
-        districtName: '',
-        microDistrictId: null,
-        microDistrictName: '',
-      }));
+      dispatch(
+        setAddress({
+          ...address,
+          districtId: null,
+          districtName: "",
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
     }
   };
 
   const handleMicroDistrictSelect = (microId: string) => {
     if (!microDistricts.length) return;
-    
-    const selected = microDistricts.find(
-      (micro) => micro.id.toString() === microId
-    );
-    
+
+    const selected = microDistricts.find((micro) => micro.id.toString() === microId);
+
     if (selected) {
-      dispatch(setAddress({
-        ...address,
-        microDistrictId: selected.id,
-        microDistrictName: selected.namerus,
-      }));
+      dispatch(
+        setAddress({
+          ...address,
+          microDistrictId: selected.id,
+          microDistrictName: selected.namerus,
+        })
+      );
     } else {
-      dispatch(setAddress({
-        ...address,
-        microDistrictId: null,
-        microDistrictName: '',
-      }));
+      dispatch(
+        setAddress({
+          ...address,
+          microDistrictId: null,
+          microDistrictName: "",
+        })
+      );
     }
   };
 
@@ -205,7 +235,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   };
 
   const handleHousemateSelect = (option: string) => {
-    const roommate = roommateOptions.find(r => r.name === option);
+    const roommate = roommateOptions.find((r) => r.name === option);
     if (roommate) {
       dispatch(setRoommates(roommate));
     }
@@ -228,14 +258,14 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   };
 
   const handlePropertyTypeSelect = (typeCode: string) => {
-    const selected = propertyTypeOptions.find(type => type.code === typeCode);
+    const selected = propertyTypeOptions.find((type) => type.code === typeCode);
     if (selected) {
       dispatch(setPropertyType(selected.code));
     }
   };
 
   const handleOwnerTypeSelect = (typeCode: string) => {
-    const selected = ownerTypeOptions.find(type => type.code === typeCode);
+    const selected = ownerTypeOptions.find((type) => type.code === typeCode);
     if (selected) {
       dispatch(setOwnerType(selected.code));
     }
@@ -246,15 +276,15 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
     setIsToday(false);
     setIsTomorrow(false);
     setMoreFilters(false);
-    
+
     showToast({
-      title: "Фильтры сброшены!"
+      title: "Фильтры сброшены!",
     });
   };
 
   const handleSubmit = () => {
     if (onSubmit) {
-      onSubmit({filter: filterState});
+      onSubmit({ filter: filterState });
     } else {
       addToast({
         title: "Фильтр применен!",
@@ -283,7 +313,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
             value={selectedGender?.code || ""}
             placeholder="Выберите пол"
             onChange={(option) => {
-              const selected = genderOptions.find(g => g.code === option);
+              const selected = genderOptions.find((g) => g.code === option);
               dispatch(setGender(selected || null));
             }}
           />
@@ -303,7 +333,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
           />
         </div>
 
-        {districts.length > 0  && (
+        {districts.length > 0 && (
           <div className={styles.section}>
             <MySelect
               label="Район"
@@ -319,7 +349,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
           </div>
         )}
 
-        {microDistricts.length > 0  && (
+        {microDistricts.length > 0 && (
           <div className={styles.section}>
             <MySelect
               label="Микрорайон"
@@ -422,7 +452,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
             selectedKey={termType}
             variant={"light"}
             className={styles.label}
-            onSelectionChange={(key) => dispatch(setTermType(key as 'long' | 'short' | null))}
+            onSelectionChange={(key) => dispatch(setTermType(key as "long" | "short" | null))}
             size="sm"
             radius="sm"
           >
@@ -563,7 +593,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
             <div className={styles.section}>
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>Тип жилья</p>
-                {propertyTypeOptions.map(type => (
+                {propertyTypeOptions.map((type) => (
                   <Checkbox
                     key={type.id}
                     checked={propertyType === type.code}
@@ -577,7 +607,7 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
 
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>От кого?</p>
-                {ownerTypeOptions.map(type => (
+                {ownerTypeOptions.map((type) => (
                   <Checkbox
                     key={type.id}
                     checked={role === type.code}
