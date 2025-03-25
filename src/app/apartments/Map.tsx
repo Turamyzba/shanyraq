@@ -8,25 +8,15 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import Supercluster from 'supercluster';
 import { useMediaQuery } from "react-responsive";
+import { Card } from "@/types/common";
 
-interface Apartment {
-  id: number;
-  title: string;
-  cost: string;
-  image: string;
-  address: string;
-  selectedGender: string;
-  roomCount: number;
-  roommates: number;
-  arriveDate: string;
-  coordinates?: [number, number];
-}
+type Point = {x: number, y: number};
 
 interface MapProps {
   update?: boolean;
-  apartments?: Apartment[];
+  apartments?: Card[];
   isLoading?: boolean;
-  onPointsSelected?: (points: [number, number][]) => void;
+  onPointsSelected?: (points: Point[]) => void;
 }
 
 const Map: React.FC<MapProps> = ({ update, apartments = [], isLoading = false, onPointsSelected }) => {
@@ -39,7 +29,7 @@ const Map: React.FC<MapProps> = ({ update, apartments = [], isLoading = false, o
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const popupsRef = useRef<mapboxgl.Popup[]>([]);
   const drawRef = useRef<any>(null);
-  const [selectedPoints, setSelectedPoints] = useState<[number, number][]>([]);
+  const [selectedPoints, setSelectedPoints] = useState<Point[]>([]);
   const superclusterRef = useRef<Supercluster | null>(null);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   
@@ -84,12 +74,12 @@ const Map: React.FC<MapProps> = ({ update, apartments = [], isLoading = false, o
     function handleDraw(e: any) {
       const data = draw.getAll();
       if (data.features.length > 0) {
-        const points: [number, number][] = [];
+        const points: {x: number, y: number}[] = [];
         
         data.features.forEach(feature => {
           if (feature.geometry.type === 'Polygon') {
             feature.geometry.coordinates[0].forEach((coord) => {
-              points.push([coord[0], coord[1]] as [number, number]);
+              points.push({ x: coord[0], y: coord[1] } as any);
             });
           }
         });
@@ -109,7 +99,6 @@ const Map: React.FC<MapProps> = ({ update, apartments = [], isLoading = false, o
     const trashButton = document.querySelector('.mapbox-gl-draw_trash');
     if (trashButton) {
       trashButton.addEventListener('click', () => {
-        // Clear all selected points
         setSelectedPoints([]);
         if (onPointsSelected) {
           onPointsSelected([]);
@@ -167,20 +156,34 @@ const Map: React.FC<MapProps> = ({ update, apartments = [], isLoading = false, o
     if (!mapRef.current || apartments.length === 0) return;
 
     const map = mapRef.current;
+
+    const validApartments = apartments.filter(apt => {
+      const hasValidCoords = apt.coordsX && apt.coordsY && 
+                            !isNaN(parseFloat(apt.coordsX)) && 
+                            !isNaN(parseFloat(apt.coordsY));
+      return hasValidCoords;
+    });
     
-    const points = apartments.map(apt => {
-      const coords: [number, number] = apt.coordinates || 
-        [76.9286 + (Math.random() * 0.2 - 0.1), 43.2383 + (Math.random() * 0.2 - 0.1)];
+    
+    if (validApartments.length === 0) {
+      console.log('No valid apartments with coordinates');
+      return;
+    }
+
+    
+    const points = validApartments.map(apt => {
+      const lat = parseFloat(apt.coordsX);
+      const lng = parseFloat(apt.coordsY);
       
       return {
         type: 'Feature',
         properties: {
-          id: apt.id,
+          id: apt.announcementId,
           apartment: apt
         },
         geometry: {
           type: 'Point',
-          coordinates: coords
+          coordinates: [lng, lat]
         }
       };
     }) as any;

@@ -8,23 +8,10 @@ import { Modal } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { Card } from "@/types/common";
 
 interface CardProps {
-  card?: {
-    announcementId: number;
-    image: string;
-    title: string;
-    address: string;
-    arriveDate: string;
-    roomCount: string;
-    selectedGender: string;
-    roommates: number;
-    cost: number;
-    coordsX: string;
-    coordsY: string;
-    isArchived: boolean;
-    consideringOnlyNPeople: boolean;
-  };
+  card?: Card;
   isLast?: boolean;
 }
 
@@ -45,7 +32,6 @@ const LandingCard: React.FC<CardProps> = ({ card, isLast }) => {
   };
 
   const handleClose = () => {
-    // After copy, show a toast
     addToast({
       title: "Ссылка скопирована!",
       variant: "flat",

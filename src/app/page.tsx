@@ -6,13 +6,14 @@ import { Button, Accordion, AccordionItem } from "@heroui/react";
 import Images from "../components/common/Images";
 import Container from "../components/layouts/Container";
 import styles from "./page.module.scss";
-import Card from "../components/common/LandingCard";
+import LandingCard from "../components/common/LandingCard";
 import CardSkeleton from "../components/common/LandingCardSkeleton";
 import { useMediaQuery } from "react-responsive";
 import { useRouter } from "next/navigation";
 import SearchBar from "@/components/common/SearchBar";
 import { useLazyGetGreatDealsQuery } from "@/store/features/landing/landingApi";
-import { LandingCard, appAdvantages } from "@/types/landing";
+import { Card } from "@/types/common";
+import { appAdvantages } from "@/types/landing";
 
 export default function LandingPage() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -21,14 +22,14 @@ export default function LandingPage() {
   const router = useRouter();
   const [getGreatDeals] = useLazyGetGreatDealsQuery();
 
-  const [greatDeals, setGreatDeals] = useState<LandingCard[]>([]);
+  const [greatDeals, setGreatDeals] = useState<Card[]>([]);
   const [expandedKeys, setExpandedKeys] = useState(new Set(["1"]));
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchGreatDeals = () => {
     setIsLoading(true);
     getGreatDeals().then(({ data }) => {
-      setGreatDeals(data?.data as LandingCard[]);
+      setGreatDeals(data?.data as Card[]);
     }).finally(() => {
       setIsLoading(false);
     })
@@ -89,7 +90,7 @@ export default function LandingPage() {
                   ))
               : greatDeals.map((card, index) => (
                   <div className="card-wrapper" key={card.announcementId}>
-                    <Card
+                    <LandingCard
                       key={card.announcementId}
                       card={card}
                       isLast={index === greatDeals.length - 1}

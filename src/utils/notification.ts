@@ -2,8 +2,8 @@ import { addToast } from "@heroui/react";
 
 type Props = {
   title: string;
-  description: string;
-  color: "success" | "danger";
+  description?: string;
+  color?: "success" | "danger";
 };
 
 export function showToast({ title = "", description = "", color = "success" }: Props) {

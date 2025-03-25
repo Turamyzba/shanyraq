@@ -13,7 +13,7 @@ import { Button } from "@heroui/react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { initialState, setGender, setPriceRange, setRoommates, setAddress } from "@/store/features/searchBar/searchBar";
 import { useLazyGetAddressesQuery } from "@/store/features/landing/landingApi";
-import { AddressType, AddressState, genderOptions, roommateOptions } from "@/types/landing";
+import { AddressType, genderOptions, roommateOptions } from "@/types/common";
 import { formatPrice } from "@/utils/helpers";
 
 const SearchBar: React.FC = () => {
@@ -89,7 +89,6 @@ const SearchBar: React.FC = () => {
 
     const queryParams: Record<string, string> = {};
 
-    // region, district, microDistrict (IDs)
     if (address.regionId && address.regionId > 0) {
       queryParams.region = address.regionId.toString();
     }
@@ -100,7 +99,6 @@ const SearchBar: React.FC = () => {
       queryParams.microDistrict = address.microDistrictId.toString();
     }
 
-    // Price range
     queryParams.minPrice = priceRange[0].toString();
     queryParams.maxPrice = priceRange[1].toString();
 

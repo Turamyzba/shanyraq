@@ -1,9 +1,9 @@
 "use client";
 
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { AddressState, GenderState, RommatesState } from "@/types/landing";
+import type { AddressState, GenderState, RommatesState } from "@/types/common";
 
-interface SearchBarState {
+export interface SearchBarState {
   address: AddressState ;
   gender: GenderState | null;
   roommates: RommatesState | null;

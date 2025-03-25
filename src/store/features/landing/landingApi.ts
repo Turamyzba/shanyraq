@@ -1,7 +1,7 @@
 
 import { api } from "@/store/api";
 import type { Response } from "@/types/response/response";
-import { AddressType, LandingCard } from "@/types/landing";
+import { AddressType, Card } from "@/types/common";
   
   export const landingApi = api.injectEndpoints({
     endpoints: (build) => ({
@@ -12,7 +12,7 @@ import { AddressType, LandingCard } from "@/types/landing";
         }),
       }),
 
-      getGreatDeals: build.query<Response<LandingCard[]>, void>({
+      getGreatDeals: build.query<Response<Card[]>, void>({
         query: () => ({
           url: `/announcement/great-deals`,
           method: "GET",

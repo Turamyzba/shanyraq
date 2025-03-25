@@ -8,19 +8,10 @@ import { Modal } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { Card as CardType } from "@/types/common";
 
 interface CardProps {
-  card?: {
-    id: number;
-    title: string;
-    cost: string;
-    image: string;
-    address: string;
-    selectedGender: string;
-    roomCount: number;
-    roommates: number;
-    arriveDate: string;
-  };
+  card?: CardType;
   mini?: boolean;
 }
 
@@ -32,10 +23,10 @@ const Card: React.FC<CardProps> = ({ card, mini = false }) => {
   const isSmallMobile = useMediaQuery({ maxWidth: 480 });
   
   useEffect(() => {
-    if (typeof window !== "undefined" && card?.id) {
-      setShareUrl(`${window.location.origin}/apartments/${card?.id}`);
+    if (typeof window !== "undefined" && card?.announcementId) {
+      setShareUrl(`${window.location.origin}/apartments/${card?.announcementId}`);
     }
-  }, [card?.id]);
+  }, [card?.announcementId]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -116,7 +107,7 @@ const Card: React.FC<CardProps> = ({ card, mini = false }) => {
             <div className={styles.infoItem}>
               <Images.Apartment size={mini ? 16 : 20} />
               <p>{card?.roomCount 
-                ? `${card.roomCount} ${getRoomWord(card.roomCount)}` 
+                ? `${card.roomCount} ${getRoomWord(+card.roomCount)}` 
                 : "2 комнаты"}</p>
             </div>
 
@@ -132,7 +123,7 @@ const Card: React.FC<CardProps> = ({ card, mini = false }) => {
           </div>
 
           <p className={styles.price}>
-            {formatCost(card?.cost || "200 000")}
+            {formatCost(card?.cost.toString() || "200 000")}
             <span className={styles.currency}>₸</span>
           </p>
         </div>

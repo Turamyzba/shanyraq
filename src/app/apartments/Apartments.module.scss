@@ -1,6 +1,6 @@
 .wrapper {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 25px;
   margin-top: 20px;
   
@@ -21,7 +21,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: auto;
   gap: 12px;
 }
 
@@ -80,7 +80,7 @@
   grid-template-columns: repeat(auto-fill, 280px);
   gap: 10px;
   width: 100%;
-  justify-content: space-between;
+  // justify-content: space-between;
   
   @media (max-width: 1335px) {
     grid-template-columns: repeat(auto-fill, 280px);

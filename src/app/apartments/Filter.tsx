@@ -1,157 +1,256 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Filter.module.scss";
 import Images from "@/components/common/Images";
 import MySelect from "@/components/ui/MySelect";
 import MyInput from "@/components/ui/MyInput";
 import MySlider from "@/components/ui/MySlider";
 import MyCalendar from "@/components/ui/MyCalendar";
-import { Tabs, Tab, Checkbox, addToast } from "@heroui/react";
+import { Tabs, Tab, Checkbox, addToast, Select } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
-import { useMediaQuery } from "react-responsive";
-
-interface AddressNode {
-  Id: number;
-  ParentId?: number;
-  AteTypeId?: number;
-  GeonimTypeId?: number;
-  NameRus: string;
-  NameKaz: string;
-  HasChild: boolean;
-  AteTypeNameKaz: string;
-  AteTypeNameRus: string;
-  GeonimTypeNameKaz?: string;
-  GeonimTypeNameRus?: string;
-  Children: AddressNode[];
-}
+import { useLazyGetAddressesQuery } from "@/store/features/landing/landingApi";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { 
+  AddressType, 
+  genderOptions, 
+  roommateOptions, 
+  propertyTypeOptions,
+  ownerTypeOptions
+} from '@/types/common';
+import { 
+  setGender, 
+  setMinPrice, 
+  setMaxPrice, 
+  setRoommates, 
+  setAddress, 
+  setRooms, 
+  setMinAge, 
+  setMaxAge, 
+  setMoveInDate, 
+  setTermType,
+  setIsNotFirstFloor,
+  setIsNotLastFloor,
+  setMinArea,
+  setMaxArea,
+  setPetsAllowed,
+  setUtilitiesIncluded,
+  setForStudents,
+  setOnlyEmptyApartments,
+  setBadHabitsAllowed,
+  setPropertyType,
+  setOwnerType,
+  resetFilter,
+  initialState,
+  setMinFloor,
+  setMaxFloor
+} from "@/store/features/filter/filterSlice";
+import { showToast } from "@/utils/notification";
 
 interface FilterProps {
   onSubmit?: (filterData: any) => void;
+  onSaveFilter?: (filterData: any) => void;
 }
 
-export default function Filter({ onSubmit }: FilterProps) {
-  const [selectedGender, setSelectedGender] = useState("");
-  const genders = [
-    { value: "Мужчина", label: "Мужчина" },
-    { value: "Женщина", label: "Женщина" },
-    { value: "Любой", label: "Любой" },
-  ];
-
-  const [selectedRegion, setSelectedRegion] = useState<AddressNode | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<AddressNode | null>(null);
-  const [selectedMicroDistrict, setSelectedMicroDistrict] = useState<AddressNode | null>(null);
-  const [selectedStreet, setSelectedStreet] = useState<AddressNode | null>(null);
-  const [regions, setRegions] = useState<AddressNode[]>([]);
-  const [isLoadingRegions, setIsLoadingRegions] = useState(false);
-
-  const [priceRange, setPriceRange] = useState([0, 500000]);
-  const handlePriceSliderChange = (event: any, newValue: number | number[]) => {
-    setPriceRange(newValue as number[]);
-  };
-  const housematesOptions = ["1", "2", "3", "4", "5+"];
-  const [selectedHousemate, setSelectedHousemate] = useState("1");
-
-  const [rooms, setRooms] = useState(1);
-  const incrementRooms = () => setRooms((prev) => Math.min(prev + 1, 10));
-  const decrementRooms = () => setRooms((prev) => Math.max(prev - 1, 1));
-
-  const [ageRange, setAgeRange] = useState([18, 50]);
-  const handleAgeSliderChange = (event: any, newValue: number | number[]) => {
-    setAgeRange(newValue as number[]);
-  };
-
-  let [moveInDate, setMoveInDate] = useState(parseDate("2024-03-07"));
-
+export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
+  const dispatch = useAppDispatch();
+  const filterState = useAppSelector((state) => state.filter);
+  
+  const [getAddresses, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
+  const { address, rooms, selectedGender, roommates, minPrice,
+    maxPrice, propertyType, role, minAge, maxAge, minArea, maxArea, moveInDate, termType, 
+    petsAllowed, forStudents, isNotFirstFloor, isNotLastFloor, utilitiesIncluded, onlyEmptyApartments, badHabitsAllowed,
+    minFloor, maxFloor,
+  } = filterState;
+  
+  const [regions, setRegions] = useState<AddressType[]>([]);
+  const [districts, setDistricts] = useState<AddressType[]>([]);
+  const [microDistricts, setMicroDistricts] = useState<AddressType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [moreFilters, setMoreFilters] = useState(false);
+  
   const [isToday, setIsToday] = useState(false);
   const [isTomorrow, setIsTomorrow] = useState(false);
 
-  const [moreFilters, setMoreFilters] = useState(false);
+  const genderSelectOptions = genderOptions.map((gender) => ({
+    value: gender.code,
+    label: gender.namerus,
+  }));
 
-  const [roomSize, setRoomSize] = useState(["", "60"]);
-  const handleRoomSizeChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newRoomSize = [...roomSize];
-    newRoomSize[index] = e.target.value;
-    setRoomSize(newRoomSize);
+  const fetchRegions = async () => {
+    setIsLoading(true);
+    getAddresses(1).then(({ data }) => {
+      setRegions(data?.data as AddressType[]);
+    }).finally(() => {
+      setIsLoading(false);
+    });
   };
 
-  const [floors, setFloors] = useState(["", ""]);
-  const handleFloorChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newFloors = [...floors];
-    newFloors[index] = e.target.value;
-    setFloors(newFloors);
+  const fetchDistricts = async (cityId: number) => {
+    setIsLoading(true);
+    getAddresses(cityId).then(({ data }) => {
+      setDistricts(data?.data as AddressType[]);
+    }).finally(() => {
+      setIsLoading(false);
+    });
   };
-  const [isNotFirstFloor, setIsNotFirstFloor] = useState(false);
-  const [isNotLastFloor, setIsNotLastFloor] = useState(false);
 
-  const [termType, setTermType] = useState("long");
+  const fetchMicroDistricts = async (districtId: number) => {
+    getAddresses(districtId).then(({ data }) => {
+      setMicroDistricts(data?.data as AddressType[]);
+    });
+  };
 
-  const [petsAllowed, setPetsAllowed] = useState(false);
-  const [utilitiesIncluded, setUtilitiesIncluded] = useState(false);
-  const [forStudents, setForStudents] = useState(false);
-  const [onlyEmptyApartments, setOnlyEmptyApartments] = useState(false);
-  const [badHabitsAllowed, setBadHabitsAllowed] = useState(false);
+  useEffect(() => {
+    fetchRegions();
+  }, []);
 
-  const [propertyType, setPropertyType] = useState("");
-  
-  const isSmallMobile = useMediaQuery({ maxWidth: 480 });
+  useEffect(() => {
+    if (isToday) {
+      const today = new Date();
+      dispatch(setMoveInDate(today.toISOString().split('T')[0]));
+    } else if (isTomorrow) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      dispatch(setMoveInDate(tomorrow.toISOString().split('T')[0]));
+    }
+  }, [isToday, isTomorrow, dispatch]);
+
+  const handleRegionSelect = async (regionId: string) => {
+    const selected = regions.find((region) => region.id.toString() === regionId);
+    setDistricts([]);
+    setMicroDistricts([]);
+    
+    if (selected) {
+      dispatch(setAddress({
+        regionId: selected.id,
+        regionName: selected.namerus,
+        districtId: null,
+        districtName: '',
+        microDistrictId: null,
+        microDistrictName: '',
+      }));
+      
+      if (selected.haschild) {
+        fetchDistricts(selected.id);
+      }
+    } else {
+      dispatch(setAddress(initialState.address));
+    }
+  };
+
+  const handleDistrictSelect = async (districtId: string) => {
+    if (!districts.length) return;
+    
+    const selected = districts.find(
+      (district) => district.id.toString() === districtId
+    );
+    setMicroDistricts([]);
+    
+    if (selected) {
+      dispatch(setAddress({
+        ...address,
+        districtId: selected.id,
+        districtName: selected.namerus,
+        microDistrictId: null,
+        microDistrictName: '',
+      }));
+      
+      if (selected.haschild) {
+        fetchMicroDistricts(selected.id);
+      }
+    } else {
+      dispatch(setAddress({
+        ...address,
+        districtId: null,
+        districtName: '',
+        microDistrictId: null,
+        microDistrictName: '',
+      }));
+    }
+  };
+
+  const handleMicroDistrictSelect = (microId: string) => {
+    if (!microDistricts.length) return;
+    
+    const selected = microDistricts.find(
+      (micro) => micro.id.toString() === microId
+    );
+    
+    if (selected) {
+      dispatch(setAddress({
+        ...address,
+        microDistrictId: selected.id,
+        microDistrictName: selected.namerus,
+      }));
+    } else {
+      dispatch(setAddress({
+        ...address,
+        microDistrictId: null,
+        microDistrictName: '',
+      }));
+    }
+  };
+
+  const handlePriceSliderChange = (event: any, newValue: number | number[]) => {
+    if (Array.isArray(newValue)) {
+      dispatch(setMinPrice(newValue[0]));
+      dispatch(setMaxPrice(newValue[1]));
+    }
+  };
+
+  const handleHousemateSelect = (option: string) => {
+    const roommate = roommateOptions.find(r => r.name === option);
+    if (roommate) {
+      dispatch(setRoommates(roommate));
+    }
+  };
+
+  const incrementRooms = () => dispatch(setRooms(Math.min(rooms + 1, 10)));
+  const decrementRooms = () => dispatch(setRooms(Math.max(rooms - 1, 1)));
+
+  const handleAgeSliderChange = (event: any, newValue: number | number[]) => {
+    if (Array.isArray(newValue)) {
+      dispatch(setMinAge(newValue[0]));
+      dispatch(setMaxAge(newValue[1]));
+    }
+  };
+
+  const handleDateChange = (date: any) => {
+    if (date) {
+      dispatch(setMoveInDate(date.toString()));
+    }
+  };
+
+  const handlePropertyTypeSelect = (typeCode: string) => {
+    const selected = propertyTypeOptions.find(type => type.code === typeCode);
+    if (selected) {
+      dispatch(setPropertyType(selected.code));
+    }
+  };
+
+  const handleOwnerTypeSelect = (typeCode: string) => {
+    const selected = ownerTypeOptions.find(type => type.code === typeCode);
+    if (selected) {
+      dispatch(setOwnerType(selected.code));
+    }
+  };
 
   const resetFilters = () => {
-    setSelectedGender("");
-    setSelectedRegion(null);
-    setSelectedDistrict(null);
-    setSelectedMicroDistrict(null);
-    setSelectedStreet(null);
-    setPriceRange([0, 500000]);
-    setSelectedHousemate("1");
-    setRooms(1);
-    setAgeRange([18, 50]);
-    setMoveInDate(parseDate("2024-03-07"));
+    dispatch(resetFilter());
     setIsToday(false);
     setIsTomorrow(false);
-    setRoomSize(["", "60"]);
-    setFloors(["", ""]);
-    setIsNotFirstFloor(false);
-    setIsNotLastFloor(false);
-    setTermType("long");
-    setPetsAllowed(false);
-    setUtilitiesIncluded(false);
-    setForStudents(false);
-    setOnlyEmptyApartments(false);
-    setBadHabitsAllowed(false);
-    setPropertyType("");
+    setMoreFilters(false);
+    
+    showToast({
+      title: "Фильтры сброшены!"
+    });
   };
 
   const handleSubmit = () => {
-    const filterData = {
-      selectedGender,
-      region: selectedRegion?.NameRus,
-      district: selectedDistrict?.NameRus,
-      microDistrict: selectedMicroDistrict?.NameRus,
-      street: selectedStreet?.NameRus,
-      minPrice: priceRange[0],
-      maxPrice: priceRange[1],
-      numberOfPeopleAreYouAccommodating: parseInt(selectedHousemate),
-      quantityOfRooms: rooms,
-      minAge: ageRange[0],
-      maxAge: ageRange[1],
-      arriveDate: moveInDate,
-      minArea: roomSize[0] ? parseInt(roomSize[0]) : 0,
-      maxArea: roomSize[1] ? parseInt(roomSize[1]) : 500,
-      notTheFirstFloor: isNotFirstFloor,
-      notTheTopFloor: isNotLastFloor,
-      forALongTime: termType === "long",
-      arePetsAllowed: petsAllowed,
-      isCommunalServiceIncluded: utilitiesIncluded,
-      intendedForStudents: forStudents,
-      onlyEmptyApartments: onlyEmptyApartments,
-      badHabitsAllowed: badHabitsAllowed,
-      typeOfHousing: propertyType,
-    };
-    
     if (onSubmit) {
-      onSubmit(filterData);
+      onSubmit({filter: filterState});
     } else {
       addToast({
         title: "Фильтр применен!",
@@ -164,20 +263,7 @@ export default function Filter({ onSubmit }: FilterProps) {
   };
 
   const saveFilter = () => {
-    const filterData = {
-      selectedGender,
-      region: selectedRegion?.NameRus,
-      minPrice: priceRange[0],
-      maxPrice: priceRange[1],
-    };
-    
-    addToast({
-      title: "Поиск сохранен!",
-      variant: "flat",
-      radius: "sm",
-      timeout: 2000,
-      color: "primary",
-    });
+    // This function is prepared for future implementation
   };
 
   return (
@@ -192,71 +278,59 @@ export default function Filter({ onSubmit }: FilterProps) {
 
         <div className={styles.section}>
           <MySelect
-            options={genders}
+            options={genderSelectOptions}
             label="Гендер"
-            value={selectedGender}
+            value={selectedGender?.code || ""}
             placeholder="Выберите пол"
-            onChange={(option) => setSelectedGender(option)}
+            onChange={(option) => {
+              const selected = genderOptions.find(g => g.code === option);
+              dispatch(setGender(selected || null));
+            }}
           />
         </div>
 
         <div className={styles.section}>
           <MySelect
             label="Регион"
-            placeholder={isLoadingRegions ? "Загрузка..." : "Выберите регион"}
+            placeholder={isLoading ? "Загрузка..." : "Выберите регион"}
             options={regions.map((region) => ({
-              value: region.HasChild ? region.Id.toString() : `${region.Id}$`,
-              label: region.NameRus || "",
+              value: region.id.toString(),
+              label: region.namerus || "",
             }))}
-            value={selectedRegion?.Id ? selectedRegion.Id.toString() : ""}
-            onChange={(optionValue) => {
-              const selected = regions.find((region) => region.Id?.toString() === optionValue);
-              setSelectedRegion(selected || null);
-              setSelectedDistrict(null);
-              setSelectedMicroDistrict(null);
-            }}
-            disabled={isLoadingRegions}
+            value={address?.regionId ? address.regionId.toString() : ""}
+            onChange={handleRegionSelect}
+            disabled={isLoading}
           />
         </div>
 
-        {selectedRegion && selectedRegion.HasChild && (
+        {districts.length > 0  && (
           <div className={styles.section}>
             <MySelect
               label="Район"
-              placeholder="Выберите район"
-              options={selectedRegion.Children.map((district) => ({
-                value: district.HasChild ? district.Id.toString() : `${district.Id}$`,
-                label: district.NameRus || "",
+              placeholder={isLoading ? "Загрузка..." : "Выберите район"}
+              options={districts.map((district) => ({
+                value: district.id.toString(),
+                label: district.namerus || "",
               }))}
-              value={selectedDistrict?.Id ? selectedDistrict.Id.toString() : ""}
-              onChange={(optionValue) => {
-                const selected = selectedRegion.Children.find(
-                  (district) => district.Id?.toString() === optionValue
-                );
-                setSelectedDistrict(selected || null);
-                setSelectedMicroDistrict(null);
-              }}
+              value={address?.districtId ? address.districtId.toString() : ""}
+              onChange={handleDistrictSelect}
+              disabled={isLoading}
             />
           </div>
         )}
 
-        {selectedDistrict && selectedDistrict.HasChild && (
+        {microDistricts.length > 0  && (
           <div className={styles.section}>
             <MySelect
               label="Микрорайон"
-              placeholder="Выберите микрорайон"
-              options={selectedDistrict.Children.map((micro) => ({
-                value: micro.HasChild ? micro.Id.toString() : `${micro.Id}$`,
-                label: micro.NameRus,
+              placeholder={isLoading ? "Загрузка..." : "Выберите микрорайон"}
+              options={microDistricts.map((micro) => ({
+                value: micro.id.toString(),
+                label: micro.namerus,
               }))}
-              value={selectedMicroDistrict?.Id?.toString() || ""}
-              onChange={(option) => {
-                const selected = selectedDistrict.Children.find(
-                  (micro) => micro.Id.toString() === option
-                );
-                setSelectedMicroDistrict(selected || null);
-                setSelectedStreet(null);
-              }}
+              value={address?.microDistrictId ? address.microDistrictId.toString() : ""}
+              onChange={handleMicroDistrictSelect}
+              disabled={isLoading}
             />
           </div>
         )}
@@ -267,14 +341,14 @@ export default function Filter({ onSubmit }: FilterProps) {
             <MyInput
               type="number"
               placeholder="Минимальный"
-              value={priceRange[0].toString()}
-              onChange={(e) => setPriceRange([+e.target.value, priceRange[1]])}
+              value={minPrice.toString()}
+              onChange={(e) => dispatch(setMinPrice(+e.target.value))}
             />
             <MyInput
               type="number"
               placeholder="Максимальный"
-              value={priceRange[1].toString()}
-              onChange={(e) => setPriceRange([priceRange[0], +e.target.value])}
+              value={maxPrice.toString()}
+              onChange={(e) => dispatch(setMaxPrice(+e.target.value))}
             />
           </div>
           <div className={styles.relative}>
@@ -283,7 +357,7 @@ export default function Filter({ onSubmit }: FilterProps) {
               <span>500000</span>
             </div>
             <MySlider
-              value={priceRange}
+              value={[minPrice, maxPrice]}
               handleSliderChange={handlePriceSliderChange}
               min={0}
               max={500000}
@@ -296,16 +370,16 @@ export default function Filter({ onSubmit }: FilterProps) {
         <div className={styles.section}>
           <p className={styles.label}>Количество сожителей</p>
           <ul className={styles.housemates}>
-            {housematesOptions.map((option) => (
+            {roommateOptions.map((option) => (
               <MyButton
-                key={option}
+                key={option.id}
                 isIconOnly
                 className={`${styles.housemateItem} ${
-                  selectedHousemate === option ? styles.selected : ""
+                  roommates?.id === option.id ? styles.selected : ""
                 }`}
-                onClick={() => setSelectedHousemate(option)}
+                onClick={() => handleHousemateSelect(option.name)}
               >
-                {option}
+                {option.name}
               </MyButton>
             ))}
           </ul>
@@ -332,7 +406,7 @@ export default function Filter({ onSubmit }: FilterProps) {
               <span>50</span>
             </div>
             <MySlider
-              value={ageRange}
+              value={[minAge, maxAge]}
               handleSliderChange={handleAgeSliderChange}
               min={18}
               max={50}
@@ -348,7 +422,7 @@ export default function Filter({ onSubmit }: FilterProps) {
             selectedKey={termType}
             variant={"light"}
             className={styles.label}
-            onSelectionChange={(key) => setTermType(key as string)}
+            onSelectionChange={(key) => dispatch(setTermType(key as 'long' | 'short'))}
             size="sm"
             radius="sm"
           >
@@ -361,10 +435,10 @@ export default function Filter({ onSubmit }: FilterProps) {
           <p className={styles.label}>Дата начала заселения</p>
           <MyCalendar
             aria-label="Дата заселения"
-            value={moveInDate}
+            value={parseDate(moveInDate)}
             variant="bordered"
             color={"primary"}
-            onChange={(date) => setMoveInDate(date ?? parseDate("2024-03-07"))}
+            onChange={handleDateChange}
             size="md"
             radius="sm"
           />
@@ -373,7 +447,7 @@ export default function Filter({ onSubmit }: FilterProps) {
               checked={isToday}
               onChange={() => {
                 setIsToday(!isToday);
-                if (!isToday) setIsTomorrow(false);
+                if (isToday) setIsTomorrow(false);
               }}
               aria-label="Сегодня"
             >
@@ -383,7 +457,7 @@ export default function Filter({ onSubmit }: FilterProps) {
               checked={isTomorrow}
               onChange={() => {
                 setIsTomorrow(!isTomorrow);
-                if (!isTomorrow) setIsToday(false);
+                if (isTomorrow) setIsToday(false);
               }}
               aria-label="Завтра"
             >
@@ -400,14 +474,14 @@ export default function Filter({ onSubmit }: FilterProps) {
                 <MyInput
                   type="number"
                   placeholder="От"
-                  value={roomSize[0]}
-                  onChange={(e) => handleRoomSizeChange(e, 0)}
+                  value={minArea?.toString() || ""}
+                  onChange={(e) => dispatch(setMinArea(+e.target.value))}
                 />
                 <MyInput
                   type="number"
                   placeholder="До"
-                  value={roomSize[1]}
-                  onChange={(e) => handleRoomSizeChange(e, 1)}
+                  value={maxArea?.toString() || ""}
+                  onChange={(e) => dispatch(setMaxArea(+e.target.value))}
                 />
               </div>
             </div>
@@ -418,27 +492,27 @@ export default function Filter({ onSubmit }: FilterProps) {
                 <MyInput
                   type="number"
                   placeholder="От"
-                  value={floors[0]}
-                  onChange={(e) => handleFloorChange(e, 0)}
+                  value={minFloor?.toString() || ""}
+                  onChange={(e) => dispatch(setMinFloor(+e.target.value))}
                 />
                 <MyInput
                   type="number"
                   placeholder="До"
-                  value={floors[1]}
-                  onChange={(e) => handleFloorChange(e, 1)}
+                  value={maxFloor?.toString() || ""}
+                  onChange={(e) => dispatch(setMaxFloor(+e.target.value))}
                 />
               </div>
               <div className={styles.checkboxFloorGroup}>
                 <Checkbox
                   checked={isNotFirstFloor}
-                  onChange={() => setIsNotFirstFloor((prev) => !prev)}
+                  onChange={() => dispatch(setIsNotFirstFloor(!isNotFirstFloor))}
                   aria-label="Не первый этаж"
                 >
                   <p className={styles.label}>Не первый этаж?</p>
                 </Checkbox>
                 <Checkbox
                   checked={isNotLastFloor}
-                  onChange={() => setIsNotLastFloor((prev) => !prev)}
+                  onChange={() => dispatch(setIsNotLastFloor(!isNotLastFloor))}
                   aria-label="Не последний этаж"
                 >
                   <p className={styles.label}>Не последний этаж?</p>
@@ -450,35 +524,35 @@ export default function Filter({ onSubmit }: FilterProps) {
               <div className={styles.checkboxGroup}>
                 <MyCheckBox
                   checked={petsAllowed}
-                  onChange={() => setPetsAllowed((prev) => !prev)}
+                  onChange={() => dispatch(setPetsAllowed(!petsAllowed))}
                   label="Разрешено ли с животными?"
                   labelClassName={styles.label}
                 />
 
                 <MyCheckBox
                   checked={utilitiesIncluded}
-                  onChange={() => setUtilitiesIncluded((prev) => !prev)}
+                  onChange={() => dispatch(setUtilitiesIncluded(!utilitiesIncluded))}
                   label="Включены ли коммунальные услуги?"
                   labelClassName={styles.label}
                 />
 
                 <MyCheckBox
                   checked={forStudents}
-                  onChange={() => setForStudents((prev) => !prev)}
+                  onChange={() => dispatch(setForStudents(!forStudents))}
                   label="Можно ли студентам?"
                   labelClassName={styles.label}
                 />
 
                 <MyCheckBox
                   checked={onlyEmptyApartments}
-                  onChange={() => setOnlyEmptyApartments((prev) => !prev)}
+                  onChange={() => dispatch(setOnlyEmptyApartments(!onlyEmptyApartments))}
                   label="Только квартиры без жителей?"
                   labelClassName={styles.label}
                 />
 
                 <MyCheckBox
                   checked={badHabitsAllowed}
-                  onChange={() => setBadHabitsAllowed((prev) => !prev)}
+                  onChange={() => dispatch(setBadHabitsAllowed(!badHabitsAllowed))}
                   label="С вредными привычками"
                   labelClassName={styles.label}
                 />
@@ -488,38 +562,30 @@ export default function Filter({ onSubmit }: FilterProps) {
             <div className={styles.section}>
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>Тип жилья</p>
-                <Checkbox
-                  checked={propertyType === "Квартира"}
-                  onChange={() => setPropertyType("Квартира")}
-                  aria-label="Квартира"
-                >
-                  <p className={styles.label}>Квартира</p>
-                </Checkbox>
-                <Checkbox
-                  checked={propertyType === "Дом"}
-                  onChange={() => setPropertyType("Дом")}
-                  aria-label="Дом"
-                >
-                  <p className={styles.label}>Дом</p>
-                </Checkbox>
+                {propertyTypeOptions.map(type => (
+                  <Checkbox
+                    key={type.id}
+                    checked={propertyType === type.code}
+                    onChange={() => handlePropertyTypeSelect(type.code)}
+                    aria-label={type.namerus}
+                  >
+                    <p className={styles.label}>{type.namerus}</p>
+                  </Checkbox>
+                ))}
               </div>
 
               <div className={styles.checkboxFloorGroup}>
                 <p className={styles.label}>От кого?</p>
-                <Checkbox
-                  checked={propertyType === "Квартира"}
-                  onChange={() => setPropertyType("Квартира")}
-                  aria-label="Квартира"
-                >
-                  <p className={styles.label}>От хозяев</p>
-                </Checkbox>
-                <Checkbox
-                  checked={propertyType === "Дом"}
-                  onChange={() => setPropertyType("Дом")}
-                  aria-label="Дом"
-                >
-                  <p className={styles.label}>От жителей</p>
-                </Checkbox>
+                {ownerTypeOptions.map(type => (
+                  <Checkbox
+                    key={type.id}
+                    checked={role === type.code}
+                    onChange={() => handleOwnerTypeSelect(type.code)}
+                    aria-label={type.namerus}
+                  >
+                    <p className={styles.label}>{type.namerus}</p>
+                  </Checkbox>
+                ))}
               </div>
             </div>
           </>
