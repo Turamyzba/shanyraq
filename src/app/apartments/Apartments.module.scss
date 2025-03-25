@@ -191,3 +191,25 @@
   width: 240px;
   transform-origin: top left;
 }
+
+.loadMoreContainer {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+  width: 100%;
+}
+
+.loadMoreButton {
+  background-color: #1AA683;
+  color: white;
+  padding: 10px 20px;
+  min-width: 200px;
+  
+  &:hover {
+    background-color: darken(#1AA683, 10%);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+  }
+}

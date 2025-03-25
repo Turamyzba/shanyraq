@@ -3,16 +3,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GenderState, RommatesState, AddressState } from '@/types/common';
 
 export interface FilterState {
+  page: number;
+  sort: number;
   selectedGender: GenderState | null;
-  minPrice: number;
-  maxPrice: number;
+  minPrice: number | null;
+  maxPrice: number | null;
   roommates: RommatesState | null;
   address: AddressState;
-  rooms: number;
-  minAge: number;
-  maxAge: number;
-  moveInDate: string;
-  termType: 'long' | 'short';
+  rooms: number | null;
+  minAge: number | null;
+  maxAge: number | null;
+  moveInDate: string | null;
+  termType: 'long' | 'short' | null;
   minFloor: number | null;
   maxFloor: number | null;
   isNotFirstFloor: boolean;
@@ -30,9 +32,11 @@ export interface FilterState {
 }
 
 export const initialState: FilterState = {
+  page: 1,
+  sort: 1,
   selectedGender: null,
-  minPrice: 0,
-  maxPrice: 500000,
+  minPrice: null,
+  maxPrice: null,
   roommates: null,
   address: {
     regionId: null,
@@ -42,11 +46,11 @@ export const initialState: FilterState = {
     microDistrictId: null,
     microDistrictName: '',
   },
-  rooms: 1,
-  minAge: 18,
-  maxAge: 50,
-  moveInDate: '2024-03-28',
-  termType: 'long',
+  rooms: null,
+  minAge: null,
+  maxAge: null,
+  moveInDate: null,
+  termType: null,
   minFloor: null,
   maxFloor: null,
   isNotFirstFloor: false,
@@ -67,6 +71,12 @@ const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
+    setCurrentPage: (state, action: PayloadAction<number>) => {
+      state.page = action.payload;
+    },
+    setCurrentOrder: (state, action: PayloadAction<number>) => {
+      state.sort = action.payload;
+    },
     setGender: (state, action: PayloadAction<GenderState | null>) => {
       state.selectedGender = action.payload;
     },
@@ -94,7 +104,7 @@ const filterSlice = createSlice({
     setMoveInDate: (state, action: PayloadAction<string>) => {
       state.moveInDate = action.payload;
     },
-    setTermType: (state, action: PayloadAction<'long' | 'short'>) => {
+    setTermType: (state, action: PayloadAction<'long' | 'short' | null>) => {
       state.termType = action.payload;
     },
     setMinFloor: (state, action: PayloadAction<number>) => {
@@ -146,6 +156,8 @@ const filterSlice = createSlice({
 });
 
 export const {
+  setCurrentPage,
+  setCurrentOrder,
   setGender,
   setAddress,
   setMinPrice,

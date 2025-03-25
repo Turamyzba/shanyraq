@@ -6,7 +6,7 @@ import MySelect from "@/components/ui/MySelect";
 import MyInput from "@/components/ui/MyInput";
 import MySlider from "@/components/ui/MySlider";
 import MyCalendar from "@/components/ui/MyCalendar";
-import { Tabs, Tab, Checkbox, addToast, Select } from "@heroui/react";
+import { Tabs, Tab, Checkbox, addToast, Select, useDisclosure } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import MyButton from "@/components/ui/MyButton";
 import MyCheckBox from "@/components/ui/MyCheckBox";
@@ -47,19 +47,21 @@ import {
   setMaxFloor
 } from "@/store/features/filter/filterSlice";
 import { showToast } from "@/utils/notification";
+import SaveFilterModal from "@/components/common/SaveFilterModal";
 
 interface FilterProps {
   onSubmit?: (filterData: any) => void;
-  onSaveFilter?: (filterData: any) => void;
+  onResetFilter?: (filterData: any) => void;
 }
 
-export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
+export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useAppDispatch();
   const filterState = useAppSelector((state) => state.filter);
   
   const [getAddresses, { isLoading: getAddressIsLoading }] = useLazyGetAddressesQuery();
-  const { address, rooms, selectedGender, roommates, minPrice,
-    maxPrice, propertyType, role, minAge, maxAge, minArea, maxArea, moveInDate, termType, 
+  const { address, rooms = 1, selectedGender, roommates, minPrice,
+    maxPrice, propertyType, role, minAge, maxAge, minArea, maxArea, moveInDate = new Date(), termType, 
     petsAllowed, forStudents, isNotFirstFloor, isNotLastFloor, utilitiesIncluded, onlyEmptyApartments, badHabitsAllowed,
     minFloor, maxFloor,
   } = filterState;
@@ -109,8 +111,10 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
   useEffect(() => {
     if (isToday) {
       const today = new Date();
+      setIsTomorrow(false);
       dispatch(setMoveInDate(today.toISOString().split('T')[0]));
     } else if (isTomorrow) {
+      setIsToday(false);
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       dispatch(setMoveInDate(tomorrow.toISOString().split('T')[0]));
@@ -207,8 +211,8 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
     }
   };
 
-  const incrementRooms = () => dispatch(setRooms(Math.min(rooms + 1, 10)));
-  const decrementRooms = () => dispatch(setRooms(Math.max(rooms - 1, 1)));
+  const incrementRooms = () => rooms && dispatch(setRooms(Math.min(rooms + 1, 10)));
+  const decrementRooms = () => rooms && dispatch(setRooms(Math.max(rooms - 1, 1)));
 
   const handleAgeSliderChange = (event: any, newValue: number | number[]) => {
     if (Array.isArray(newValue)) {
@@ -260,10 +264,6 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
         color: "success",
       });
     }
-  };
-
-  const saveFilter = () => {
-    // This function is prepared for future implementation
   };
 
   return (
@@ -341,13 +341,13 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
             <MyInput
               type="number"
               placeholder="Минимальный"
-              value={minPrice.toString()}
+              value={minPrice ? minPrice.toString() : ""}
               onChange={(e) => dispatch(setMinPrice(+e.target.value))}
             />
             <MyInput
               type="number"
               placeholder="Максимальный"
-              value={maxPrice.toString()}
+              value={maxPrice ? maxPrice.toString() : ""}
               onChange={(e) => dispatch(setMaxPrice(+e.target.value))}
             />
           </div>
@@ -357,7 +357,7 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
               <span>500000</span>
             </div>
             <MySlider
-              value={[minPrice, maxPrice]}
+              value={[minPrice || 0, maxPrice || 500000]}
               handleSliderChange={handlePriceSliderChange}
               min={0}
               max={500000}
@@ -406,7 +406,7 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
               <span>50</span>
             </div>
             <MySlider
-              value={[minAge, maxAge]}
+              value={[minAge || 18, maxAge || 50]}
               handleSliderChange={handleAgeSliderChange}
               min={18}
               max={50}
@@ -422,10 +422,11 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
             selectedKey={termType}
             variant={"light"}
             className={styles.label}
-            onSelectionChange={(key) => dispatch(setTermType(key as 'long' | 'short'))}
+            onSelectionChange={(key) => dispatch(setTermType(key as 'long' | 'short' | null))}
             size="sm"
             radius="sm"
           >
+            <Tab key={null} title="Без разницы" />
             <Tab key="long" title="Долгосрочно" />
             <Tab key="short" title="Краткосрочно" />
           </Tabs>
@@ -435,7 +436,7 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
           <p className={styles.label}>Дата начала заселения</p>
           <MyCalendar
             aria-label="Дата заселения"
-            value={parseDate(moveInDate)}
+            value={moveInDate}
             variant="bordered"
             color={"primary"}
             onChange={handleDateChange}
@@ -599,7 +600,7 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
             <span>{moreFilters ? "Уменьшить фильтр" : "Подробный фильтр"}</span>
             <Images.Filter />
           </MyButton>
-          <MyButton className={styles.saveSearchButton} onClick={saveFilter}>
+          <MyButton className={styles.saveSearchButton} onClick={onOpen}>
             <span>Сохранить поиск</span>
             <Images.Search color="black" />
           </MyButton>
@@ -609,6 +610,7 @@ export default function Filter({ onSubmit, onSaveFilter }: FilterProps) {
           Найти
         </MyButton>
       </div>
+      <SaveFilterModal isOpen={isOpen} onClose={onClose} />
     </aside>
   );
 }

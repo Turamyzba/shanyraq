@@ -18,36 +18,40 @@ import Map from "./Map";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
-import { mapStateToFilterRequest, useLazyGetFilteredAnnouncementsQuery, useLazyGetAllAnnouncementsQuery } from "@/store/features/filter/filterApi";
-import { setSelectedMapPoints } from "@/store/features/filter/filterSlice";
+import { 
+  mapStateToFilterRequest, 
+  useLazyGetFilteredAnnouncementsQuery
+} from "@/store/features/filter/filterApi";
+import { setSelectedMapPoints, resetFilter, setCurrentPage, setCurrentOrder } from "@/store/features/filter/filterSlice";
 import { Card } from "@/types/common";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 const sortItems = [
   { value: "1", label: "Самые подходящие" },
   { value: "3", label: "По новизне" },
-  { value: "4", label: "По убыванию цены" },
   { value: "2", label: "По возрастанию цены" },
+  { value: "4", label: "По убыванию цены" },
 ];
 
 export default function ApartmentsPage() {
-  const [selectedSort, setSelectedSort] = useState("1");
   const [isMap, setIsMap] = useState(false);
   const [hideFilter, setHideFilter] = useState(true);
   const [showListings, setShowListings] = useState(false);
   const [open, setOpen] = useState(false);
   const [filteredApartments, setFilteredApartments] = useState<Card[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
   
   const isMobile = useMediaQuery({ maxWidth: 768 });
   
   const antIcon = <LoadingOutlined style={{ fontSize: 36, color: "#1AA683" }} spin />;
 
   const [ getFilteredAnnouncements ] = useLazyGetFilteredAnnouncementsQuery();
-  const [ getAllAnnouncements ] = useLazyGetAllAnnouncementsQuery();
 
   const dispatch = useAppDispatch();
   const filterState = useAppSelector((state) => state.filter);
+  const { page, sort } = filterState;
+  
 
   const showDrawer = () => {
     setOpen(true);
@@ -69,47 +73,33 @@ export default function ApartmentsPage() {
     }
   }, [isMobile, isMap]);
 
-  const fetchFilterApartments = async (filterData: any) => {
-    setIsLoading(true);
-    
-    try {
-      // Map the filter state to the API request format
-      const requestData = mapStateToFilterRequest(filterData);
+  const fetchFilterApartments = async (filterData: any, isLoadMore = false) => {
+    const requestData = mapStateToFilterRequest(filterData);
       
-      // Send the API request
-      const result = await getFilteredAnnouncements(requestData);
-      
-      if (result.data) {
-        setFilteredApartments(result.data?.data?.announcements as Card[]);
-      } else if (result.error) {
-        console.error("API error:", result.error);
+    getFilteredAnnouncements(requestData).then(({ data }) => {
+      const newApartments = data?.data?.announcements as Card[];
+      const newPage = data?.data?.page as number;
+      dispatch(setCurrentPage(newPage));
+
+      if (newApartments.length === 0) {
+        setHasMoreData(false);
       }
-    } catch (error) {
-      console.error("Error in fetchFilterApartments:", error);
-    } finally {
-      setIsLoading(false);
-    }
+      if (isLoadMore) {
+        setFilteredApartments([...filteredApartments, ...newApartments]);
+      } else {
+        setFilteredApartments(newApartments);
+        setHasMoreData(true);
+      }
+    })
+  
   };
 
-  const fetchAllApartments = async () => {
-    setIsLoading(true);
-    
-    try {
-      const result = await getAllAnnouncements();
-      
-      if (result.data) {
-        setFilteredApartments(result.data?.data?.announcements as Card[]);
-      }
-    } catch (error) {
-      console.error("Error fetching all apartments:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
   useEffect(() => {
-    fetchAllApartments();
-  }, []);
+    setIsLoading(true)
+    fetchFilterApartments(filterState, false);
+    setIsLoading(false)
+  }, [page, sort]);
+
 
   const handleIsMap = () => {
     setIsMap(!isMap);
@@ -124,27 +114,43 @@ export default function ApartmentsPage() {
     if (isMobile) {
       onClose();
     }
+    dispatch(setCurrentPage(1));
     fetchFilterApartments(filterData);
+  };
+  
+  const handleResetFilter = () => {
+    dispatch(resetFilter());
+    dispatch(setCurrentPage(1));
+    fetchFilterApartments(filterState);
   };
 
   const handleMapPointsSelected = (points: {x: number, y: number}[]) => {
-    // First update the Redux state
     dispatch(setSelectedMapPoints(points));
     
-    // Then prepare filter request with the updated points
     const updatedFilterState = {
       ...filterState,
       selectedMapPoints: points
     };
+
+    fetchFilterApartments({filter: updatedFilterState}, false);
+  };
+  
+  const loadMoreApartments = () => {
+    if (isLoading || !hasMoreData) return;
     
-    // Call API with the updated filter state
-    fetchFilterApartments({filter: updatedFilterState});
+    const nextPage = page + 1;
+    dispatch(setCurrentPage(nextPage));
   };
 
   return (
     <Container>
       <div className={styles.wrapper}>
-        {(!hideFilter && !isMobile) && (<Filter onSubmit={handleFilterSubmit} />)}
+        {(!hideFilter && !isMobile) && (
+          <Filter 
+            onSubmit={handleFilterSubmit} 
+            onResetFilter={handleResetFilter}
+          />
+        )}
 
         {showListings && isMap && hideFilter && !isMobile && (
           <div className={styles.mapListings}>
@@ -170,7 +176,7 @@ export default function ApartmentsPage() {
               <Dropdown>
                 <DropdownTrigger>
                   <Button className="capitalize" variant="bordered" size="sm">
-                    {sortItems.find((sort) => sort.value === selectedSort)?.label}
+                    {sortItems.find((s) => s.value === sort.toString())?.label}
                     <Images.ChevronDown size={20} color={"#5c5c5c"} />
                   </Button>
                 </DropdownTrigger>
@@ -178,11 +184,12 @@ export default function ApartmentsPage() {
                   disallowEmptySelection
                   aria-label="Выбор сортировки"
                   selectionMode="single"
-                  selectedKeys={selectedSort}
+                  selectedKeys={sort.toString()}
                   variant="flat"
                   onSelectionChange={(keys) => {
                     if (keys.currentKey) {
-                      setSelectedSort(keys.currentKey.toString());
+                      dispatch(setCurrentPage(1))
+                      dispatch(setCurrentOrder(+keys.currentKey))
                     }
                   }}
                 >
@@ -237,13 +244,27 @@ export default function ApartmentsPage() {
           ) : (
             <>
               {!isMap ? (
+                <>
                 <div className={styles.gridContainer}>
                   <div className={styles.cardGrid}>
-                    {filteredApartments.map((apartment) => (
-                      <CardComponent key={apartment.announcementId} card={apartment} />
+                    {filteredApartments.map((apartment, index) => (
+                      <CardComponent key={apartment.announcementId} card={apartment} 
+                      isLast={hasMoreData && index === filteredApartments.length - 1} loadMoreApartments={loadMoreApartments} />
                     ))}
                   </div>
                 </div>
+                {isLoading && (
+                  <div className={styles.loadingMore}>
+                    <Spin indicator={antIcon} />
+                  </div>
+                )}
+                
+                {!hasMoreData && filteredApartments.length > 0 && (
+                  <div className={styles.noMoreData}>
+                    <p>Больше объявлений не найдено</p>
+                  </div>
+                )}
+                </>
               ) : (
                 <div className={styles.mapContent}>
                   <Map 
@@ -267,7 +288,10 @@ export default function ApartmentsPage() {
         size="large"
         open={open}
       >
-        <Filter onSubmit={handleFilterSubmit} />
+        <Filter 
+          onSubmit={handleFilterSubmit} 
+          onResetFilter={handleResetFilter}
+        />
       </Drawer>
     </Container>
   );

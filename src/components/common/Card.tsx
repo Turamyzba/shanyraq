@@ -8,19 +8,18 @@ import { Modal } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { Card as CardType } from "@/types/common";
+import { Card as CardType, genderOptions } from "@/types/common";
 
 interface CardProps {
   card?: CardType;
   mini?: boolean;
+  isLast?: boolean;
+  loadMoreApartments?: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ card, mini = false }) => {
+const Card: React.FC<CardProps> = ({ card, mini = false, isLast = false, loadMoreApartments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
-  
-  const isMobile = useMediaQuery({ maxWidth: 768 });
-  const isSmallMobile = useMediaQuery({ maxWidth: 480 });
   
   useEffect(() => {
     if (typeof window !== "undefined" && card?.announcementId) {
@@ -45,16 +44,12 @@ const Card: React.FC<CardProps> = ({ card, mini = false }) => {
     }, 1000);
   };
 
-  // Format cost with space as thousand separator
   const formatCost = (cost: string) => {
     if (!cost) return "0";
-    // Remove any existing spaces first
     const cleanCost = cost.replace(/\s+/g, "");
-    // Add space as thousand separator
     return cleanCost.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   };
 
-  // Fixed sizes for image based on card type
   const imageWidth = mini ? 240 : 280;
   const imageHeight = mini ? 120 : 180;
 
@@ -95,7 +90,11 @@ const Card: React.FC<CardProps> = ({ card, mini = false }) => {
           </div>
           <div className={styles.cardLocation}>
             <Images.Map size={mini ? 16 : 20} color={"#929292"} />
-            <p>{card?.address || "Алматы, Казахстан"}</p>
+            <p>
+              {(card?.address ?? "").length > (mini ? 24 : 28) 
+                ? `${card?.address.substring(0, mini ? 24 : 28)}...` 
+                : card?.address}
+              </p>
           </div>
 
           <div className={styles.roomInfo}>
@@ -113,7 +112,7 @@ const Card: React.FC<CardProps> = ({ card, mini = false }) => {
 
             <div className={styles.infoItem}>
               <Images.GenderBoth size={mini ? 16 : 20} />
-              <p>{card?.selectedGender || "Любой"}</p>
+              <p>{getGender(card?.selectedGender || "")}</p>
             </div>
 
             <div className={styles.infoItem}>
@@ -139,15 +138,26 @@ const Card: React.FC<CardProps> = ({ card, mini = false }) => {
           </Button>
         </div>
       </div>
+      {isLast && (
+        <div className={styles.lastOverlay}>
+          <Button onPress={loadMoreApartments} className={styles.viewAllButton}>
+            Загрузить еще 23 объявлений
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
 
-// Helper function to get the correct word form for rooms
 function getRoomWord(count: number): string {
   if (count === 1) return "комната";
   if (count >= 2 && count <= 4) return "комнаты";
   return "комнат";
+}
+
+function getGender(code: string): string {
+  const gender = genderOptions.find( g => g.code = code)
+  return gender?.namerus || "";
 }
 
 export default Card;
