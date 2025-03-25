@@ -1,9 +1,7 @@
 // src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupDetails.tsx
 
 import React, { useState, useEffect } from "react";
-import { Button } from "antd";
 import { Group, ApartmentDetails, ModalConfig } from "./types";
-import ApartmentDetailsComponent from "./ApartmentDetails";
 import GroupList from "./GroupList";
 import ActionModals from "./ActionModals";
 import styles from "./GroupDetails.module.scss";
@@ -161,7 +159,6 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
   if (!groupsData || groupsData.length === 0) {
     return (
       <div className={styles.container}>
-        <ApartmentDetailsComponent details={apartmentDetails} />
         <div className={styles.emptyState}>Нет доступных групп</div>
       </div>
     );
@@ -169,8 +166,6 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
 
   return (
     <div className={styles.container}>
-      <ApartmentDetailsComponent details={apartmentDetails} />
-
       <GroupList
         groups={groupsData}
         onLeaveGroup={handleLeaveGroup}
