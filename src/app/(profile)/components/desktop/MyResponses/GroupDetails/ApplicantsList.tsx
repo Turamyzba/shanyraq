@@ -23,6 +23,8 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   if (!applicants.length) return null;
 
   const limitedAccess = groupStatus !== "accepted";
+  const currentUserApplicant = applicants.find((app) => app.isCurrentUser);
+  const otherApplicants = applicants.filter((app) => !app.isCurrentUser);
 
   const columns = [
     {
@@ -37,9 +39,12 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${applicant.id})` }}
           ></div>
           <div>
-            <div className={styles.userName}>{applicant.name}</div>
+            <div className={styles.userName}>
+              {applicant.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
+              {applicant.name}
+            </div>
             <div className={styles.userEmail}>
-              {limitedAccess ? "******@***.***" : applicant.email}
+              {limitedAccess && !applicant.isCurrentUser ? "******@***.***" : applicant.email}
             </div>
           </div>
         </div>
@@ -50,7 +55,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       key: "telegram",
       width: 100,
       render: (applicant: Member) =>
-        limitedAccess ? (
+        limitedAccess && !applicant.isCurrentUser ? (
           <span>@********</span>
         ) : (
           <a
@@ -67,22 +72,25 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       title: "Возраст",
       dataIndex: "age",
       key: "age",
-      width:  100,
-      render: (age: number) => (limitedAccess ? "**" : age),
+      width: 100,
+      render: (age: number, applicant: Member) =>
+        limitedAccess && !applicant.isCurrentUser ? "**" : age,
     },
     {
       title: "Контакты",
       dataIndex: "phone",
       key: "phone",
-      width:  140,
-      render: (phone: string) => (limitedAccess ? "*** *** ** **" : phone),
+      width: 140,
+      render: (phone: string, applicant: Member) =>
+        limitedAccess && !applicant.isCurrentUser ? "*** *** ** **" : phone,
     },
     {
       title: "Дата",
       dataIndex: "date",
       key: "date",
-      width:  100,
-      render: (date: string) => (limitedAccess ? "**/**/****" : date),
+      width: 100,
+      render: (date: string, applicant: Member) =>
+        limitedAccess && !applicant.isCurrentUser ? "**/**/****" : date,
     },
     {
       title: "Действия",
@@ -101,7 +109,8 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       fixed: "right" as const,
       width: 120,
       render: (applicant: Member) =>
-        canManageApplicants && (
+        canManageApplicants &&
+        !applicant.isCurrentUser && (
           <div className={styles.actions}>
             <Button
               className={styles.acceptButton}

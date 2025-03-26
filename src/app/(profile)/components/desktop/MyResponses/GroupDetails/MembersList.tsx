@@ -1,7 +1,6 @@
 import React from "react";
 import { Collapse, Table } from "antd";
 import { Member, GroupStatus } from "./types";
-import MemberItem from "./MemberItem";
 import styles from "./GroupDetails.module.scss";
 
 interface MembersListProps {
@@ -29,10 +28,15 @@ const MembersList: React.FC<MembersListProps> = ({
 }) => {
   if (!members.length) return null;
 
-  // Limited access for pending or rejected groups
+  // Limited access for pending or rejected groups if not current user
   const limitedAccess = groupStatus !== "accepted";
 
-  // Filter members to only show current user if status is not accepted
+  // Filter out current user for pending/rejected groups (they appear in applicants)
+  const filteredMembers = members.filter(
+    (member) => groupStatus === "accepted" || !member.isCurrentUser || member.role === "owner"
+  );
+
+  if (filteredMembers.length === 0) return null;
 
   const columns = [
     {
@@ -51,13 +55,15 @@ const MembersList: React.FC<MembersListProps> = ({
               {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
               {member.name}
 
-              {!limitedAccess && member.role === "admin" && <span className={styles.adminBadge}>Админ группы</span>}
+              {!limitedAccess && member.role === "admin" && (
+                <span className={styles.adminBadge}>Админ группы</span>
+              )}
               {!limitedAccess && member.role === "owner" && (
                 <span className={styles.ownerBadge}>Создатель объявления</span>
               )}
             </div>
             <div className={styles.userEmail}>
-              {limitedAccess ? "******@***.***" : member.email}
+              {limitedAccess && !member.isCurrentUser ? "******@***.***" : member.email}
             </div>
           </div>
         </div>
@@ -68,7 +74,7 @@ const MembersList: React.FC<MembersListProps> = ({
       key: "telegram",
       width: 100,
       render: (member: Member) =>
-        limitedAccess ? (
+        limitedAccess && !member.isCurrentUser ? (
           <span>@********</span>
         ) : (
           <a
@@ -86,21 +92,24 @@ const MembersList: React.FC<MembersListProps> = ({
       dataIndex: "age",
       key: "age",
       width: 100,
-      render: (age: number, member: Member) => (limitedAccess ? "**" : age),
+      render: (age: number, member: Member) =>
+        limitedAccess && !member.isCurrentUser ? "**" : age,
     },
     {
       title: "Контакты",
       dataIndex: "phone",
       key: "phone",
       width: 140,
-      render: (phone: string, member: Member) => (limitedAccess ? "*** *** ** **" : phone),
+      render: (phone: string, member: Member) =>
+        limitedAccess && !member.isCurrentUser ? "*** *** ** **" : phone,
     },
     {
       title: "Дата",
       dataIndex: "date",
       key: "date",
       width: 100,
-      render: (date: string, member: Member) => (limitedAccess ? "**/**/****" : date),
+      render: (date: string, member: Member) =>
+        limitedAccess && !member.isCurrentUser ? "**/**/****" : date,
     },
     {
       title: "Действия",
@@ -109,7 +118,7 @@ const MembersList: React.FC<MembersListProps> = ({
       render: (member: Member) => (
         <div className={styles.actionButtons}>
           <Button className={styles.actionButton}>Посмотреть анкету</Button>
-          {!limitedAccess && (
+          {(!limitedAccess || member.isCurrentUser) && (
             <Button className={styles.actionButton}>Сопроводительное письмо</Button>
           )}
         </div>
@@ -164,13 +173,15 @@ const MembersList: React.FC<MembersListProps> = ({
         className={styles.newApplicationsCollapse}
       >
         <Panel
-          header={<h2 className={styles.panelHeader}>Участники группы ({members.length})</h2>}
+          header={
+            <h2 className={styles.panelHeader}>Участники группы ({filteredMembers.length})</h2>
+          }
           key="members"
         >
           <Table
             className={styles.table}
             columns={columns}
-            dataSource={members}
+            dataSource={filteredMembers}
             pagination={false}
             rowKey="id"
             scroll={{ x: "max-content", y: 400 }}

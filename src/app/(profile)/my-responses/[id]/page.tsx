@@ -32,8 +32,6 @@ const mockApartmentDetails = {
   status: "accepted",
 };
 
-// Mock groups data
-// Mock groups data
 export const mockGroupsData = {
   accepted: [
     {
@@ -178,6 +176,8 @@ export const mockGroupsData = {
           avatar: "/avatars/user9.jpg",
           role: "admin",
         },
+      ],
+      applicants: [
         {
           id: 10,
           name: "Асем",
@@ -191,7 +191,6 @@ export const mockGroupsData = {
           isCurrentUser: true,
         },
       ],
-      applicants: [],
       isUserMember: true,
       isUserAdmin: false,
       isUserSuperAdmin: false,
@@ -214,6 +213,8 @@ export const mockGroupsData = {
           role: "owner",
           isCurrentUser: true,
         },
+      ],
+      applicants: [
         {
           id: 12,
           name: "Айгуль",
@@ -223,10 +224,7 @@ export const mockGroupsData = {
           phone: "8777 888 99 00",
           date: "22/11/2024",
           avatar: "/avatars/user12.jpg",
-          role: "member",
         },
-      ],
-      applicants: [
         {
           id: 13,
           name: "Алмас",
@@ -260,6 +258,8 @@ export const mockGroupsData = {
           role: "owner",
           isCurrentUser: true,
         },
+      ],
+      applicants: [
         {
           id: 17,
           name: "Карина",
@@ -269,10 +269,8 @@ export const mockGroupsData = {
           phone: "8777 123 45 67",
           date: "20/11/2024",
           avatar: "/avatars/user17.jpg",
-          role: "member",
         },
       ],
-      applicants: [],
       isUserMember: true,
       isUserAdmin: false,
       isUserSuperAdmin: false,
@@ -297,6 +295,8 @@ export const mockGroupsData = {
           avatar: "/avatars/user14.jpg",
           role: "owner",
         },
+      ],
+      applicants: [
         {
           id: 15,
           name: "Мадина",
@@ -310,7 +310,6 @@ export const mockGroupsData = {
           isCurrentUser: true,
         },
       ],
-      applicants: [],
       isUserMember: true,
       isUserAdmin: false,
       isUserSuperAdmin: false,

@@ -152,12 +152,21 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
         setGroupsData((prevGroups) =>
           prevGroups.map((group) => {
             if (group.id === groupId) {
-              const applicant = group.applicants?.find((a) => a.id === applicantId);
+              // Find applicant in both applicants list and possibly members list if current user
+              const applicant =
+                group.applicants?.find((a) => a.id === applicantId) ||
+                (group.status !== "accepted"
+                  ? group.members.find((m) => m.id === applicantId && m.isCurrentUser)
+                  : undefined);
+
               if (!applicant) return group;
 
               return {
                 ...group,
-                members: [...group.members, { ...applicant, role: "member" }],
+                members: [
+                  ...group.members.filter((m) => !(m.isCurrentUser && m.id === applicantId)),
+                  { ...applicant, role: "member" },
+                ],
                 applicants: group.applicants.filter((a) => a.id !== applicantId),
               };
             }
@@ -185,6 +194,9 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
               return {
                 ...group,
                 applicants: group.applicants.filter((a) => a.id !== applicantId),
+                status: group.applicants.some((a) => a.isCurrentUser && a.id === applicantId)
+                  ? "rejected"
+                  : group.status,
               };
             }
             return group;

@@ -27,24 +27,34 @@ const GroupItem: React.FC<GroupItemProps> = ({
   onRejectApplicant,
 }) => {
   const avatarLimit = 3;
-  const displayedAvatars = group.members.slice(0, avatarLimit);
-  const hasMoreAvatars = group.members.length > avatarLimit;
+  
+  // For pending and rejected groups, move current user to applicants list
+  let displayMembers = [...group.members];
+  let displayApplicants = [...(group.applicants || [])];
+  
+  // For pending and rejected groups, current user should be in the applicants list
+  if ((group.status === "pending" || group.status === "rejected") && group.isUserMember) {
+    const currentUser = displayMembers.find(member => member.isCurrentUser);
+    if (currentUser && !group.isUserOwner) {
+      displayMembers = displayMembers.filter(member => !member.isCurrentUser);
+      displayApplicants = [currentUser, ...displayApplicants];
+    }
+  }
+  
+  const displayedAvatars = displayMembers.slice(0, avatarLimit);
+  const hasMoreAvatars = displayMembers.length > avatarLimit;
   const isPending = group.status === "pending";
   const isRejected = group.status === "rejected";
   const isAccepted = group.status === "accepted";
 
-  // Only admins and creators can remove members
+  // Control permissions
   const canRemoveMembers = group.isUserAdmin || group.isUserOwner;
-
-  // Only creators can promote to admin or demote from admin
   const canManageAdmins = group.isUserOwner && isAccepted;
-
-  // Only admins and creators can manage applicants
   const canManageApplicants = group.isUserAdmin || group.isUserOwner;
-
-  // Users can leave groups if they are members but not the creator
-  const canLeaveGroup = group.isUserMember && !group.isUserOwner && isAccepted;
-
+  
+  // Users can leave groups if they are accepted groups
+  const canLeaveGroup = group.isUserMember && isAccepted;
+  
   // Users can cancel their application if the status is pending
   const canCancelApplication = group.isUserMember && isPending;
 
@@ -73,7 +83,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
               />
             ))}
             {hasMoreAvatars && (
-              <div className={styles.moreAvatars}>+{group.members.length - avatarLimit}</div>
+              <div className={styles.moreAvatars}>+{displayMembers.length - avatarLimit}</div>
             )}
           </div>
         </div>
@@ -115,7 +125,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
       </div>
 
       <MembersList
-        members={group.members}
+        members={displayMembers}
         groupStatus={group.status}
         isRejected={isRejected}
         canRemoveMembers={canRemoveMembers}
@@ -125,9 +135,10 @@ const GroupItem: React.FC<GroupItemProps> = ({
         onDemoteFromAdmin={(memberId) => onDemoteFromAdmin && onDemoteFromAdmin(group.id, memberId)}
       />
 
-      {group.applicants && group.applicants.length > 0 && !isJointApplication && (
+      {/* Display applicants list (including current user for pending/rejected groups) */}
+      {displayApplicants.length > 0 && !isJointApplication && (
         <ApplicantsList
-          applicants={group.applicants}
+          applicants={displayApplicants}
           groupStatus={group.status}
           canManageApplicants={canManageApplicants}
           onAcceptApplicant={(applicantId) =>
@@ -162,11 +173,12 @@ const GroupItem: React.FC<GroupItemProps> = ({
       {isRejected && (
         <div className={styles.leaveGroupSection}>
           <Button className={styles.cancelButton} disabled>
-            Отменить
+            Отменено
           </Button>
         </div>
       )}
 
+      {/* Add leave group button for accepted groups */}
       {canLeaveGroup && (
         <div className={styles.leaveGroupSection}>
           <Button
