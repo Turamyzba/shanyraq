@@ -4,44 +4,25 @@ import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import MyInput from "@/components/ui/MyInput";
 import MySlider from "@/components/ui/MySlider";
-import MyCalendar from "@/components/ui/MyCalendar";
 import MyCheckBox from "@/components/ui/MyCheckBox";
 import Images from "@/components/common/Images";
-import { parseDate } from "@internationalized/date";
 import styles from "./StepBasicInfo.module.scss";
 import MyButton from "../ui/MyButton";
-import { UserRole } from "../AddApartmentSteps/StepRole";
-
-const housematesOptions = ["1", "2", "3", "4", "5+"];
-
-// Gender.ts
-export enum Gender {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
-  ANY = "ANY",
-}
-
-export const genderOptions = [
-  { code: Gender.MALE, label: "Мужчина" },
-  { code: Gender.FEMALE, label: "Женщина" },
-  { code: Gender.ANY, label: "Любой" },
-];
+import { genderOptions, roommateOptions } from "@/types/common";
 
 const StepBasicInfo: React.FC = () => {
   const { control, watch, setValue } = useFormContext();
 
-  // Watch current form values
   const title = watch("title");
   const gender = watch("gender");
   const livingInHome = watch("livingInHome");
   const peopleInApartment = watch("peopleInApartment");
   const roommates = watch("roommates") || 1;
   const ageRange = watch("ageRange") || [18, 50];
-  const selectedRole = watch("role") === UserRole.TENANT;
+  const selectedRole = watch("role") === "RESIDENT";
 
   return (
     <div className={styles.container}>
-      {/* Title Input */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Заголовок объявления:</label>
         <MyInput
@@ -52,13 +33,11 @@ const StepBasicInfo: React.FC = () => {
         />
       </div>
 
-      {/* Gender Selection using RadioGroup/Radio */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Кого вы подселяете?</label>
         <div className={styles.genderContainer}>
           {genderOptions.map((option) => (
             <div key={option.code} className={styles.radioRow}>
-              {/* Show different icons based on whether selected */}
               <button onClick={() => setValue("gender", option.code)}>
                 {gender === option.code ? <Images.radioSelected /> : <Images.radioNotSelected />}
               </button>
@@ -77,14 +56,13 @@ const StepBasicInfo: React.FC = () => {
                 htmlFor={option.code}
                 className={`${styles.radioLabel} ${gender === option.code ? styles.selected : ""}`}
               >
-                {option.label}
+                {option.namerus}
               </label>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Living In Home Checkbox */}
       {selectedRole && (
         <div className={styles.inputGroup}>
           <label className={styles.label}>Вы проживаете в этом доме?</label>
@@ -95,26 +73,24 @@ const StepBasicInfo: React.FC = () => {
         </div>
       )}
 
-      {/* People in Apartment */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Сколько людей проживают в квартире? (не включая вас)</label>
         <div className={styles.housemates}>
-          {housematesOptions.map((option) => (
+          {roommateOptions.map((option) => (
             <MyButton
-              key={option}
+              key={option.id}
               isIconOnly
               className={`${styles.housemateItem} ${
-                peopleInApartment === option ? styles.selected : ""
+                peopleInApartment === option.id ? styles.selected : ""
               }`}
-              onClick={() => setValue("peopleInApartment", option)}
+              onClick={() => setValue("peopleInApartment", option.id)}
             >
-              {option}
+              {option.name}
             </MyButton>
           ))}
         </div>
       </div>
 
-      {/* Roommates Count */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Сколько человек подселяете?</label>
         <div className={styles.roomControls}>
@@ -136,7 +112,6 @@ const StepBasicInfo: React.FC = () => {
         </div>
       </div>
 
-      {/* Age Range Slider */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Возрастной диапазон</label>
         <Controller
@@ -154,7 +129,6 @@ const StepBasicInfo: React.FC = () => {
           )}
         />
         <div className={styles.sliderValues}>
-          {/* <span className={styles.sliderValue}>{ageRange[0]}</span> */}
           <MyInput
             placeholder={ageRange[0]}
             className={styles.sliderValue}

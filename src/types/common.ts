@@ -1,3 +1,5 @@
+import Images from "@/components/common/Images";
+
 export interface AddressType {
   id: number;
   parentid: number;
@@ -84,3 +86,19 @@ export const ownerTypeOptions: OwnerTypeState[] = [
   { id: 1, namerus: "От хозяев", namekaz: "Иелерден", code: "OWNER" },
   { id: 2, namerus: "От жителей", namekaz: "Тұрғындардан", code: "RESIDENT" },
 ];
+
+export const roleOptions = [
+  {
+    code: "OWNER",
+    name: "Я хозяин",
+    description: "Эта опция для вас, если вы сдаёте жильё или предлагаете услуги",
+    image: Images.roleOwner,
+  },
+  {
+    code: "RESIDENT",
+    name: "Я житель",
+    description: "Эта опция для вас, если вы ищете сожителей",
+    image: Images.roleTenant,
+  },
+];
+

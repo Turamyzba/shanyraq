@@ -10,16 +10,14 @@ import MyFileUpload from "@/components/ui/MyFileUpload";
 const StepApartmentAdditionalDetails: React.FC = () => {
   const { watch, setValue } = useFormContext();
 
-  // Watch form values
   const petsAllowed = watch("apartmentDetails.petsAllowed") || false;
   const utilitiesIncluded = watch("apartmentDetails.utilitiesIncluded") || false;
   const utilitiesAmount = watch("apartmentDetails.utilitiesAmount") || [0, 5000];
-  const forStudents = watch("apartmentDetails.forStudents") || true;
+  const forStudents = watch("apartmentDetails.forStudents") || false;
   const badHabitsAllowed = watch("apartmentDetails.badHabitsAllowed") || false;
   const description = watch("apartmentDetails.description") || "";
   const photos = watch("apartmentDetails.photos") || [];
 
-  // Handle utilities amount change
   const handleUtilitiesAmountChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newAmount = [...utilitiesAmount];
     newAmount[index] = parseInt(e.target.value || "0");
@@ -114,9 +112,8 @@ const StepApartmentAdditionalDetails: React.FC = () => {
         <MyFileUpload
           photos={photos}
           setPhotos={(newPhotos) => setValue("apartmentDetails.photos", newPhotos)}
-          maxCount={8}
+          maxCount={20}
         />
-        {photos.length < 5 && <p className={styles.errorText}>Добавьте минимум 5 фотографий</p>}
       </div>
     </div>
   );

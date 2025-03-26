@@ -2,7 +2,7 @@ import type { Middleware, MiddlewareAPI } from "redux";
 import { isFulfilled, isRejectedWithValue } from "@reduxjs/toolkit";
 import { messageCatch } from "../../utils/messageCatch";
 import { errorCatch } from "../../utils/errorCatch";
-import { addToast } from "@heroui/react";
+import { addToast, cn } from "@heroui/react";
 
 export const notificationMiddleware: Middleware = (api: MiddlewareAPI) => (next) => (action) => {
   if (isFulfilled(action)) {
@@ -15,6 +15,12 @@ export const notificationMiddleware: Middleware = (api: MiddlewareAPI) => (next)
         radius: "sm",
         timeout: 5000,
         color: "success",
+        classNames: {
+          base: cn([
+            "z-[10000]"
+          ])
+        },
+
       });
     }
   }
@@ -29,6 +35,11 @@ export const notificationMiddleware: Middleware = (api: MiddlewareAPI) => (next)
         radius: "sm",
         timeout: 5000,
         color: "danger",
+        classNames: {
+          base: cn([
+            "z-[10000]"
+          ])
+        },
       });
     }
   }

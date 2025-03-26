@@ -1,40 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import Images from "../common/Images";
 import styles from "./StepRole.module.scss";
 import { Button } from "@heroui/react";
 import { useFormContext } from "react-hook-form";
-
-export enum UserRole {
-  OWNER = "OWNER",
-  TENANT = "TENANT",
-}
-
-const roleOptions = [
-  {
-    code: UserRole.OWNER,
-    name: "Я хозяин",
-    description: "Эта опция для вас, если вы сдаёте жильё или предлагаете услуги",
-    image: Images.roleOwner,
-  },
-  {
-    code: UserRole.TENANT,
-    name: "Я житель",
-    description: "Эта опция для вас, если вы ищете сожителей",
-    image: Images.roleTenant,
-  },
-];
+import { roleOptions } from "@/types/common"
 
 const StepRole: React.FC = () => {
   const { setValue, watch } = useFormContext();
   const selectedRole = watch("role");
-
-  const [error, setError] = useState<boolean>(false);
-
-  const handleSelect = (role: UserRole) => {
-    setValue("role", role);
-  };
 
   return (
     <div className={styles.container}>
@@ -48,7 +22,7 @@ const StepRole: React.FC = () => {
           <Button
             key={option.code}
             type="button"
-            onPress={() => handleSelect(option.code)}
+            onPress={() => setValue("role", option.code)}
             className={`${styles.optionButton} ${
               selectedRole === option.code ? styles.selected : styles.notSelected
             }`}
@@ -65,8 +39,6 @@ const StepRole: React.FC = () => {
           </Button>
         ))}
       </div>
-
-      {error && <p className={styles.errorMessage}>Пожалуйста, выберите роль перед продолжением</p>}
     </div>
   );
 };

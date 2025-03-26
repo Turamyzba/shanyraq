@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { PlusOutlined, DeleteOutlined, UploadOutlined } from "@ant-design/icons";
-import { Image, Upload, Button, message } from "antd";
+import { PlusOutlined, DeleteOutlined, UploadOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Image, Upload, Button, Spin, Progress } from "antd";
 import type { GetProp, UploadFile, UploadProps } from "antd";
+import { useUploadFilesMutation } from "@/store/features/addAnnouncement/announcementApi";
+import { RcFile } from "antd/es/upload";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -26,7 +28,11 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadingFiles, setUploadingFiles] = useState<string[]>([]);
 
+  const [uploadFiles] = useUploadFilesMutation();
+  
   // Initialize fileList from photos on mount and when photos changes
   useEffect(() => {
     if (photos && photos.length > 0) {
@@ -50,18 +56,15 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
     setPreviewOpen(true);
   };
 
+  // This is a controlled upload now - we'll update the list manually
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    // Fix duplication by not updating the fileList on upload
-    if (!uploading) {
-      setFileList(newFileList);
-    }
+    // We don't update fileList here anymore - will be managed by our custom handlers
   };
 
   const handleRemove = (file: UploadFile) => {
     const newFileList = fileList.filter((item) => item.uid !== file.uid);
     setFileList(newFileList);
 
-    // Update the parent component's photos array
     const newPhotos = newFileList
       .filter((file) => file.status === "done")
       .map((file) => file.url || "");
@@ -70,43 +73,55 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
     return true;
   };
 
-  // Custom request to handle file uploads
-  const customRequest = async ({ file, onSuccess, onError }: any) => {
+  const uploadFilesToServer = async (files: FileType[]): Promise<string[]> => {
+    if (!files || files.length === 0) return [];
+    
+    const formData = new FormData();
+    
+    setUploadingFiles(files.map(file => file.name));
+    setUploadProgress(0);
+    
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+
     try {
-      setUploading(true);
-      // Simulate upload process
-      const base64 = await getBase64(file);
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 300);
 
-      // Add to fileList
-      const newFile = {
-        uid: `-${Date.now()}`,
-        name: file.name,
-        status: "done" as const,
-        url: base64,
-      };
-
-      const newFileList = [...fileList, newFile];
-      setFileList(newFileList);
-
-      // Update parent photos array
-      const newPhotos = newFileList
-        .filter((file) => file.status === "done")
-        .map((file) => file.url || "");
-
-      setPhotos(newPhotos);
-
-      if (onSuccess) {
-        setTimeout(() => {
-          onSuccess("ok");
-          setUploading(false);
-        }, 500);
-      }
+      const response = await uploadFiles(formData);
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
+      console.log(response.data?.data);
+      
+      setTimeout(() => {
+        setUploadingFiles([]);
+        setUploadProgress(0);
+      }, 500);
+      
+      return response.data?.data || [];
     } catch (error) {
-      if (onError) {
-        onError(error);
-      }
-      setUploading(false);
-      message.error("Не удалось загрузить файл");
+      console.error("Error uploading files:", error);
+      setUploadingFiles([]);
+      setUploadProgress(0);
+      throw error;
+    }
+  };
+
+  // Completely disable the internal upload mechanism and handle it ourselves
+  const customRequest = ({ onSuccess }: any) => {
+    // Just mark as success, our beforeUpload will handle the actual upload
+    if (onSuccess) {
+      onSuccess("ok");
     }
   };
 
@@ -115,13 +130,93 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
     setPhotos([]);
   };
 
-  // Custom upload button to match your design
+  const beforeUpload = async (file: RcFile, uploadedFiles: RcFile[]) => {
+    // We process the first file only to avoid duplicate processing
+    // We identify the first file with its unique lastModified timestamp
+    if (uploadedFiles.length > 0 && file === uploadedFiles[0]) {
+      // We're the first file in this batch
+      try {
+        setUploading(true);
+        
+        // First add the files to the visual list as "uploading"
+        const tempFileList = [...fileList];
+        
+        const uploadingItems = uploadedFiles.map((file) => ({
+          uid: `-${Date.now()}-${file.name}`,
+          name: file.name,
+          status: "uploading" as const,
+          percent: 0,
+          originFileObj: file,
+        }));
+        
+        setFileList([...tempFileList, ...uploadingItems]);
+        
+        // Then upload them all at once
+        const fileUrls = await uploadFilesToServer(uploadedFiles);
+        
+        if (fileUrls && fileUrls.length > 0) {
+          // Get all temp entries we just added
+          const newFileListWithoutTemp = fileList.filter(
+            (item) => !uploadingItems.some((tempItem) => tempItem.uid === item.uid)
+          );
+          
+          // Create new entries with URLs from server
+          const newFiles = await Promise.all(
+            uploadedFiles.map(async (file, index) => {
+              const base64Preview = await getBase64(file);
+              return {
+                uid: `-${Date.now()}-${index}`,
+                name: file.name,
+                status: "done" as const,
+                url: fileUrls[index],
+                preview: base64Preview,
+              };
+            })
+          );
+          
+          const finalFileList = [...newFileListWithoutTemp, ...newFiles];
+          setFileList(finalFileList);
+          
+          const newPhotos = finalFileList
+            .filter((file) => file.status === "done")
+            .map((file) => file.url || "");
+          
+          setPhotos(newPhotos);
+        } else {
+          // If upload failed, remove the temp entries
+          setFileList(
+            fileList.filter(
+              (item) => !uploadingItems.some((tempItem) => tempItem.uid === item.uid)
+            )
+          );
+        }
+      } catch (error) {
+        console.error("Error in file upload:", error);
+      } finally {
+        setUploading(false);
+      }
+    }
+    
+    // Return false to prevent the default upload behavior for ALL files
+    return false;
+  };
+
   const uploadButton = (
     <div className="w-full h-full flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <UploadOutlined className="text-4xl text-[#1AA683]" />
+        {uploading ? (
+          <LoadingOutlined className="text-4xl text-[#1AA683]" />
+        ) : (
+          <UploadOutlined className="text-4xl text-[#1AA683]" />
+        )}
         <p className="text-sm text-[#252525]">
-          <span className="text-[#1AA683]">Нажмите</span>, чтобы загрузить, или перетащите.
+          {uploading ? (
+            "Загрузка..."
+          ) : (
+            <>
+              <span className="text-[#1AA683]">Нажмите</span>, чтобы загрузить, или перетащите.
+            </>
+          )}
         </p>
         <p className="text-sm text-[#B5B7C0]">Минимум количество 5</p>
       </div>
@@ -139,9 +234,30 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
             danger
             onClick={handleDeleteAll}
             className="p-0 h-auto hover:bg-transparent hover:underline"
+            disabled={uploading}
           >
             Удалить все
           </Button>
+        </div>
+      )}
+
+      {/* Upload progress indicator */}
+      {uploadingFiles.length > 0 && (
+        <div className="mb-4 p-3 bg-gray-50 rounded">
+          <div className="flex flex-col gap-2">
+            <p className="text-sm font-medium mb-1">
+              Загрузка {uploadingFiles.length} файлов...
+            </p>
+            <Progress percent={uploadProgress} status="active" strokeColor="#1AA683" />
+            <div className="text-xs text-gray-500 mt-1">
+              {uploadingFiles.slice(0, 2).map((name, i) => (
+                <div key={i}>{name}</div>
+              ))}
+              {uploadingFiles.length > 2 && (
+                <div>+{uploadingFiles.length - 2} ещё</div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -181,8 +297,10 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
         customRequest={customRequest}
         onRemove={handleRemove}
         multiple
+        beforeUpload={beforeUpload}
         className="w-full"
         accept="image/*"
+        disabled={uploading}
       >
         {fileList.length >= maxCount ? null : uploadButton}
       </Upload>

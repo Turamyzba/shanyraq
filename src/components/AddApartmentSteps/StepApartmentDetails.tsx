@@ -3,55 +3,124 @@
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import styles from "./StepApartmentDetails.module.scss";
-import Images from "@/components/common/Images";
 import MySelect from "../ui/MySelect";
 import MyCalendar from "../ui/MyCalendar";
-import { Checkbox } from "@heroui/react";
-import { parseDate } from "@internationalized/date";
+import { CalendarDate, parseDate } from "@internationalized/date";
 import MyInput from "../ui/MyInput";
 import MyButton from "../ui/MyButton";
 import MyCheckBox from "../ui/MyCheckBox";
+import { AddressType, roommateOptions } from "@/types/common";
+import { formatDate } from "@/utils/helpers";
 
-interface AddressNode {
-  Id: number;
-  ParentId?: number;
-  AteTypeId?: number;
-  GeonimTypeId?: number;
-  NameRus: string;
-  NameKaz: string;
-  HasChild: boolean;
-  AteTypeNameKaz: string;
-  AteTypeNameRus: string;
-  GeonimTypeNameKaz?: string;
-  GeonimTypeNameRus?: string;
-  Children: AddressNode[];
+interface StepApartmentDetailsProps {
+  citiesData: AddressType[];
+  districtsData: AddressType[];
+  setDistrictsData: React.Dispatch<React.SetStateAction<AddressType[]>>;
+  microDistrictsData: AddressType[];
+  setMicroDistrictsData: React.Dispatch<React.SetStateAction<AddressType[]>>;
+  fetchCities: () => Promise<void>;
+  fetchDistricts: (cityId: number) => Promise<void>;
+  fetchMicroDistricts: (districtId: number) => Promise<void>;
+  isAddressLoading: boolean;
 }
 
-const roomOptions = ["1", "2", "3", "4", "5+"];
-
-const StepApartmentDetails: React.FC = () => {
+const StepApartmentDetails: React.FC<StepApartmentDetailsProps> = ({
+  citiesData,
+  districtsData,
+  setDistrictsData,
+  microDistrictsData,
+  setMicroDistrictsData,
+  fetchCities,
+  fetchDistricts,
+  fetchMicroDistricts,
+  isAddressLoading
+}) => {
   const { watch, setValue } = useFormContext();
 
-  // Watch form values from react-hook-form
   const address = watch("address") || "";
+  const regionValue = watch("region") || "";
+  const districtValue = watch("district") || "";
+  const microDistrictValue = watch("microDistrict") || "";
   const monthlyPayment = watch("monthlyPayment") || "";
   const rooms = watch("rooms") || "1";
   const deposit = watch("deposit") || false;
   const depositAmount = watch("depositAmount") || 0;
+  const moveInDateValue = watch("moveInDate");
 
-  // Local state for selected items
-  const [selectedRegion, setSelectedRegion] = useState<AddressNode | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<AddressNode | null>(null);
-  const [selectedMicroDistrict, setSelectedMicroDistrict] = useState<AddressNode | null>(null);
-  const regions: AddressNode[] = [];
+  console.log("Form values:", {
+    region: regionValue,
+    district: districtValue,
+    microDistrict: microDistrictValue
+  });
+  
+  const regionValueStr = regionValue ? regionValue.toString() : "";
+  const districtValueStr = districtValue ? districtValue.toString() : "";
+  const microDistrictValueStr = microDistrictValue ? microDistrictValue.toString() : "";
 
-  const [moveInDate, setMoveInDate] = useState(parseDate("2024-03-07"));
-  // Called when the calendar date is changed.
-  const handleCalendarChange = (date: any) => {
-    const newDate = date || parseDate("2024-03-07");
-    setMoveInDate(newDate);
-    setValue("moveInDate", newDate);
+  const [moveInDate, setMoveInDate] = useState<CalendarDate>(
+    moveInDateValue 
+      ? parseDate(moveInDateValue) 
+      : parseDate(formatDate(new Date()))
+  );
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      if (citiesData.length === 0) {
+        await fetchCities();
+      }
+      
+      if (regionValue && districtsData.length === 0) {
+        await fetchDistricts(Number(regionValue));
+      }
+      
+      if (districtValue && microDistrictsData.length === 0) {
+        await fetchMicroDistricts(Number(districtValue));
+      }
+    };
+    
+    loadInitialData();
+  }, []);
+
+  const handleRegionSelect = (value: string) => {
+    const selectedRegion = citiesData.find((reg) => reg.id.toString() === value);
+    
+    setDistrictsData([]);
+    setMicroDistrictsData([]);
+    
+    setValue("region", selectedRegion?.id || null);
+    setValue("district", null);
+    setValue("microDistrict", null);
+    
+    if (selectedRegion && selectedRegion.haschild) {
+      fetchDistricts(selectedRegion.id);
+    }
   };
+
+  const handleDistrictSelect = (value: string) => {
+    const selectedDistrict = districtsData.find((dist) => dist.id.toString() === value);
+    
+    setMicroDistrictsData([]);
+    
+    setValue("district", selectedDistrict?.id || null);
+    setValue("microDistrict", null);
+    
+    if (selectedDistrict && selectedDistrict.haschild) {
+      fetchMicroDistricts(selectedDistrict.id);
+    }
+  };
+
+  const handleMicroDistrictSelect = (value: string) => {
+    const selectedMicroDistrict = microDistrictsData.find((micro) => micro.id.toString() === value);
+    
+    setValue("microDistrict", selectedMicroDistrict?.id || null);
+  };
+
+  const handleCalendarChange = (date: CalendarDate | null) => {
+    const newDate = date || parseDate(formatDate(new Date()));
+    setMoveInDate(newDate);
+    setValue("moveInDate", formatDate(newDate.toDate("UTC")));
+  };
+  
   return (
     <div className={styles.container}>
       {/* Region Selection */}
@@ -59,63 +128,46 @@ const StepApartmentDetails: React.FC = () => {
         <label className={styles.label}>Регион</label>
         <MySelect
           placeholder="Выберите регион"
-          options={regions.map((reg) => ({
-            value: reg.HasChild ? reg.Id.toString() : `${reg.Id}$`,
-            label: reg.NameKaz || "",
+          options={citiesData.map((reg) => ({
+            value: reg.id.toString(),
+            label: reg.namerus,
           }))}
-          value={selectedRegion?.Id ? selectedRegion.Id.toString() : ""}
-          onChange={(optionValue) => {
-            const found = regions.find((reg) => reg.Id.toString() === optionValue);
-            setSelectedRegion(found || null);
-            // reset district & microdistrict
-            setSelectedDistrict(null);
-            setSelectedMicroDistrict(null);
-            // also update react-hook-form field if needed
-            setValue("region", found?.NameKaz || "");
-          }}
+          value={regionValueStr}
+          onChange={handleRegionSelect}
+          isLoading={isAddressLoading && !citiesData.length}
         />
       </div>
 
       {/* District Section */}
-      {selectedRegion && selectedRegion.HasChild && (
+      {districtsData.length > 0 && (
         <div className={styles.inputGroup}>
           <label className={styles.label}>Район</label>
           <MySelect
             placeholder="Выберите район"
-            options={selectedRegion.Children.map((dist) => ({
-              value: dist.HasChild ? dist.Id.toString() : `${dist.Id}$`,
-              label: dist.NameKaz || "",
+            options={districtsData.map((dist) => ({
+              value: dist.id.toString(),
+              label: dist.namerus,
             }))}
-            value={selectedDistrict?.Id ? selectedDistrict.Id.toString() : ""}
-            onChange={(optionValue) => {
-              const foundDist = selectedRegion.Children.find(
-                (d) => d.Id.toString() === optionValue
-              );
-              setSelectedDistrict(foundDist || null);
-              // reset microDistrict
-              setSelectedMicroDistrict(null);
-              setValue("district", foundDist?.NameKaz || "");
-            }}
+            value={districtValueStr}
+            onChange={handleDistrictSelect}
+            isLoading={isAddressLoading && !districtsData.length}
           />
         </div>
       )}
 
       {/* Microdistrict Section */}
-      {selectedDistrict && selectedDistrict.HasChild && (
+      {microDistrictsData.length > 0 && (
         <div className={styles.inputGroup}>
           <label className={styles.label}>Микрорайон</label>
           <MySelect
             placeholder="Выберите микрорайон"
-            options={selectedDistrict.Children.map((micro) => ({
-              value: micro.HasChild ? micro.Id.toString() : `${micro.Id}$`,
-              label: micro.NameKaz,
+            options={microDistrictsData.map((micro) => ({
+              value: micro.id.toString(),
+              label: micro.namerus,
             }))}
-            value={selectedMicroDistrict?.Id?.toString() || ""}
-            onChange={(option) => {
-              const foundMicro = selectedDistrict.Children.find((m) => m.Id.toString() === option);
-              setSelectedMicroDistrict(foundMicro || null);
-              setValue("microDistrict", foundMicro?.NameKaz || "");
-            }}
+            value={microDistrictValueStr}
+            onChange={handleMicroDistrictSelect}
+            isLoading={isAddressLoading && !microDistrictsData.length}
           />
         </div>
       )}
@@ -163,16 +215,16 @@ const StepApartmentDetails: React.FC = () => {
         <label className={styles.label}>Сколько комнат в квартире?</label>
         <ul className={styles.roomsList}>
           <div className={styles.roomsList}>
-            {roomOptions.map((option) => (
+            {roommateOptions.map((option) => (
               <MyButton
-                key={option}
+                key={option.id}
                 isIconOnly
                 className={`${styles.roomsItem} ${
-                  rooms === option ? styles.roomsItemSelected : ""
+                  rooms === option.id ? styles.roomsItemSelected : ""
                 }`}
-                onClick={() => setValue("rooms", option)}
+                onClick={() => setValue("rooms", option.id)}
               >
-                {option}
+                {option.name}
               </MyButton>
             ))}
           </div>

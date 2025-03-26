@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import styles from "./StepApartmentFullDetails.module.scss";
 import MyInput from "@/components/ui/MyInput";
-// import MyButton from "@/components/ui/MyButton";
+import MyPhoneInput from "@/components/ui/MyPhoneInput";
 import { Button as MyButton } from "@heroui/react";
 import { Checkbox } from "@heroui/react";
 import Images from "@/components/common/Images";
+import { Plus, X, User, Phone } from "lucide-react";
+import { propertyTypeOptions } from "@/types/common";
 
 interface Resident {
   name: string;
@@ -21,21 +23,22 @@ const StepApartmentFullDetails: React.FC = () => {
   const propertyType = watch("apartmentDetails.propertyType") || "";
   const floorsFrom = watch("apartmentDetails.floorsFrom") || 1;
   const floorsTo = watch("apartmentDetails.floorsTo") || 3;
-  const roomSize = watch("apartmentDetails.roomSize") || 0; // Changed to single value
+  const roomSize = watch("apartmentDetails.roomSize") || 0;
   const longTerm = watch("apartmentDetails.longTerm") || false;
-  const ownerPhones = watch("apartmentDetails.ownerPhones") || []; // Array of phone numbers
-  const residents: Resident[] = watch("apartmentDetails.residents") || []; // Array of residents
-  const peopleInApartment = watch("peopleInApartment") || "1"; // Number of people in apartment
+  const ownerName = watch("apartmentDetails.ownerName") || "";
+  const ownerPhones = watch("apartmentDetails.ownerPhones") || [];
+  const residents: Resident[] = watch("apartmentDetails.residents") || [];
+  const peopleInApartment = watch("peopleInApartment") || "1";
 
   // Local state for UI
   const [showAddOwnerPhone, setShowAddOwnerPhone] = useState(false);
-  const [newOwnerPhone, setNewOwnerPhone] = useState("");
+  const [newOwnerPhone, setNewOwnerPhone] = useState("+7 ");
   const [showAddResidentForm, setShowAddResidentForm] = useState(false);
   const [newResidentName, setNewResidentName] = useState("");
-  const [newResidentPhone, setNewResidentPhone] = useState("");
+  const [newResidentPhone, setNewResidentPhone] = useState("+7 ");
   const [showAddResidentPhone, setShowAddResidentPhone] = useState(false);
   const [selectedResidentIndex, setSelectedResidentIndex] = useState<number | null>(null);
-  const [newPhoneForResident, setNewPhoneForResident] = useState("");
+  const [newPhoneForResident, setNewPhoneForResident] = useState("+7 ");
 
   // Get max number of residents allowed
   const getMaxResidents = () => {
@@ -46,15 +49,16 @@ const StepApartmentFullDetails: React.FC = () => {
   // Form validation helpers
   const isPhoneValid = (phone: string) => {
     // Remove all non-digit characters and check if it has at least 10 digits
-    return phone.replace(/\D/g, "").length >= 10;
+    return phone.replace(/\D/g, "").length >= 11; // +7 plus 10 digits
   };
 
   // Handle adding a new owner phone
   const handleAddOwnerPhone = () => {
     if (newOwnerPhone && isPhoneValid(newOwnerPhone)) {
+      // Preserve the exact format of the phone as entered by the user
       const updatedPhones = [...ownerPhones, newOwnerPhone];
       setValue("apartmentDetails.ownerPhones", updatedPhones);
-      setNewOwnerPhone("");
+      setNewOwnerPhone("+7 ");
       setShowAddOwnerPhone(false);
     }
   };
@@ -68,6 +72,7 @@ const StepApartmentFullDetails: React.FC = () => {
   // Handle adding a new resident
   const handleAddResident = () => {
     if (newResidentName && newResidentPhone && isPhoneValid(newResidentPhone)) {
+      // Preserve the exact format of the phone as entered by the user
       const newResident: Resident = {
         name: newResidentName,
         phones: [newResidentPhone],
@@ -78,7 +83,7 @@ const StepApartmentFullDetails: React.FC = () => {
 
       // Reset form
       setNewResidentName("");
-      setNewResidentPhone("");
+      setNewResidentPhone("+7 ");
       setShowAddResidentForm(false);
     }
   };
@@ -86,12 +91,13 @@ const StepApartmentFullDetails: React.FC = () => {
   // Handle adding a phone to an existing resident
   const handleAddPhoneToResident = (residentIndex: number) => {
     if (newPhoneForResident && isPhoneValid(newPhoneForResident)) {
+      // Preserve the exact format of the phone as entered by the user
       const updatedResidents = [...residents];
       updatedResidents[residentIndex].phones.push(newPhoneForResident);
       setValue("apartmentDetails.residents", updatedResidents);
 
       // Reset
-      setNewPhoneForResident("");
+      setNewPhoneForResident("+7 ");
       setShowAddResidentPhone(false);
       setSelectedResidentIndex(null);
     }
@@ -112,55 +118,60 @@ const StepApartmentFullDetails: React.FC = () => {
     setValue("apartmentDetails.residents", updatedResidents);
   };
 
+  // Handle phone input change for owner
+  const handleOwnerPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Preserve the exact format returned by MyPhoneInput
+    setNewOwnerPhone(e.target.value);
+  };
+
+  // Handle phone input change for resident
+  const handleResidentPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Preserve the exact format returned by MyPhoneInput
+    setNewResidentPhone(e.target.value);
+  };
+
+  // Handle phone input change for adding to existing resident
+  const handlePhoneForResidentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Preserve the exact format returned by MyPhoneInput
+    setNewPhoneForResident(e.target.value);
+  };
+
   return (
     <div className={styles.container}>
       {/* Property Type Selection */}
       <div className={styles.inputGroup}>
         <label className={styles.label}>Тип жилья:</label>
         <div className={styles.propertyTypeContainer}>
-          <div className={styles.radioRow}>
-            <button onClick={() => setValue("apartmentDetails.propertyType", "Квартира")}>
-              {propertyType === "Квартира" ? <Images.radioSelected /> : <Images.radioNotSelected />}
-            </button>
-            <input
-              type="radio"
-              id="apartment"
-              name="propertyType"
-              value="Квартира"
-              checked={propertyType === "Квартира"}
-              onChange={() => setValue("apartmentDetails.propertyType", "Квартира")}
-              className={styles.radioInput}
-            />
-            <label
-              htmlFor="apartment"
-              className={`${styles.radioLabel} ${
-                propertyType === "Квартира" ? styles.selected : ""
-              }`}
-            >
-              Квартира
-            </label>
-          </div>
-
-          <div className={styles.radioRow}>
-            <button onClick={() => setValue("apartmentDetails.propertyType", "Дом")}>
-              {propertyType === "Дом" ? <Images.radioSelected /> : <Images.radioNotSelected />}
-            </button>
-            <input
-              type="radio"
-              id="house"
-              name="propertyType"
-              value="Дом"
-              checked={propertyType === "Дом"}
-              onChange={() => setValue("apartmentDetails.propertyType", "Дом")}
-              className={styles.radioInput}
-            />
-            <label
-              htmlFor="house"
-              className={`${styles.radioLabel} ${propertyType === "Дом" ? styles.selected : ""}`}
-            >
-              Дом
-            </label>
-          </div>
+          {propertyTypeOptions.map((option) => (
+            <div key={option.id} className={styles.radioRow}>
+              <button 
+                onClick={() => {
+                  setValue("apartmentDetails.propertyType", option.code);
+                }}
+              >
+                {propertyType === option.code ? <Images.radioSelected /> : <Images.radioNotSelected />}
+              </button>
+              <input
+                type="radio"
+                id={option.code}
+                name="propertyType"
+                value={option.code}
+                checked={propertyType === option.code}
+                onChange={() => {
+                  setValue("apartmentDetails.propertyType", option.code);
+                }}
+                className={styles.radioInput}
+              />
+              <label
+                htmlFor={option.code}
+                className={`${styles.radioLabel} ${
+                  propertyType === option.code ? styles.selected : ""
+                }`}
+              >
+                {option.namerus}
+              </label>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -234,49 +245,61 @@ const StepApartmentFullDetails: React.FC = () => {
 
       <hr className={styles.divider} />
 
-      {/* Owner Phone Numbers Section */}
       <div className={styles.contactSection}>
-        <h2 className={styles.contactTitle}>Контактные телефоны</h2>
+        <h2 className={styles.contactTitle}>Контактная информация владельца</h2>
+        
+        <div className={styles.inputGroup}>
+          <label className={styles.secondaryLabel}>Имя владельца</label>
+          <MyInput
+            type="text"
+            placeholder="Введите имя владельца"
+            value={ownerName}
+            startContent={<User className="h-4 w-4 text-default-400" />}
+            onChange={(e) => setValue("apartmentDetails.ownerName", e.target.value)}
+          />
+        </div>
 
-        {/* Display existing phone numbers */}
+        <h3 className={styles.secondaryLabel}>Контактные телефоны</h3>
+
         <div className={styles.phoneNumberList}>
           {ownerPhones.map((phone: any, index: any) => (
             <div key={index} className={styles.phoneItem}>
               <div className={styles.phoneNumber}>
-                <Checkbox
-                  isSelected={true}
-                  onValueChange={() => {}}
-                  radius="sm"
-                  color="primary"
-                  className={styles.phoneCheckbox}
-                />
+                <Phone className="h-4 w-4 text-default-400 mr-2" />
                 <span>{phone}</span>
               </div>
               <button
                 onClick={() => handleRemoveOwnerPhone(index)}
                 className={styles.removePhoneButton}
               >
-                <Images.closeIcon />
+                <X size={16} />
               </button>
             </div>
           ))}
         </div>
 
-        {/* Add new phone section */}
         {showAddOwnerPhone ? (
           <div className={styles.addPhoneForm}>
-            <MyInput
+            <MyPhoneInput
               value={newOwnerPhone}
-              onChange={(e: any) => setNewOwnerPhone(e.target.value)}
+              onChange={handleOwnerPhoneChange}
+              placeholder="+7 ___ ___ ____"
+              variant="bordered"
+              color="primary"
+              labelPlacement="outside"
             />
             <div className={styles.addPhoneButtons}>
-              <MyButton onPress={handleAddOwnerPhone} className={styles.addButton}>
+              <MyButton 
+                onPress={handleAddOwnerPhone} 
+                className={styles.addButton}
+                isDisabled={!isPhoneValid(newOwnerPhone)}
+              >
                 Добавить
               </MyButton>
               <MyButton
                 onPress={() => {
                   setShowAddOwnerPhone(false);
-                  setNewOwnerPhone("");
+                  setNewOwnerPhone("+7 ");
                 }}
                 className={styles.cancelButton}
                 variant="bordered"
@@ -287,8 +310,8 @@ const StepApartmentFullDetails: React.FC = () => {
           </div>
         ) : (
           <button onClick={() => setShowAddOwnerPhone(true)} className={styles.addPhoneButton}>
-            <Images.Plus size={16} color="#1AA683" />
-            <span className={styles.addPhoneText}>Добавить еще телефоны</span>
+            <Plus size={16} color="#1AA683" />
+            <span className={styles.addPhoneText}>Добавить телефон</span>
           </button>
         )}
       </div>
@@ -304,17 +327,17 @@ const StepApartmentFullDetails: React.FC = () => {
               onClick={() => handleRemoveResident(residentIndex)}
               className={styles.removeButton}
             >
-              <Images.closeIcon />
+              <X size={16} />
             </button>
           </div>
 
-          {/* Resident Name */}
           <div className={styles.inputGroup}>
             <label className={styles.secondaryLabel}>Имя в личных сообщениях</label>
             <MyInput
               type="text"
               placeholder="Введите имя"
               value={resident.name}
+              startContent={<User className="h-4 w-4 text-default-400" />}
               onChange={(e) => {
                 const updatedResidents = [...residents];
                 updatedResidents[residentIndex].name = e.target.value;
@@ -323,7 +346,6 @@ const StepApartmentFullDetails: React.FC = () => {
             />
           </div>
 
-          {/* Resident Phones */}
           <div className={styles.contactSection}>
             <h4 className={styles.secondaryLabel}>Контактные телефоны</h4>
 
@@ -331,13 +353,7 @@ const StepApartmentFullDetails: React.FC = () => {
               {resident.phones.map((phone, phoneIndex) => (
                 <div key={phoneIndex} className={styles.phoneItem}>
                   <div className={styles.phoneNumber}>
-                    <Checkbox
-                      isSelected={true}
-                      onValueChange={() => {}}
-                      radius="sm"
-                      color="primary"
-                      className={styles.phoneCheckbox}
-                    />
+                    <Phone className="h-4 w-4 text-default-400 mr-2" />
                     <span>{phone}</span>
                   </div>
                   {phoneIndex > 0 && (
@@ -345,31 +361,35 @@ const StepApartmentFullDetails: React.FC = () => {
                       onClick={() => handleRemoveResidentPhone(residentIndex, phoneIndex)}
                       className={styles.removePhoneButton}
                     >
-                      <Images.closeIcon />
+                      <X size={16} />
                     </button>
                   )}
                 </div>
               ))}
             </div>
 
-            {/* Add phone for existing resident */}
             {selectedResidentIndex === residentIndex && showAddResidentPhone ? (
               <div className={styles.addPhoneForm}>
-                <MyInput
+                <MyPhoneInput
                   value={newPhoneForResident}
-                  onChange={(e: any) => setNewPhoneForResident(e.target.value)}
+                  onChange={handlePhoneForResidentChange}
+                  placeholder="+7 ___ ___ ____"
+                  variant="bordered"
+                  color="primary"
+                  labelPlacement="outside"
                 />
                 <div className={styles.addPhoneButtons}>
                   <MyButton
                     onPress={() => handleAddPhoneToResident(residentIndex)}
                     className={styles.addButton}
+                    isDisabled={!isPhoneValid(newPhoneForResident)}
                   >
                     Добавить
                   </MyButton>
                   <MyButton
                     onPress={() => {
                       setShowAddResidentPhone(false);
-                      setNewPhoneForResident("");
+                      setNewPhoneForResident("+7 ");
                       setSelectedResidentIndex(null);
                     }}
                     className={styles.cancelButton}
@@ -387,7 +407,7 @@ const StepApartmentFullDetails: React.FC = () => {
                 }}
                 className={styles.addPhoneButton}
               >
-                <Images.Plus size={16} color="#1AA683" />
+                <Plus size={16} color="#1AA683" />
                 <span className={styles.addPhoneText}>Добавить еще телефоны</span>
               </button>
             )}
@@ -397,7 +417,6 @@ const StepApartmentFullDetails: React.FC = () => {
         </div>
       ))}
 
-      {/* Add New Resident Form */}
       {showAddResidentForm && (
         <div className={styles.residentBlock}>
           <h3 className={styles.contactTitle}>Добавление контактов жителей</h3>
@@ -409,6 +428,7 @@ const StepApartmentFullDetails: React.FC = () => {
               type="text"
               placeholder="Введите имя"
               value={newResidentName}
+              startContent={<User className="h-4 w-4 text-default-400" />}
               onChange={(e) => setNewResidentName(e.target.value)}
             />
           </div>
@@ -418,21 +438,29 @@ const StepApartmentFullDetails: React.FC = () => {
             <h4 className={styles.secondaryLabel}>Контактные телефоны</h4>
 
             <div className={styles.addPhoneForm}>
-              <MyInput
+              <MyPhoneInput
                 value={newResidentPhone}
-                onChange={(e: any) => setNewResidentPhone(e.target.value)}
+                onChange={handleResidentPhoneChange}
+                placeholder="+7 ___ ___ ____"
+                variant="bordered"
+                color="primary"
+                labelPlacement="outside"
               />
             </div>
 
             <div className={styles.addPhoneButtons}>
-              <MyButton onPress={handleAddResident} className={styles.addButton}>
+              <MyButton 
+                onPress={handleAddResident} 
+                className={styles.addButton}
+                isDisabled={!newResidentName || !isPhoneValid(newResidentPhone)}
+              >
                 Добавить
               </MyButton>
               <MyButton
                 onClick={() => {
                   setShowAddResidentForm(false);
                   setNewResidentName("");
-                  setNewResidentPhone("");
+                  setNewResidentPhone("+7 ");
                 }}
                 className={styles.cancelButton}
                 variant="bordered"
@@ -446,16 +474,21 @@ const StepApartmentFullDetails: React.FC = () => {
         </div>
       )}
 
-      {/* Add more residents button - only show if we haven't reached the limit */}
       {!showAddResidentForm && residents.length < getMaxResidents() && (
         <MyButton
           onClick={() => setShowAddResidentForm(true)}
           className={styles.addContactButton}
           variant="bordered"
         >
-          <Images.Plus size={16} />
+          <Plus size={16} />
           <span>Добавить контакты жителей</span>
         </MyButton>
+      )}
+      
+      {residents.length >= getMaxResidents() && !showAddResidentForm && (
+        <div className={styles.maxResidentsMessage}>
+          <p>Достигнуто максимальное количество жителей ({getMaxResidents()})</p>
+        </div>
       )}
     </div>
   );

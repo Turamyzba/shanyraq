@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Select as NextSelect, SelectItem } from "@heroui/react";
 
 interface Option {
@@ -15,6 +15,7 @@ interface MyHeroSelectProps {
   options: Option[];
   className?: string;
   disabled?: boolean;
+  isLoading?: boolean;
 }
 
 export default function MyHeroSelect({
@@ -25,11 +26,24 @@ export default function MyHeroSelect({
   options,
   className,
   disabled,
+  isLoading,
 }: MyHeroSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const selectedKeys = useMemo(() => {
+    return value ? new Set([value]) : new Set([]);
+  }, [value]);
+
   return (
     <NextSelect
+    selectedKeys={selectedKeys}
+    onSelectionChange={(keys) => {
+      // Convert the Set back to a single string value
+      const keysArray = Array.from(keys);
+      const newValue = keysArray.length > 0 ? keysArray[0].toString() : "";
+      console.log("Selection changed to:", newValue);
+      onChange(newValue);
+    }}
       value={value}
       onChange={(event) => onChange(event.target.value)}
       label={label}
@@ -39,6 +53,7 @@ export default function MyHeroSelect({
       onOpenChange={setIsOpen}
       className={className}
       disabled={disabled}
+      isLoading={isLoading}
       classNames={{
         trigger: `
           w-full

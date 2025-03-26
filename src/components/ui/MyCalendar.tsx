@@ -58,7 +58,7 @@ export default function MyCalendar({
         isReadOnly={isReadOnly}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
-        inert={true}
+        inert={false}
         showMonthAndYearPickers
         onChange={(date) => onChange(date ?? null)}
         classNames={{

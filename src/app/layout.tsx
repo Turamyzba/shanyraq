@@ -15,6 +15,7 @@ import LoadingScreen from "@/components/common/LoadingScreen";
 import "@ant-design/v5-patch-for-react-19";
 import { useDisclosure } from "@heroui/react";
 import AddApartmentModal from "@/components/layouts/AddApartmentModal";
+import { ToastPortal } from "@/components/layouts/ToastPortal";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -33,8 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {!isMobile && <Footer />}
             {/* {isMobile && <MobileNavigation />} */}
           </div>
-          {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />}
+          {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />} 
         </Providers>
+        <ToastPortal />
       </body>
     </html>
   );
