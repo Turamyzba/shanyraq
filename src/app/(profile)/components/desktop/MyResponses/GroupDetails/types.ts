@@ -1,6 +1,6 @@
 export type MemberRole = "member" | "admin" | "owner" | "invited";
 export type ApplicationStatus = "pending" | "accepted" | "rejected";
-export type GroupStatus = "pending" | "accepted" | "rejected" | "draft";
+export type GroupStatus = "pending" | "accepted" | "rejected";
 
 export interface Member {
   id: number;
@@ -24,7 +24,7 @@ export interface Group {
   isUserAdmin: boolean;
   isUserSuperAdmin: boolean;
   isUserOwner: boolean;
-  isDraft?: boolean;
+  isJointApplication?: boolean;
 }
 
 export interface ApartmentDetails {

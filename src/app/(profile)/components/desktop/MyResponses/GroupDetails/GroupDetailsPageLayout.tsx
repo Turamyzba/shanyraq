@@ -4,7 +4,8 @@ import { Button } from "antd";
 import { ApartmentDetails } from "./types";
 import ApartmentDetailsComponent from "./ApartmentDetails";
 import styles from "./GroupDetails.module.scss";
-import './GroupDetails.scss'
+import "./GroupDetails.scss";
+
 interface GroupDetailsPageLayoutProps {
   children: ReactNode;
   router: AppRouterInstance;
@@ -32,7 +33,6 @@ const GroupDetailsPageLayout: React.FC<GroupDetailsPageLayoutProps> = ({
         <h1 className={styles.title}>Группы объявления</h1>
       </div>
 
-      {/* Информация о квартире отображается над табами */}
       <ApartmentDetailsComponent details={apartmentDetails} />
 
       <div className={styles.tabsContainer}>
@@ -60,12 +60,6 @@ const GroupDetailsPageLayout: React.FC<GroupDetailsPageLayoutProps> = ({
             onClick={() => onTabChange("rejected")}
           >
             Отклоненные
-          </button>
-          <button
-            className={`${styles.tab} ${activeTab === "draft" ? styles.activeTab : ""}`}
-            onClick={() => onTabChange("draft")}
-          >
-            Черновик
           </button>
         </div>
       </div>

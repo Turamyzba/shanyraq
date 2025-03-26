@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Collapse } from "antd";
+import { Button, Collapse, Tooltip } from "antd";
 import { Group } from "./types";
 import MembersList from "./MembersList";
 import ApplicantsList from "./ApplicantsList";
@@ -8,6 +8,7 @@ import styles from "./GroupDetails.module.scss";
 interface GroupItemProps {
   group: Group;
   onLeaveGroup?: (groupId: number) => void;
+  onCancelApplication?: (groupId: number) => void;
   onRemoveMember?: (groupId: number, memberId: number) => void;
   onPromoteToAdmin?: (groupId: number, memberId: number) => void;
   onAcceptApplicant?: (groupId: number, applicantId: number) => void;
@@ -17,6 +18,7 @@ interface GroupItemProps {
 const GroupItem: React.FC<GroupItemProps> = ({
   group,
   onLeaveGroup,
+  onCancelApplication,
   onRemoveMember,
   onPromoteToAdmin,
   onAcceptApplicant,
@@ -26,22 +28,34 @@ const GroupItem: React.FC<GroupItemProps> = ({
   const displayedAvatars = group.members.slice(0, avatarLimit);
   const hasMoreAvatars = group.members.length > avatarLimit;
   const isPending = group.status === "pending";
-  const isDraft = group.status === "draft";
+  const isRejected = group.status === "rejected";
 
-  // Только админы и владельцы могут удалять участников
+  // Only admins and creators can remove members
   const canRemoveMembers = group.isUserAdmin || group.isUserOwner;
 
-  // Только владельцы могут повышать до админа
+  // Only creators can promote to admin
   const canPromoteToAdmin = group.isUserOwner;
 
-  // Только админы и владельцы могут управлять заявками
+  // Only admins and creators can manage applicants
   const canManageApplicants = group.isUserAdmin || group.isUserOwner;
 
-  // Пользователи могут покинуть группы, если они участники, но не владельцы
-  const canLeaveGroup = group.isUserMember && !group.isUserOwner;
+  // Users can leave groups if they are members but not the creator
+  const canLeaveGroup = group.isUserMember && !group.isUserOwner && !isPending;
+
+  // Users can cancel their application if the status is pending
+  const canCancelApplication = group.isUserMember && isPending;
+
+  const getGroupBorderClass = () => {
+    if (group.status === "accepted") return styles.acceptedGroupBorder;
+    if (group.status === "pending") return styles.pendingGroupBorder;
+    if (group.status === "rejected") return styles.rejectedGroupBorder;
+    return "";
+  };
+
+  const isJointApplication = group.isJointApplication && isPending;
 
   return (
-    <div className={styles.groupCard}>
+    <div className={`${styles.groupCard} ${getGroupBorderClass()}`}>
       <div className={styles.groupHeader}>
         <div className={styles.groupTitle}>
           <h3>{group.name}</h3>
@@ -73,32 +87,39 @@ const GroupItem: React.FC<GroupItemProps> = ({
               }`}
             >
               {group.isUserOwner
-                ? "Вы хозяин группы"
+                ? "Вы создатель объявления"
                 : group.isUserAdmin
                   ? "Вы администратор"
                   : "Вы участник группы"}
             </div>
           )}
-          <div className={`${styles.groupStatusBadge} ${styles[group.status]}`}>
-            {group.status === "pending" && "В ожидании"}
-            {group.status === "accepted" && "Принята"}
-            {group.status === "rejected" && "Отклонена"}
-            {group.status === "draft" && "Черновик"}
-          </div>
+          {isJointApplication ? (
+            <Tooltip title="Заявка ещё не отправлена. Чтобы отправить заявку, ваши друзья должны заполнить анкету">
+              <div className={`${styles.groupStatusBadge} ${styles.jointApplicationBadge}`}>
+                Совместная заявка
+              </div>
+            </Tooltip>
+          ) : (
+            <div className={`${styles.groupStatusBadge} ${styles[group.status]}`}>
+              {group.status === "pending" && "В ожидании"}
+              {group.status === "accepted" && "Принята"}
+              {group.status === "rejected" && "Отклонена"}
+            </div>
+          )}
         </div>
       </div>
 
       <MembersList
         members={group.members}
         isPending={isPending}
-        isDraft={isDraft}
+        isRejected={isRejected}
         canRemoveMembers={canRemoveMembers}
         canPromoteToAdmin={canPromoteToAdmin}
         onRemoveMember={(memberId) => onRemoveMember && onRemoveMember(group.id, memberId)}
         onPromoteToAdmin={(memberId) => onPromoteToAdmin && onPromoteToAdmin(group.id, memberId)}
       />
 
-      {group.applicants.length > 0 && !isDraft && (
+      {group.applicants && group.applicants.length > 0 && !isJointApplication && (
         <ApplicantsList
           applicants={group.applicants}
           isPending={isPending}
@@ -112,16 +133,28 @@ const GroupItem: React.FC<GroupItemProps> = ({
         />
       )}
 
-      {isDraft && (
-        <div className={styles.draftActions}>
-          <Button type="primary" className={styles.completeDraftButton}>
-            Завершить черновик
+      {isJointApplication && (
+        <div className={styles.jointApplicationActions}>
+          <Button type="primary" className={styles.completeApplicationButton}>
+            Завершить заявку
           </Button>
-          <Button className={styles.editDraftButton}>Редактировать</Button>
+          <Button className={styles.editApplicationButton}>Редактировать</Button>
         </div>
       )}
 
-      {canLeaveGroup && !isDraft && (
+      {canCancelApplication && (
+        <div className={styles.leaveGroupSection}>
+          <Button
+            onClick={() => onCancelApplication && onCancelApplication(group.id)}
+            className={styles.cancelButton}
+            danger
+          >
+            Отменить
+          </Button>
+        </div>
+      )}
+
+      {canLeaveGroup && (
         <div className={styles.leaveGroupSection}>
           <Button
             onClick={() => onLeaveGroup && onLeaveGroup(group.id)}

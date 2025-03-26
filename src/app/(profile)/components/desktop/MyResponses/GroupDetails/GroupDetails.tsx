@@ -13,12 +13,27 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
   const [groupsData, setGroupsData] = useState<Group[]>([]);
   const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
 
-  // Обновляем локальное состояние при изменении props
   useEffect(() => {
     if (groups && Array.isArray(groups)) {
       setGroupsData(groups);
     }
   }, [groups]);
+
+  const handleCancelApplication = (groupId: number) => {
+    if (!groupId) return;
+
+    setModalConfig({
+      isOpen: true,
+      title: "Отменить заявку",
+      message: "Вы уверены, что хотите отменить заявку? Это действие невозможно отменить.",
+      confirmText: "Отменить",
+      cancelText: "Назад",
+      confirmAction: () => {
+        setGroupsData((prevGroups) => prevGroups.filter((group) => group.id !== groupId));
+        setModalConfig(null);
+      },
+    });
+  };
 
   const handleLeaveGroup = (groupId: number) => {
     if (!groupId) return;
@@ -158,6 +173,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
       <GroupList
         groups={groupsData}
         onLeaveGroup={handleLeaveGroup}
+        onCancelApplication={handleCancelApplication}
         onRemoveMember={handleRemoveMember}
         onPromoteToAdmin={handlePromoteToAdmin}
         onAcceptApplicant={handleAcceptApplicant}

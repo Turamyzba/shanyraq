@@ -5,7 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import dynamic from "next/dynamic";
 import GroupDetailsPageLayout from "../../components/desktop/MyResponses/GroupDetails/GroupDetailsPageLayout";
 
-// Используем динамический импорт для десктопной и мобильной версий
+// Dynamic imports for desktop and mobile versions
 const DesktopGroupDetails = dynamic(
   () => import("../../components/desktop/MyResponses/GroupDetails/GroupDetails"),
   { ssr: false }
@@ -16,7 +16,7 @@ const MobileGroupDetails = dynamic(
   { ssr: false }
 );
 
-// Мок-данные (обычно импортируются из отдельного файла)
+// Mock apartment details
 const mockApartmentDetails = {
   id: 1,
   title: "Просторная квартира в центре",
@@ -32,6 +32,7 @@ const mockApartmentDetails = {
   status: "accepted",
 };
 
+// Mock groups data
 export const mockGroupsData = {
   accepted: [
     {
@@ -138,7 +139,7 @@ export const mockGroupsData = {
       isUserAdmin: false,
       isUserSuperAdmin: true,
       isUserOwner: true,
-    }
+    },
   ],
   pending: [
     {
@@ -220,13 +221,47 @@ export const mockGroupsData = {
           phone: "8701 999 88 77",
           date: "20/11/2024",
           avatar: "/avatars/user13.jpg",
-        }
+        },
       ],
       isUserMember: true,
       isUserAdmin: false,
       isUserSuperAdmin: false,
       isUserOwner: true,
-    }
+    },
+    {
+      id: 6,
+      name: "Совместная заявка",
+      status: "pending",
+      members: [
+        {
+          id: 16,
+          name: "Азат",
+          email: "azat@gmail.com",
+          age: 24,
+          phone: "8700 111 22 33",
+          date: "20/11/2024",
+          avatar: "/avatars/user16.jpg",
+          role: "owner",
+          isCurrentUser: true,
+        },
+        {
+          id: 17,
+          name: "Карина",
+          email: "karina@mail.ru",
+          age: 22,
+          phone: "8777 123 45 67",
+          date: "20/11/2024",
+          avatar: "/avatars/user17.jpg",
+          role: "member",
+        },
+      ],
+      applicants: [],
+      isUserMember: true,
+      isUserAdmin: false,
+      isUserSuperAdmin: false,
+      isUserOwner: true,
+      isJointApplication: true,
+    },
   ],
   rejected: [
     {
@@ -261,88 +296,8 @@ export const mockGroupsData = {
       isUserAdmin: false,
       isUserSuperAdmin: false,
       isUserOwner: false,
-    }
-  ],
-  draft: [
-    {
-      id: 6,
-      name: "Черновик группы",
-      status: "draft",
-      members: [
-        {
-          id: 16,
-          name: "Азат",
-          email: "azat@gmail.com",
-          age: 24,
-          phone: "8700 111 22 33",
-          date: "20/11/2024",
-          avatar: "/avatars/user16.jpg",
-          role: "owner",
-          isCurrentUser: true,
-        },
-        {
-          id: 17,
-          name: "Карина",
-          email: "karina@mail.ru",
-          age: 22,
-          phone: "8777 123 45 67",
-          date: "20/11/2024",
-          avatar: "/avatars/user17.jpg",
-          role: "invited",
-        },
-      ],
-      applicants: [],
-      isUserMember: true,
-      isUserAdmin: false,
-      isUserSuperAdmin: false,
-      isUserOwner: true,
-      isDraft: true,
     },
-    {
-      id: 7,
-      name: "Новая группа друзей",
-      status: "draft",
-      members: [
-        {
-          id: 18,
-          name: "Самат",
-          email: "samat@gmail.com",
-          age: 27,
-          phone: "8700 987 65 43",
-          date: "19/11/2024", 
-          avatar: "/avatars/user18.jpg",
-          role: "owner",
-          isCurrentUser: true,
-        },
-        {
-          id: 19,
-          name: "Максат",
-          email: "maksat@gmail.com",
-          age: 25,
-          phone: "8707 987 65 43",
-          date: "19/11/2024",
-          avatar: "/avatars/user19.jpg",
-          role: "member",
-        },
-        {
-          id: 20,
-          name: "Дамир",
-          email: "damir@gmail.com",
-          age: 26,
-          phone: "8747 123 45 67",
-          date: "19/11/2024",
-          avatar: "/avatars/user20.jpg",
-          role: "invited",
-        },
-      ],
-      applicants: [],
-      isUserMember: true,
-      isUserAdmin: false,
-      isUserSuperAdmin: false,
-      isUserOwner: true,
-      isDraft: true,
-    }
-  ]
+  ],
 };
 
 export default function ResponseGroupsPage() {
@@ -359,27 +314,15 @@ export default function ResponseGroupsPage() {
   const getGroupsByTab = () => {
     switch (activeTab) {
       case "all":
-        return [
-          ...mockGroupsData.accepted,
-          ...mockGroupsData.pending,
-          ...mockGroupsData.rejected,
-          ...mockGroupsData.draft
-        ];
+        return [...mockGroupsData.accepted, ...mockGroupsData.pending, ...mockGroupsData.rejected];
       case "accepted":
         return mockGroupsData.accepted;
       case "pending":
         return mockGroupsData.pending;
       case "rejected":
         return mockGroupsData.rejected;
-      case "draft":
-        return mockGroupsData.draft;
       default:
-        return [
-          ...mockGroupsData.accepted,
-          ...mockGroupsData.pending,
-          ...mockGroupsData.rejected,
-          ...mockGroupsData.draft
-        ];
+        return [...mockGroupsData.accepted, ...mockGroupsData.pending, ...mockGroupsData.rejected];
     }
   };
 
@@ -397,15 +340,9 @@ export default function ResponseGroupsPage() {
       apartmentDetails={mockApartmentDetails}
     >
       {isMobile ? (
-        <MobileGroupDetails 
-          apartmentDetails={mockApartmentDetails} 
-          groups={filteredGroups} 
-        />
+        <MobileGroupDetails apartmentDetails={mockApartmentDetails} groups={filteredGroups} />
       ) : (
-        <DesktopGroupDetails 
-          apartmentDetails={mockApartmentDetails} 
-          groups={filteredGroups} 
-        />
+        <DesktopGroupDetails apartmentDetails={mockApartmentDetails} groups={filteredGroups} />
       )}
     </GroupDetailsPageLayout>
   );

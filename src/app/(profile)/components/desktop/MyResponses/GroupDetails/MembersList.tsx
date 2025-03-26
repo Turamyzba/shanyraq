@@ -7,7 +7,7 @@ import styles from "./GroupDetails.module.scss";
 interface MembersListProps {
   members: Member[];
   isPending: boolean;
-  isDraft?: boolean;
+  isRejected: boolean;
   canRemoveMembers: boolean;
   canPromoteToAdmin: boolean;
   onRemoveMember?: (memberId: number) => void;
@@ -19,7 +19,7 @@ const { Panel } = Collapse;
 const MembersList: React.FC<MembersListProps> = ({
   members,
   isPending,
-  isDraft = false,
+  isRejected,
   canRemoveMembers,
   canPromoteToAdmin,
   onRemoveMember,
@@ -27,9 +27,8 @@ const MembersList: React.FC<MembersListProps> = ({
 }) => {
   if (!members.length) return null;
 
-  // Если это черновик, показываем приглашенных участников отдельно
-  const regularMembers = isDraft ? members.filter((member) => member.role !== "invited") : members;
-  const invitedMembers = isDraft ? members.filter((member) => member.role === "invited") : [];
+  // Limited access for pending or rejected groups
+  const limitedAccess = isPending || isRejected;
 
   const columns = [
     {
@@ -48,9 +47,13 @@ const MembersList: React.FC<MembersListProps> = ({
               {member.name}
               {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
               {member.role === "admin" && <span className={styles.adminBadge}>Админ группы</span>}
-              {member.role === "owner" && <span className={styles.ownerBadge}>Хозяин жилья</span>}
+              {member.role === "owner" && (
+                <span className={styles.ownerBadge}>Создатель объявления</span>
+              )}
             </div>
-            <div className={styles.userEmail}>{member.email}</div>
+            <div className={styles.userEmail}>
+              {limitedAccess ? "******@***.***" : member.email}
+            </div>
           </div>
         </div>
       ),
@@ -66,6 +69,7 @@ const MembersList: React.FC<MembersListProps> = ({
       dataIndex: "phone",
       key: "phone",
       width: 140,
+      render: (phone: string, member: Member) => (limitedAccess ? "*** *** ** **" : phone),
     },
     {
       title: "Дата",
@@ -80,7 +84,9 @@ const MembersList: React.FC<MembersListProps> = ({
       render: (member: Member) => (
         <div className={styles.actionButtons}>
           <Button className={styles.actionButton}>Посмотреть анкету</Button>
-          <Button className={styles.actionButton}>Сопроводительное письмо</Button>
+          {!limitedAccess && (
+            <Button className={styles.actionButton}>Сопроводительное письмо</Button>
+          )}
         </div>
       ),
     },
@@ -89,25 +95,26 @@ const MembersList: React.FC<MembersListProps> = ({
       key: "manage",
       fixed: "right" as const,
       width: 100,
-      render: (member: Member) => (
-        <div className={styles.memberActions}>
-          {canPromoteToAdmin && member.role === "member" && !member.isCurrentUser && (
-            <Button
-              className={styles.promoteButton}
-              onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
-              icon={<AdminIcon />}
-            />
-          )}
-          {canRemoveMembers && member.role !== "owner" && !member.isCurrentUser && (
-            <Button
-              className={styles.removeButton}
-              onClick={() => onRemoveMember && onRemoveMember(member.id)}
-              danger
-              icon={<TrashIcon />}
-            />
-          )}
-        </div>
-      ),
+      render: (member: Member) =>
+        !limitedAccess && (
+          <div className={styles.memberActions}>
+            {canPromoteToAdmin && member.role === "member" && !member.isCurrentUser && (
+              <Button
+                className={styles.promoteButton}
+                onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
+                icon={<AdminIcon />}
+              />
+            )}
+            {canRemoveMembers && member.role !== "owner" && !member.isCurrentUser && (
+              <Button
+                className={styles.removeButton}
+                onClick={() => onRemoveMember && onRemoveMember(member.id)}
+                danger
+                icon={<TrashIcon />}
+              />
+            )}
+          </div>
+        ),
     },
   ];
 
@@ -120,50 +127,19 @@ const MembersList: React.FC<MembersListProps> = ({
         className={styles.newApplicationsCollapse}
       >
         <Panel
-          header={
-            <h2 className={styles.panelHeader}>
-              {isDraft ? "Создатели черновика" : "Участники группы"} ({regularMembers.length})
-            </h2>
-          }
+          header={<h2 className={styles.panelHeader}>Участники группы ({members.length})</h2>}
           key="members"
         >
           <Table
             className={styles.table}
             columns={columns}
-            dataSource={regularMembers}
+            dataSource={members}
             pagination={false}
             rowKey="id"
             scroll={{ x: "max-content", y: 400 }}
           />
         </Panel>
       </Collapse>
-
-      {isDraft && invitedMembers.length > 0 && (
-        <Collapse
-          defaultActiveKey={["invited"]}
-          ghost
-          expandIconPosition="end"
-          className={styles.newApplicationsCollapse}
-        >
-          <Panel
-            header={
-              <h2 className={styles.panelHeader}>
-                Приглашенные участники ({invitedMembers.length})
-              </h2>
-            }
-            key="invited"
-          >
-            <Table
-              className={styles.table}
-              columns={columns}
-              dataSource={invitedMembers}
-              pagination={false}
-              rowKey="id"
-              scroll={{ x: "max-content", y: 400 }}
-            />
-          </Panel>
-        </Collapse>
-      )}
     </>
   );
 };

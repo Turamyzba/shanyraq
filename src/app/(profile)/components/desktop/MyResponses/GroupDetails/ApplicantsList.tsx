@@ -104,7 +104,9 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
     >
       <Panel
         header={
-          <h4 className={styles.applicationsSectionTitle}>Новые заявки <span>{applicants.length}</span></h4>
+          <h4 className={styles.applicationsSectionTitle}>
+            Новые заявки <span>{applicants.length}</span>
+          </h4>
         }
         key="applicants"
       >
