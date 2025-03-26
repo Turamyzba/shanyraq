@@ -30,7 +30,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       title: "Пользователь",
       key: "user",
       fixed: "left" as const,
-      width: 240,
+      width: 320,
       render: (applicant: Member) => (
         <div className={styles.tableUser}>
           <div

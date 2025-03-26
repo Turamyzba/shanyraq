@@ -64,7 +64,7 @@ const MembersList: React.FC<MembersListProps> = ({
     {
       title: "Телеграм",
       key: "telegram",
-      width: 140,
+      width: 100,
       render: (member: Member) =>
         limitedAccess ? (
           <span>@********</span>
