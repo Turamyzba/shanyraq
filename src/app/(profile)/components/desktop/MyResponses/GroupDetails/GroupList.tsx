@@ -9,6 +9,7 @@ interface GroupListProps {
   onCancelApplication?: (groupId: number) => void;
   onRemoveMember?: (groupId: number, memberId: number) => void;
   onPromoteToAdmin?: (groupId: number, memberId: number) => void;
+  onDemoteFromAdmin?: (groupId: number, memberId: number) => void;
   onAcceptApplicant?: (groupId: number, applicantId: number) => void;
   onRejectApplicant?: (groupId: number, applicantId: number) => void;
 }
@@ -19,6 +20,7 @@ const GroupList: React.FC<GroupListProps> = ({
   onCancelApplication,
   onRemoveMember,
   onPromoteToAdmin,
+  onDemoteFromAdmin,
   onAcceptApplicant,
   onRejectApplicant,
 }) => {
@@ -41,6 +43,7 @@ const GroupList: React.FC<GroupListProps> = ({
             onCancelApplication={onCancelApplication}
             onRemoveMember={onRemoveMember}
             onPromoteToAdmin={onPromoteToAdmin}
+            onDemoteFromAdmin={onDemoteFromAdmin}
             onAcceptApplicant={onAcceptApplicant}
             onRejectApplicant={onRejectApplicant}
           />

@@ -108,6 +108,37 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
     });
   };
 
+  const handleDemoteFromAdmin = (groupId: number, memberId: number) => {
+    if (!groupId || !memberId) return;
+
+    setModalConfig({
+      isOpen: true,
+      title: "Понизить до участника",
+      message: "Вы уверены, что хотите понизить этого администратора до обычного участника?",
+      confirmText: "Подтвердить",
+      cancelText: "Отмена",
+      confirmAction: () => {
+        setGroupsData((prevGroups) =>
+          prevGroups.map((group) => {
+            if (group.id === groupId) {
+              return {
+                ...group,
+                members: group.members.map((member) => {
+                  if (member.id === memberId) {
+                    return { ...member, role: "member" };
+                  }
+                  return member;
+                }),
+              };
+            }
+            return group;
+          })
+        );
+        setModalConfig(null);
+      },
+    });
+  };
+
   const handleAcceptApplicant = (groupId: number, applicantId: number) => {
     if (!groupId || !applicantId) return;
 
@@ -176,6 +207,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ apartmentDetails, groups })
         onCancelApplication={handleCancelApplication}
         onRemoveMember={handleRemoveMember}
         onPromoteToAdmin={handlePromoteToAdmin}
+        onDemoteFromAdmin={handleDemoteFromAdmin}
         onAcceptApplicant={handleAcceptApplicant}
         onRejectApplicant={handleRejectApplicant}
       />

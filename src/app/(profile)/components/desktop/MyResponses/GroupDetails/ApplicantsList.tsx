@@ -1,11 +1,11 @@
 import React from "react";
 import { Collapse, Table } from "antd";
-import { Member } from "./types";
+import { Member, GroupStatus } from "./types";
 import styles from "./GroupDetails.module.scss";
 
 interface ApplicantsListProps {
   applicants: Member[];
-  isPending: boolean;
+  groupStatus: GroupStatus;
   canManageApplicants: boolean;
   onAcceptApplicant?: (applicantId: number) => void;
   onRejectApplicant?: (applicantId: number) => void;
@@ -15,12 +15,15 @@ const { Panel } = Collapse;
 
 const ApplicantsList: React.FC<ApplicantsListProps> = ({
   applicants,
-  isPending,
+  groupStatus,
   canManageApplicants,
   onAcceptApplicant,
   onRejectApplicant,
 }) => {
   if (!applicants.length) return null;
+
+  // Limited access for pending or rejected groups
+  const limitedAccess = groupStatus !== "accepted";
 
   const columns = [
     {
@@ -36,28 +39,51 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
           ></div>
           <div>
             <div className={styles.userName}>{applicant.name}</div>
-            <div className={styles.userEmail}>{applicant.email}</div>
+            <div className={styles.userEmail}>
+              {limitedAccess ? "******@***.***" : applicant.email}
+            </div>
           </div>
         </div>
       ),
+    },
+    {
+      title: "Телеграм",
+      key: "telegram",
+      width: 100,
+      render: (applicant: Member) =>
+        limitedAccess ? (
+          <span>@********</span>
+        ) : (
+          <a
+            href={`https://t.me/${applicant.telegram?.substring(1)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.telegramLink}
+          >
+            {applicant.telegram}
+          </a>
+        ),
     },
     {
       title: "Возраст",
       dataIndex: "age",
       key: "age",
       width: 100,
+      render: (age: number) => (limitedAccess ? "**" : age),
     },
     {
       title: "Контакты",
       dataIndex: "phone",
       key: "phone",
       width: 140,
+      render: (phone: string) => (limitedAccess ? "*** *** ** **" : phone),
     },
     {
       title: "Дата",
       dataIndex: "date",
       key: "date",
       width: 100,
+      render: (date: string) => (limitedAccess ? "**/**/****" : date),
     },
     {
       title: "Действия",

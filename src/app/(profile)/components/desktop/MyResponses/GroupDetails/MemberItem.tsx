@@ -1,25 +1,30 @@
 import React from "react";
 import { Button } from "antd";
-import { Member, MemberRole } from "./types";
+import { Member, MemberRole, GroupStatus } from "./types";
 import styles from "./GroupDetails.module.scss";
 
 interface MemberItemProps {
   member: Member;
-  isPending: boolean;
+  groupStatus: GroupStatus;
   canRemove: boolean;
-  canPromoteToAdmin: boolean;
+  canManageAdmins: boolean;
   onRemove?: (memberId: number) => void;
   onPromoteToAdmin?: (memberId: number) => void;
+  onDemoteFromAdmin?: (memberId: number) => void;
 }
 
 const MemberItem: React.FC<MemberItemProps> = ({
   member,
-  isPending,
+  groupStatus,
   canRemove,
-  canPromoteToAdmin,
+  canManageAdmins,
   onRemove,
   onPromoteToAdmin,
+  onDemoteFromAdmin,
 }) => {
+  const isAccepted = groupStatus === "accepted";
+  const limitedAccess = groupStatus !== "accepted";
+
   const getRoleBadge = (role?: MemberRole) => {
     if (!role) return null;
 
@@ -38,8 +43,11 @@ const MemberItem: React.FC<MemberItemProps> = ({
     return <span className={badgeClass}>{roleText[role]}</span>;
   };
 
-  const showPromoteButton = canPromoteToAdmin && member.role === "member" && !member.isCurrentUser;
-  const showRemoveButton = canRemove && member.role !== "owner" && !member.isCurrentUser;
+  const showManageButton = canManageAdmins && isAccepted && !member.isCurrentUser;
+  const showPromoteButton = showManageButton && member.role === "member";
+  const showDemoteButton = showManageButton && member.role === "admin";
+  const showRemoveButton =
+    canRemove && member.role !== "owner" && !member.isCurrentUser && isAccepted;
 
   return (
     <div className={styles.memberCard}>
@@ -51,30 +59,45 @@ const MemberItem: React.FC<MemberItemProps> = ({
           ></div>
           <div>
             <div className={styles.userName}>
-              {member.name}
               {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
+              {member.name}
+
               {getRoleBadge(member.role)}
             </div>
-            <div className={styles.userEmail}>{member.email}</div>
+            <div className={styles.userEmail}>
+              {limitedAccess ? "******@***.***" : member.email}
+            </div>
           </div>
         </div>
       </div>
 
       <div className={styles.memberDetail}>
-        <span className={styles.detailValue}>{member.age ?? "Н/Д"}</span>
+        {limitedAccess ? (
+          <span className={styles.detailValue}>**</span>
+        ) : (
+          <span className={styles.detailValue}>{member.age ?? "Н/Д"}</span>
+        )}
       </div>
 
       <div className={styles.memberDetail}>
-        <span className={styles.detailValue}>{member.phone ?? "Н/Д"}</span>
+        {limitedAccess ? (
+          <span className={styles.detailValue}>*** *** ** **</span>
+        ) : (
+          <span className={styles.detailValue}>{member.phone ?? "Н/Д"}</span>
+        )}
       </div>
 
       <div className={styles.memberDetail}>
-        <span className={styles.detailValue}>{member.date ?? "Н/Д"}</span>
+        {limitedAccess ? (
+          <span className={styles.detailValue}>**/**/****</span>
+        ) : (
+          <span className={styles.detailValue}>{member.date ?? "Н/Д"}</span>
+        )}
       </div>
 
       <div className={styles.actionButtons}>
         <Button className={styles.actionButton}>Посмотреть анкету</Button>
-        <Button className={styles.actionButton}>Сопроводительное письмо</Button>
+        {!limitedAccess && <Button className={styles.actionButton}>Сопроводительное письмо</Button>}
       </div>
 
       <div className={styles.memberActions}>
@@ -83,6 +106,16 @@ const MemberItem: React.FC<MemberItemProps> = ({
             className={styles.promoteButton}
             onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
             icon={<AdminIcon />}
+            title="Сделать администратором"
+          />
+        )}
+
+        {showDemoteButton && (
+          <Button
+            className={styles.demoteButton}
+            onClick={() => onDemoteFromAdmin && onDemoteFromAdmin(member.id)}
+            icon={<DemoteIcon />}
+            title="Понизить до участника"
           />
         )}
 
@@ -129,6 +162,18 @@ const AdminIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M16.6667 5.83333L7.5 15L3.33333 10.8333L4.16667 10L7.5 13.3333L15.8333 5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const DemoteIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M5 10H15"
       stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"

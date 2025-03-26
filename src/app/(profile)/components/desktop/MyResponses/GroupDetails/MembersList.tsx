@@ -1,34 +1,36 @@
 import React from "react";
 import { Collapse, Table } from "antd";
-import { Member } from "./types";
+import { Member, GroupStatus } from "./types";
 import MemberItem from "./MemberItem";
 import styles from "./GroupDetails.module.scss";
 
 interface MembersListProps {
   members: Member[];
-  isPending: boolean;
+  groupStatus: GroupStatus;
   isRejected: boolean;
   canRemoveMembers: boolean;
-  canPromoteToAdmin: boolean;
+  canManageAdmins: boolean;
   onRemoveMember?: (memberId: number) => void;
   onPromoteToAdmin?: (memberId: number) => void;
+  onDemoteFromAdmin?: (memberId: number) => void;
 }
 
 const { Panel } = Collapse;
 
 const MembersList: React.FC<MembersListProps> = ({
   members,
-  isPending,
+  groupStatus,
   isRejected,
   canRemoveMembers,
-  canPromoteToAdmin,
+  canManageAdmins,
   onRemoveMember,
   onPromoteToAdmin,
+  onDemoteFromAdmin,
 }) => {
   if (!members.length) return null;
 
   // Limited access for pending or rejected groups
-  const limitedAccess = isPending || isRejected;
+  const limitedAccess = groupStatus !== "accepted";
 
   const columns = [
     {
@@ -44,8 +46,9 @@ const MembersList: React.FC<MembersListProps> = ({
           ></div>
           <div>
             <div className={styles.userName}>
-              {member.name}
               {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
+              {member.name}
+
               {member.role === "admin" && <span className={styles.adminBadge}>Админ группы</span>}
               {member.role === "owner" && (
                 <span className={styles.ownerBadge}>Создатель объявления</span>
@@ -59,10 +62,29 @@ const MembersList: React.FC<MembersListProps> = ({
       ),
     },
     {
+      title: "Телеграм",
+      key: "telegram",
+      width: 140,
+      render: (member: Member) =>
+        limitedAccess ? (
+          <span>@********</span>
+        ) : (
+          <a
+            href={`https://t.me/${member.telegram?.substring(1)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.telegramLink}
+          >
+            {member.telegram}
+          </a>
+        ),
+    },
+    {
       title: "Возраст",
       dataIndex: "age",
       key: "age",
       width: 100,
+      render: (age: number, member: Member) => (limitedAccess ? "**" : age),
     },
     {
       title: "Контакты",
@@ -76,6 +98,7 @@ const MembersList: React.FC<MembersListProps> = ({
       dataIndex: "date",
       key: "date",
       width: 100,
+      render: (date: string, member: Member) => (limitedAccess ? "**/**/****" : date),
     },
     {
       title: "Действия",
@@ -98,13 +121,25 @@ const MembersList: React.FC<MembersListProps> = ({
       render: (member: Member) =>
         !limitedAccess && (
           <div className={styles.memberActions}>
-            {canPromoteToAdmin && member.role === "member" && !member.isCurrentUser && (
-              <Button
-                className={styles.promoteButton}
-                onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
-                icon={<AdminIcon />}
-              />
-            )}
+            {canManageAdmins &&
+              !member.isCurrentUser &&
+              (member.role === "member" ? (
+                <Button
+                  className={styles.promoteButton}
+                  onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
+                  icon={<AdminIcon />}
+                  title="Сделать администратором"
+                />
+              ) : (
+                member.role === "admin" && (
+                  <Button
+                    className={styles.demoteButton}
+                    onClick={() => onDemoteFromAdmin && onDemoteFromAdmin(member.id)}
+                    icon={<DemoteIcon />}
+                    title="Понизить до участника"
+                  />
+                )
+              ))}
             {canRemoveMembers && member.role !== "owner" && !member.isCurrentUser && (
               <Button
                 className={styles.removeButton}
@@ -144,8 +179,8 @@ const MembersList: React.FC<MembersListProps> = ({
   );
 };
 
-const Button = ({ className, onClick, icon, children, danger }: any) => (
-  <button className={`${className} ${danger ? styles.danger : ""}`} onClick={onClick}>
+const Button = ({ className, onClick, icon, children, danger, title }: any) => (
+  <button className={`${className} ${danger ? styles.danger : ""}`} onClick={onClick} title={title}>
     {icon}
     {children}
   </button>
@@ -181,6 +216,18 @@ const AdminIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M16.6667 5.83333L7.5 15L3.33333 10.8333L4.16667 10L7.5 13.3333L15.8333 5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const DemoteIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M5 10H15"
       stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"

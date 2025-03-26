@@ -33,6 +33,7 @@ const mockApartmentDetails = {
 };
 
 // Mock groups data
+// Mock groups data
 export const mockGroupsData = {
   accepted: [
     {
@@ -44,6 +45,7 @@ export const mockGroupsData = {
           id: 1,
           name: "Батырхан",
           email: "amantay11@gmail.com",
+          telegram: "@batyr_k",
           age: 24,
           phone: "8777 777 77 77",
           date: "27/11/2024",
@@ -54,6 +56,7 @@ export const mockGroupsData = {
           id: 2,
           name: "Ерасыл",
           email: "erasyl.m@mail.ru",
+          telegram: "@erasyl",
           age: 18,
           phone: "8777 545 74 78",
           date: "27/11/2024",
@@ -64,6 +67,7 @@ export const mockGroupsData = {
           id: 3,
           name: "Айбол",
           email: "aibol.qazaq@gmail.com",
+          telegram: "@aibol",
           age: 19,
           phone: "8701 577 77 78",
           date: "27/11/2024",
@@ -87,6 +91,7 @@ export const mockGroupsData = {
           id: 4,
           name: "Марат",
           email: "marat@gmail.com",
+          telegram: "@marat",
           age: 25,
           phone: "8700 123 45 67",
           date: "26/11/2024",
@@ -98,6 +103,7 @@ export const mockGroupsData = {
           id: 5,
           name: "Алишер",
           email: "alisher@mail.ru",
+          telegram: "@alisher",
           age: 22,
           phone: "8707 987 65 43",
           date: "26/11/2024",
@@ -108,6 +114,7 @@ export const mockGroupsData = {
           id: 21,
           name: "Даурен",
           email: "dauren@mail.ru",
+          telegram: "@dauren",
           age: 23,
           phone: "8777 888 99 00",
           date: "26/11/2024",
@@ -120,6 +127,7 @@ export const mockGroupsData = {
           id: 6,
           name: "Жанар",
           email: "zhanar@gmail.com",
+          telegram: "@zhanar",
           age: 23,
           phone: "8700 222 33 44",
           date: "25/11/2024",
@@ -129,6 +137,7 @@ export const mockGroupsData = {
           id: 7,
           name: "Асет",
           email: "aset@mail.ru",
+          telegram: "@aset",
           age: 27,
           phone: "8701 333 44 55",
           date: "24/11/2024",
@@ -151,6 +160,7 @@ export const mockGroupsData = {
           id: 8,
           name: "Дина",
           email: "dina@gmail.com",
+          telegram: "@dina",
           age: 26,
           phone: "8705 111 22 33",
           date: "23/11/2024",
@@ -161,6 +171,7 @@ export const mockGroupsData = {
           id: 9,
           name: "Айдос",
           email: "aidos@gmail.com",
+          telegram: "@aidos",
           age: 28,
           phone: "8777 333 44 55",
           date: "23/11/2024",
@@ -171,6 +182,7 @@ export const mockGroupsData = {
           id: 10,
           name: "Асем",
           email: "asem@gmail.com",
+          telegram: "@asem",
           age: 24,
           phone: "8700 111 22 33",
           date: "23/11/2024",
@@ -194,6 +206,7 @@ export const mockGroupsData = {
           id: 11,
           name: "Нурсултан",
           email: "nursultan@gmail.com",
+          telegram: "@nursultan",
           age: 26,
           phone: "8700 444 55 66",
           date: "22/11/2024",
@@ -205,6 +218,7 @@ export const mockGroupsData = {
           id: 12,
           name: "Айгуль",
           email: "aigul@mail.ru",
+          telegram: "@aigul",
           age: 23,
           phone: "8777 888 99 00",
           date: "22/11/2024",
@@ -217,6 +231,7 @@ export const mockGroupsData = {
           id: 13,
           name: "Алмас",
           email: "almas@gmail.com",
+          telegram: "@almas",
           age: 22,
           phone: "8701 999 88 77",
           date: "20/11/2024",
@@ -237,6 +252,7 @@ export const mockGroupsData = {
           id: 16,
           name: "Азат",
           email: "azat@gmail.com",
+          telegram: "@azat",
           age: 24,
           phone: "8700 111 22 33",
           date: "20/11/2024",
@@ -248,6 +264,7 @@ export const mockGroupsData = {
           id: 17,
           name: "Карина",
           email: "karina@mail.ru",
+          telegram: "@karina",
           age: 22,
           phone: "8777 123 45 67",
           date: "20/11/2024",
@@ -273,6 +290,7 @@ export const mockGroupsData = {
           id: 14,
           name: "Саят",
           email: "sayat@gmail.com",
+          telegram: "@sayat",
           age: 28,
           phone: "8707 111 22 33",
           date: "21/11/2024",
@@ -283,6 +301,7 @@ export const mockGroupsData = {
           id: 15,
           name: "Мадина",
           email: "madina@mail.ru",
+          telegram: "@madina",
           age: 25,
           phone: "8700 555 66 77",
           date: "21/11/2024",
@@ -299,7 +318,6 @@ export const mockGroupsData = {
     },
   ],
 };
-
 export default function ResponseGroupsPage() {
   const params = useParams();
   const router = useRouter();

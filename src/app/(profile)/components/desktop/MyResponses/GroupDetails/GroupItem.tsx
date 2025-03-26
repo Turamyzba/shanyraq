@@ -11,6 +11,7 @@ interface GroupItemProps {
   onCancelApplication?: (groupId: number) => void;
   onRemoveMember?: (groupId: number, memberId: number) => void;
   onPromoteToAdmin?: (groupId: number, memberId: number) => void;
+  onDemoteFromAdmin?: (groupId: number, memberId: number) => void;
   onAcceptApplicant?: (groupId: number, applicantId: number) => void;
   onRejectApplicant?: (groupId: number, applicantId: number) => void;
 }
@@ -21,6 +22,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
   onCancelApplication,
   onRemoveMember,
   onPromoteToAdmin,
+  onDemoteFromAdmin,
   onAcceptApplicant,
   onRejectApplicant,
 }) => {
@@ -29,18 +31,19 @@ const GroupItem: React.FC<GroupItemProps> = ({
   const hasMoreAvatars = group.members.length > avatarLimit;
   const isPending = group.status === "pending";
   const isRejected = group.status === "rejected";
+  const isAccepted = group.status === "accepted";
 
   // Only admins and creators can remove members
   const canRemoveMembers = group.isUserAdmin || group.isUserOwner;
 
-  // Only creators can promote to admin
-  const canPromoteToAdmin = group.isUserOwner;
+  // Only creators can promote to admin or demote from admin
+  const canManageAdmins = group.isUserOwner && isAccepted;
 
   // Only admins and creators can manage applicants
   const canManageApplicants = group.isUserAdmin || group.isUserOwner;
 
   // Users can leave groups if they are members but not the creator
-  const canLeaveGroup = group.isUserMember && !group.isUserOwner && !isPending;
+  const canLeaveGroup = group.isUserMember && !group.isUserOwner && isAccepted;
 
   // Users can cancel their application if the status is pending
   const canCancelApplication = group.isUserMember && isPending;
@@ -76,7 +79,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
         </div>
 
         <div className={styles.groupStatusBadges}>
-          {group.isUserMember && (
+          {group.isUserMember && !isRejected && (
             <div
               className={`${styles.userStatusBadge} ${
                 group.isUserOwner
@@ -90,13 +93,15 @@ const GroupItem: React.FC<GroupItemProps> = ({
                 ? "Вы создатель объявления"
                 : group.isUserAdmin
                   ? "Вы администратор"
-                  : "Вы участник группы"}
+                  : isAccepted
+                    ? "Вы участник группы"
+                    : ""}
             </div>
           )}
           {isJointApplication ? (
             <Tooltip title="Заявка ещё не отправлена. Чтобы отправить заявку, ваши друзья должны заполнить анкету">
               <div className={`${styles.groupStatusBadge} ${styles.jointApplicationBadge}`}>
-                Совместная заявка
+                Черновик
               </div>
             </Tooltip>
           ) : (
@@ -111,18 +116,19 @@ const GroupItem: React.FC<GroupItemProps> = ({
 
       <MembersList
         members={group.members}
-        isPending={isPending}
+        groupStatus={group.status}
         isRejected={isRejected}
         canRemoveMembers={canRemoveMembers}
-        canPromoteToAdmin={canPromoteToAdmin}
+        canManageAdmins={canManageAdmins}
         onRemoveMember={(memberId) => onRemoveMember && onRemoveMember(group.id, memberId)}
         onPromoteToAdmin={(memberId) => onPromoteToAdmin && onPromoteToAdmin(group.id, memberId)}
+        onDemoteFromAdmin={(memberId) => onDemoteFromAdmin && onDemoteFromAdmin(group.id, memberId)}
       />
 
       {group.applicants && group.applicants.length > 0 && !isJointApplication && (
         <ApplicantsList
           applicants={group.applicants}
-          isPending={isPending}
+          groupStatus={group.status}
           canManageApplicants={canManageApplicants}
           onAcceptApplicant={(applicantId) =>
             onAcceptApplicant && onAcceptApplicant(group.id, applicantId)
@@ -149,6 +155,14 @@ const GroupItem: React.FC<GroupItemProps> = ({
             className={styles.cancelButton}
             danger
           >
+            Отменить
+          </Button>
+        </div>
+      )}
+
+      {isRejected && (
+        <div className={styles.leaveGroupSection}>
+          <Button className={styles.cancelButton} danger disabled>
             Отменить
           </Button>
         </div>

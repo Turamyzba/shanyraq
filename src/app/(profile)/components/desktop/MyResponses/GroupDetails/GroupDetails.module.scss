@@ -225,10 +225,12 @@
 .adminBadge,
 .ownerBadge,
 .memberBadge {
+  display: block;
   font-size: 12px;
   font-weight: 500;
   padding: 2px 8px;
   border-radius: 4px;
+  margin-top: 5px;
 }
 
 .adminBadge {
@@ -253,7 +255,7 @@
   color: #6b7280;
   padding: 2px 8px;
   border-radius: 4px;
-  margin-left: 8px;
+  margin-right: 8px;
 }
 
 .tabsContainer {
@@ -343,7 +345,6 @@
   font-size: 16px;
   font-weight: 500;
   color: #252525;
-  display: flex;
   align-items: center;
   gap: 8px;
 }
@@ -373,6 +374,10 @@
 .memberActions,
 .actionButtons {
   display: flex;
+  gap: 8px;
+}
+.actions{
+    display: flex;
   gap: 8px;
 }
 

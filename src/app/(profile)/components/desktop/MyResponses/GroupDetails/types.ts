@@ -6,6 +6,7 @@ export interface Member {
   id: number;
   name: string;
   email: string | null;
+  telegram: string | null;
   age: number | null;
   phone: string | null;
   date: string | null;
