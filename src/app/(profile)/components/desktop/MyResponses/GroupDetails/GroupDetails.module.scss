@@ -399,7 +399,8 @@
 .acceptButton,
 .rejectButton,
 .removeButton,
-.promoteButton {
+.promoteButton,
+.demoteButton {
   width: 32px;
   height: 32px;
   display: flex;
@@ -439,6 +440,18 @@
   background-color: #e9f2f0;
   color: #1aa683;
   border-color: #1aa683;
+}
+.demoteButton {
+  background-color: #1aa683;
+  border: none;
+  color: white;
+  margin-right: 8px;
+}
+
+.demoteButton:hover {
+  background-color: #1aa683;
+  border: none;
+  color: white;
 }
 
 .jointApplicationActions {

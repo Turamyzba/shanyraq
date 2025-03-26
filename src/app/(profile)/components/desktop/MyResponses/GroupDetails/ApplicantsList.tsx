@@ -2,7 +2,7 @@ import React from "react";
 import { Collapse, Table } from "antd";
 import { Member, GroupStatus } from "./types";
 import styles from "./GroupDetails.module.scss";
-
+import Images from '@/components/common/Images'
 interface ApplicantsListProps {
   applicants: Member[];
   groupStatus: GroupStatus;
