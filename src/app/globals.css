@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 [role="alert"] {
-z-index: 10000 !important;
+  z-index: 10000 !important;
 }
 
 .heroui-toast-container {
-z-index: 10000 !important;
+  z-index: 10000 !important;
 }

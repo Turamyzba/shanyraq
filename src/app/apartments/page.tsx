@@ -103,7 +103,7 @@ export default function ApartmentsPage() {
 
   useEffect(() => {
     const isSortChange = sort > 1;
-    
+
     if (isSortChange) {
       fetchFilterApartments(filterState, false);
     }
@@ -111,12 +111,12 @@ export default function ApartmentsPage() {
 
   useEffect(() => {
     const isPageChange = page > 1;
-    
+
     if (isPageChange) {
       fetchFilterApartments(filterState, true);
     }
   }, [page]);
-  
+
   const handleIsMap = () => {
     setIsMap(!isMap);
     if (!isMap) {
@@ -160,7 +160,7 @@ export default function ApartmentsPage() {
     const nextPage = page + 1;
     dispatch(setCurrentPage(nextPage));
   };
-  console.log(!(filteredApartments.length > 0))
+  console.log(!(filteredApartments.length > 0));
 
   return (
     <Container>
@@ -254,45 +254,42 @@ export default function ApartmentsPage() {
             </div>
           </div>
           <>
-              {!isMap ? (
-                <>
-                  <div className={styles.gridContainer}>
-                    <div className={styles.cardGrid}>
-                      {filteredApartments.map((apartment) => (
-                        <CardComponent
-                          key={apartment.announcementId}
-                          card={apartment}
-                        />
-                      ))}
-                      {filteredApartments.length > 0 && (
+            {!isMap ? (
+              <>
+                <div className={styles.gridContainer}>
+                  <div className={styles.cardGrid}>
+                    {filteredApartments.map((apartment) => (
+                      <CardComponent key={apartment.announcementId} card={apartment} />
+                    ))}
+                    {filteredApartments.length > 0 && (
                       <CardComponent
-                          key={filteredApartments[filteredApartments.length - 1].announcementId}
-                          card={filteredApartments[filteredApartments.length - 1]}
-                          isLast={true}
-                          disabledButton={isLoading}
-                          loadMoreApartments={loadMoreApartments}
-                        />
-                      )}
-                    </div>
+                        key={filteredApartments[filteredApartments.length - 1].announcementId}
+                        card={filteredApartments[filteredApartments.length - 1]}
+                        isLast={true}
+                        disabledButton={isLoading}
+                        loadMoreApartments={loadMoreApartments}
+                      />
+                    )}
                   </div>
-                  {!(filteredApartments.length > 0) && (
-                    <div className={styles.empty}>
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className={styles.mapContent}>
-                  <Map
-                    update={hideFilter || isMobile}
-                    apartments={filteredApartments}
-                    isLoading={false}
-                    onPointsSelected={handleMapPointsSelected}
-                  />
                 </div>
-              )}
-            </>
-            {isLoading && (
+                {!(filteredApartments.length > 0) && (
+                  <div className={styles.empty}>
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className={styles.mapContent}>
+                <Map
+                  update={hideFilter || isMobile}
+                  apartments={filteredApartments}
+                  isLoading={false}
+                  onPointsSelected={handleMapPointsSelected}
+                />
+              </div>
+            )}
+          </>
+          {isLoading && (
             <div className={styles.loadingScreen}>
               <Spin indicator={antIcon} />
             </div>

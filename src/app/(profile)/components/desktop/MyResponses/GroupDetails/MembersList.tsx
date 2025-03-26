@@ -2,7 +2,7 @@ import React from "react";
 import { Collapse, Table } from "antd";
 import { Member, GroupStatus } from "./types";
 import styles from "./GroupDetails.module.scss";
-import Images from '@/components/common/Images'
+import Images from "@/components/common/Images";
 interface MembersListProps {
   members: Member[];
   groupStatus: GroupStatus;
@@ -138,7 +138,7 @@ const MembersList: React.FC<MembersListProps> = ({
                 <Button
                   className={styles.promoteButton}
                   onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
-                  icon={<Images.AddAdmin  size={15}/>}
+                  icon={<Images.AddAdmin size={15} />}
                   title="Сделать администратором"
                 />
               ) : (

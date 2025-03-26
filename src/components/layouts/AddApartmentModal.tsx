@@ -7,22 +7,22 @@ import { useForm, FormProvider } from "react-hook-form";
 import { validateFormStep } from "@/utils/formValidation";
 import { shouldSubmitStep, ApiDataTracker } from "@/utils/enhancedFormChangeDetector";
 
-import { 
-  StepRole, 
-  StepBasicInfo, 
-  StepApartmentDetails, 
-  StepApartmentAdditionalDetails, 
-  StepApartmentFullDetails, 
-  StepSuccess 
+import {
+  StepRole,
+  StepBasicInfo,
+  StepApartmentDetails,
+  StepApartmentAdditionalDetails,
+  StepApartmentFullDetails,
+  StepSuccess,
 } from "../AddApartmentSteps";
-import { 
-  mapFormToApiRequest, 
-  useCreateAnnouncementStep1Mutation, 
-  useCreateAnnouncementStep2Mutation, 
-  useCreateAnnouncementStep3Mutation, 
-  useCreateAnnouncementStep4Mutation, 
-  useCreateAnnouncementStep5Mutation, 
-  useCreateAnnouncementStep6Mutation 
+import {
+  mapFormToApiRequest,
+  useCreateAnnouncementStep1Mutation,
+  useCreateAnnouncementStep2Mutation,
+  useCreateAnnouncementStep3Mutation,
+  useCreateAnnouncementStep4Mutation,
+  useCreateAnnouncementStep5Mutation,
+  useCreateAnnouncementStep6Mutation,
 } from "@/store/features/addAnnouncement/announcementApi";
 import { showToast } from "@/utils/notification";
 import { AddressType } from "@/types/common";
@@ -71,14 +71,14 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   const [announcementId, setAnnouncementId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
-  
+
   const [createStep1] = useCreateAnnouncementStep1Mutation();
   const [createStep2] = useCreateAnnouncementStep2Mutation();
   const [createStep3] = useCreateAnnouncementStep3Mutation();
   const [createStep4] = useCreateAnnouncementStep4Mutation();
   const [createStep5] = useCreateAnnouncementStep5Mutation();
   const [createStep6] = useCreateAnnouncementStep6Mutation();
-  
+
   const [isAddressLoading, setIsAddressLoading] = useState(false);
   const [citiesData, setCitiesData] = useState<AddressType[]>([]);
   const [districtsData, setDistrictsData] = useState<AddressType[]>([]);
@@ -133,17 +133,19 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     {
       id: 3,
       name: "Детали квартиры",
-      component: <StepApartmentDetails 
-        citiesData={citiesData}
-        districtsData={districtsData}
-        setDistrictsData={setDistrictsData}
-        microDistrictsData={microDistrictsData}
-        setMicroDistrictsData={setMicroDistrictsData}
-        fetchCities={fetchCities}
-        fetchDistricts={fetchDistricts}
-        fetchMicroDistricts={fetchMicroDistricts}
-        isAddressLoading={isAddressLoading}
-      />,
+      component: (
+        <StepApartmentDetails
+          citiesData={citiesData}
+          districtsData={districtsData}
+          setDistrictsData={setDistrictsData}
+          microDistrictsData={microDistrictsData}
+          setMicroDistrictsData={setMicroDistrictsData}
+          fetchCities={fetchCities}
+          fetchDistricts={fetchDistricts}
+          fetchMicroDistricts={fetchMicroDistricts}
+          isAddressLoading={isAddressLoading}
+        />
+      ),
     },
     {
       id: 4,
@@ -189,7 +191,7 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       const formData = methods.getValues();
 
       const needsSubmission = shouldSubmitStep(formData, step);
-      
+
       if (step === 1 || needsSubmission) {
         const apiData = mapFormToApiRequest(formData, step);
         let response;
@@ -204,9 +206,9 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             break;
           case 2:
             if (!announcementId) return false;
-            response = await createStep2({ 
-              announcementId, 
-              data: apiData 
+            response = await createStep2({
+              announcementId,
+              data: apiData,
             }).unwrap();
             if (response) {
               apiDataTracker.setStepApiData(step, apiData);
@@ -214,9 +216,9 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             break;
           case 3:
             if (!announcementId) return false;
-            response = await createStep3({ 
-              announcementId, 
-              data: apiData 
+            response = await createStep3({
+              announcementId,
+              data: apiData,
             }).unwrap();
             if (response) {
               apiDataTracker.setStepApiData(step, apiData);
@@ -224,9 +226,9 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             break;
           case 4:
             if (!announcementId) return false;
-            response = await createStep4({ 
-              announcementId, 
-              data: apiData 
+            response = await createStep4({
+              announcementId,
+              data: apiData,
             }).unwrap();
             if (response) {
               apiDataTracker.setStepApiData(step, apiData);
@@ -234,9 +236,9 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             break;
           case 5:
             if (!announcementId) return false;
-            response = await createStep5({ 
-              announcementId, 
-              data: apiData 
+            response = await createStep5({
+              announcementId,
+              data: apiData,
             }).unwrap();
             if (response) {
               apiDataTracker.setStepApiData(step, apiData);
@@ -244,16 +246,16 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             break;
           case 6:
             if (!announcementId) return false;
-            response = await createStep6({ 
-              announcementId, 
-              data: apiData 
+            response = await createStep6({
+              announcementId,
+              data: apiData,
             }).unwrap();
             if (response) {
               apiDataTracker.setStepApiData(step, apiData);
             }
             break;
         }
-      } 
+      }
 
       return true;
     } catch (error) {
@@ -270,16 +272,16 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
   const handleNext = async () => {
     const formData = methods.getValues();
-    
+
     if (!validateFormStep(formData, currentStep)) {
       return;
     }
-    
+
     if (currentStep === 1 && announcementId) {
       setCurrentStep((prev) => prev + 1);
       return;
     }
-    
+
     if (hasChanges || currentStep === 1) {
       const success = await handleSubmit(currentStep);
       if (success && currentStep < steps.length) {
@@ -307,7 +309,7 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       onClose();
     }
   };
-  
+
   useEffect(() => {
     if (!isOpen) {
       methods.reset(defaultValues);
@@ -323,39 +325,29 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       <div className={styles.footerContainer}>
         <div className={styles.leftButtons}>
           {currentStep > 1 ? (
-            <Button 
-              className={styles.backButton} 
-              onPress={handleBack}
-              isDisabled={isLoading}
-            >
+            <Button className={styles.backButton} onPress={handleBack} isDisabled={isLoading}>
               Назад
             </Button>
           ) : (
-            <Button 
-              className={styles.cancelButton} 
-              onPress={onClose}
-              isDisabled={isLoading}
-            >
+            <Button className={styles.cancelButton} onPress={onClose} isDisabled={isLoading}>
               Отмена
             </Button>
           )}
         </div>
         <div className={styles.rightButtons}>
           {currentStep < steps.length && (
-            <Button 
-              className={styles.nextButton} 
-              onPress={handleNext}
-              isDisabled={isLoading}
-            >
-              {isLoading ? "Загрузка..." : (currentStep === 1 ? "Далее" : (hasChanges ? "Сохранить и далее" : "Далее"))}
+            <Button className={styles.nextButton} onPress={handleNext} isDisabled={isLoading}>
+              {isLoading
+                ? "Загрузка..."
+                : currentStep === 1
+                  ? "Далее"
+                  : hasChanges
+                    ? "Сохранить и далее"
+                    : "Далее"}
             </Button>
           )}
           {currentStep === steps.length && (
-            <Button 
-              className={styles.finishButton} 
-              onPress={handleFinish}
-              isDisabled={isLoading}
-            >
+            <Button className={styles.finishButton} onPress={handleFinish} isDisabled={isLoading}>
               {isLoading ? "Загрузка..." : "Завершить"}
             </Button>
           )}

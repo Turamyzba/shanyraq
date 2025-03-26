@@ -7,32 +7,32 @@ import { FinalStepResponse } from "@/types/response/announcementResponses";
 
 export const mapFormToApiRequest = (formData: any, step: number = 1): AnnouncementRequest => {
   const baseRequest: AnnouncementRequest = {
-    role: formData.role
+    role: formData.role,
   };
 
   if (step === 2) {
     Object.assign(baseRequest, {
-        title: formData.title,
-        selectedGender: formData.gender,
-        doYouLiveInThisHouse: formData.livingInHome,
-        consideringOnlyNPeople: false, // Fixed value based on your form design
-        howManyPeopleLiveInThisApartment: formData.peopleInApartment?.toString(),
-        numberOfPeopleAreYouAccommodating: formData.roommates,
-        minAge: formData.ageRange?.[0],
-        maxAge: formData.ageRange?.[1],
+      title: formData.title,
+      selectedGender: formData.gender,
+      doYouLiveInThisHouse: formData.livingInHome,
+      consideringOnlyNPeople: false, // Fixed value based on your form design
+      howManyPeopleLiveInThisApartment: formData.peopleInApartment?.toString(),
+      numberOfPeopleAreYouAccommodating: formData.roommates,
+      minAge: formData.ageRange?.[0],
+      maxAge: formData.ageRange?.[1],
     });
   }
   if (step === 3) {
     Object.assign(baseRequest, {
-        region: formData.region,
-        district: formData.district,
-        microDistrict: formData.microDistrict,
-        address: formData.address,
-        arriveDate: formData.moveInDate,
-        cost: Number(formData.monthlyPayment),
-        quantityOfRooms: formData.rooms,
-        isDepositRequired: formData.deposit,
-        deposit: formData.deposit ? formData.depositAmount : undefined,
+      region: formData.region,
+      district: formData.district,
+      microDistrict: formData.microDistrict,
+      address: formData.address,
+      arriveDate: formData.moveInDate,
+      cost: Number(formData.monthlyPayment),
+      quantityOfRooms: formData.rooms,
+      isDepositRequired: formData.deposit,
+      deposit: formData.deposit ? formData.depositAmount : undefined,
     });
   }
 
@@ -60,7 +60,7 @@ export const mapFormToApiRequest = (formData: any, step: number = 1): Announceme
       ownersPhoneNumbers: formData.apartmentDetails?.ownerPhones,
       residentsData: formData.apartmentDetails?.residents?.map((resident: any) => ({
         name: resident.name,
-        phoneNumbers: resident.phones
+        phoneNumbers: resident.phones,
       })),
     });
   }
@@ -74,7 +74,6 @@ export const mapFormToApiRequest = (formData: any, step: number = 1): Announceme
   return baseRequest;
 };
 
-
 export const announcementApi = api.injectEndpoints({
   endpoints: (build) => ({
     // Step 1: Start the announcement creation process
@@ -87,7 +86,10 @@ export const announcementApi = api.injectEndpoints({
     }),
 
     // Step 2: Update announcement with basic info
-    createAnnouncementStep2: build.mutation<Response<number>, { announcementId: number; data: AnnouncementRequest }>({
+    createAnnouncementStep2: build.mutation<
+      Response<number>,
+      { announcementId: number; data: AnnouncementRequest }
+    >({
       query: ({ announcementId, data }) => ({
         url: `announcement/create/step2/${announcementId}`,
         method: "POST",
@@ -96,7 +98,10 @@ export const announcementApi = api.injectEndpoints({
     }),
 
     // Step 3: Update with apartment details
-    createAnnouncementStep3: build.mutation<Response<number>, { announcementId: number; data: AnnouncementRequest }>({
+    createAnnouncementStep3: build.mutation<
+      Response<number>,
+      { announcementId: number; data: AnnouncementRequest }
+    >({
       query: ({ announcementId, data }) => ({
         url: `announcement/create/step3/${announcementId}`,
         method: "POST",
@@ -105,7 +110,10 @@ export const announcementApi = api.injectEndpoints({
     }),
 
     // Step 4: Update with additional details
-    createAnnouncementStep4: build.mutation<Response<number>, { announcementId: number; data: AnnouncementRequest }>({
+    createAnnouncementStep4: build.mutation<
+      Response<number>,
+      { announcementId: number; data: AnnouncementRequest }
+    >({
       query: ({ announcementId, data }) => ({
         url: `announcement/create/step4/${announcementId}`,
         method: "POST",
@@ -123,7 +131,10 @@ export const announcementApi = api.injectEndpoints({
     }),
 
     // Step 5: Update with full details
-    createAnnouncementStep5: build.mutation<Response<number>, { announcementId: number; data: AnnouncementRequest }>({
+    createAnnouncementStep5: build.mutation<
+      Response<number>,
+      { announcementId: number; data: AnnouncementRequest }
+    >({
       query: ({ announcementId, data }) => ({
         url: `announcement/create/step5/${announcementId}`,
         method: "POST",
@@ -132,7 +143,10 @@ export const announcementApi = api.injectEndpoints({
     }),
 
     // Step 6: Final step with preferences
-    createAnnouncementStep6: build.mutation<Response<FinalStepResponse>, { announcementId: number; data: AnnouncementRequest }>({
+    createAnnouncementStep6: build.mutation<
+      Response<FinalStepResponse>,
+      { announcementId: number; data: AnnouncementRequest }
+    >({
       query: ({ announcementId, data }) => ({
         url: `announcement/create/step6/${announcementId}`,
         method: "POST",
@@ -150,5 +164,5 @@ export const {
   useCreateAnnouncementStep4Mutation,
   useCreateAnnouncementStep5Mutation,
   useCreateAnnouncementStep6Mutation,
-  useUploadFilesMutation
+  useUploadFilesMutation,
 } = announcementApi;

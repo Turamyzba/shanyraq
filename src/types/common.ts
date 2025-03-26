@@ -101,4 +101,3 @@ export const roleOptions = [
     image: Images.roleTenant,
   },
 ];
-

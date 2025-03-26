@@ -26,14 +26,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <div className="app-wrapper">
             {isMobile ? <MobileHeader /> : <Header handleOpenModal={onOpen} />}
-            <main className="content-wrapper">
-              
-              {children}
-            </main>
+            <main className="content-wrapper">{children}</main>
             {!isMobile && <Footer />}
             {/* {isMobile && <MobileNavigation />} */}
           </div>
-          {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />} 
+          {isOpen && <AddApartmentModal isOpen={isOpen} onClose={onClose} />}
         </Providers>
         <ToastPortal />
       </body>

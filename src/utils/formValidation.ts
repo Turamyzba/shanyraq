@@ -87,7 +87,7 @@ export const validateStepApartmentDetails = (formData: any): boolean => {
 
 export const validateStepApartmentAdditionalDetails = (formData: any): boolean => {
   const apartmentDetails = formData.apartmentDetails || {};
-  
+
   if (!apartmentDetails.description || apartmentDetails.description.trim().length < 10) {
     showToast({
       title: "Ошибка",
@@ -123,7 +123,7 @@ export const validateStepApartmentAdditionalDetails = (formData: any): boolean =
 
 export const validateStepApartmentFullDetails = (formData: any): boolean => {
   const apartmentDetails = formData.apartmentDetails || {};
-  
+
   if (!apartmentDetails.propertyType) {
     showToast({
       title: "Ошибка",

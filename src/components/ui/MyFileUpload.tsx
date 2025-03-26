@@ -32,7 +32,7 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
   const [uploadingFiles, setUploadingFiles] = useState<string[]>([]);
 
   const [uploadFiles] = useUploadFilesMutation();
-  
+
   // Initialize fileList from photos on mount and when photos changes
   useEffect(() => {
     if (photos && photos.length > 0) {
@@ -75,19 +75,19 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
 
   const uploadFilesToServer = async (files: FileType[]): Promise<string[]> => {
     if (!files || files.length === 0) return [];
-    
+
     const formData = new FormData();
-    
-    setUploadingFiles(files.map(file => file.name));
+
+    setUploadingFiles(files.map((file) => file.name));
     setUploadProgress(0);
-    
+
     files.forEach((file) => {
-      formData.append('files', file);
+      formData.append("files", file);
     });
 
     try {
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
+        setUploadProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -97,17 +97,17 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       }, 300);
 
       const response = await uploadFiles(formData);
-      
+
       clearInterval(progressInterval);
       setUploadProgress(100);
-      
+
       console.log(response.data?.data);
-      
+
       setTimeout(() => {
         setUploadingFiles([]);
         setUploadProgress(0);
       }, 500);
-      
+
       return response.data?.data || [];
     } catch (error) {
       console.error("Error uploading files:", error);
@@ -137,10 +137,10 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       // We're the first file in this batch
       try {
         setUploading(true);
-        
+
         // First add the files to the visual list as "uploading"
         const tempFileList = [...fileList];
-        
+
         const uploadingItems = uploadedFiles.map((file) => ({
           uid: `-${Date.now()}-${file.name}`,
           name: file.name,
@@ -148,18 +148,18 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
           percent: 0,
           originFileObj: file,
         }));
-        
+
         setFileList([...tempFileList, ...uploadingItems]);
-        
+
         // Then upload them all at once
         const fileUrls = await uploadFilesToServer(uploadedFiles);
-        
+
         if (fileUrls && fileUrls.length > 0) {
           // Get all temp entries we just added
           const newFileListWithoutTemp = fileList.filter(
             (item) => !uploadingItems.some((tempItem) => tempItem.uid === item.uid)
           );
-          
+
           // Create new entries with URLs from server
           const newFiles = await Promise.all(
             uploadedFiles.map(async (file, index) => {
@@ -173,21 +173,19 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
               };
             })
           );
-          
+
           const finalFileList = [...newFileListWithoutTemp, ...newFiles];
           setFileList(finalFileList);
-          
+
           const newPhotos = finalFileList
             .filter((file) => file.status === "done")
             .map((file) => file.url || "");
-          
+
           setPhotos(newPhotos);
         } else {
           // If upload failed, remove the temp entries
           setFileList(
-            fileList.filter(
-              (item) => !uploadingItems.some((tempItem) => tempItem.uid === item.uid)
-            )
+            fileList.filter((item) => !uploadingItems.some((tempItem) => tempItem.uid === item.uid))
           );
         }
       } catch (error) {
@@ -196,7 +194,7 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
         setUploading(false);
       }
     }
-    
+
     // Return false to prevent the default upload behavior for ALL files
     return false;
   };
@@ -245,17 +243,13 @@ const MyFileUpload: React.FC<FileUploadProps> = ({ photos, setPhotos, maxCount =
       {uploadingFiles.length > 0 && (
         <div className="mb-4 p-3 bg-gray-50 rounded">
           <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium mb-1">
-              Загрузка {uploadingFiles.length} файлов...
-            </p>
+            <p className="text-sm font-medium mb-1">Загрузка {uploadingFiles.length} файлов...</p>
             <Progress percent={uploadProgress} status="active" strokeColor="#1AA683" />
             <div className="text-xs text-gray-500 mt-1">
               {uploadingFiles.slice(0, 2).map((name, i) => (
                 <div key={i}>{name}</div>
               ))}
-              {uploadingFiles.length > 2 && (
-                <div>+{uploadingFiles.length - 2} ещё</div>
-              )}
+              {uploadingFiles.length > 2 && <div>+{uploadingFiles.length - 2} ещё</div>}
             </div>
           </div>
         </div>

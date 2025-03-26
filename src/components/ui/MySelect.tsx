@@ -36,14 +36,14 @@ export default function MyHeroSelect({
 
   return (
     <NextSelect
-    selectedKeys={selectedKeys}
-    onSelectionChange={(keys) => {
-      // Convert the Set back to a single string value
-      const keysArray = Array.from(keys);
-      const newValue = keysArray.length > 0 ? keysArray[0].toString() : "";
-      console.log("Selection changed to:", newValue);
-      onChange(newValue);
-    }}
+      selectedKeys={selectedKeys}
+      onSelectionChange={(keys) => {
+        // Convert the Set back to a single string value
+        const keysArray = Array.from(keys);
+        const newValue = keysArray.length > 0 ? keysArray[0].toString() : "";
+        console.log("Selection changed to:", newValue);
+        onChange(newValue);
+      }}
       value={value}
       onChange={(event) => onChange(event.target.value)}
       label={label}

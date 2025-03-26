@@ -27,20 +27,20 @@ const GroupItem: React.FC<GroupItemProps> = ({
   onRejectApplicant,
 }) => {
   const avatarLimit = 3;
-  
+
   // For pending and rejected groups, move current user to applicants list
   let displayMembers = [...group.members];
   let displayApplicants = [...(group.applicants || [])];
-  
+
   // For pending and rejected groups, current user should be in the applicants list
   if ((group.status === "pending" || group.status === "rejected") && group.isUserMember) {
-    const currentUser = displayMembers.find(member => member.isCurrentUser);
+    const currentUser = displayMembers.find((member) => member.isCurrentUser);
     if (currentUser && !group.isUserOwner) {
-      displayMembers = displayMembers.filter(member => !member.isCurrentUser);
+      displayMembers = displayMembers.filter((member) => !member.isCurrentUser);
       displayApplicants = [currentUser, ...displayApplicants];
     }
   }
-  
+
   const displayedAvatars = displayMembers.slice(0, avatarLimit);
   const hasMoreAvatars = displayMembers.length > avatarLimit;
   const isPending = group.status === "pending";
@@ -51,10 +51,10 @@ const GroupItem: React.FC<GroupItemProps> = ({
   const canRemoveMembers = group.isUserAdmin || group.isUserOwner;
   const canManageAdmins = group.isUserOwner && isAccepted;
   const canManageApplicants = group.isUserAdmin || group.isUserOwner;
-  
+
   // Users can leave groups if they are accepted groups
   const canLeaveGroup = group.isUserMember && isAccepted;
-  
+
   // Users can cancel their application if the status is pending
   const canCancelApplication = group.isUserMember && isPending;
 

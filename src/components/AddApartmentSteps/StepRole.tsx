@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import styles from "./StepRole.module.scss";
 import { Button } from "@heroui/react";
 import { useFormContext } from "react-hook-form";
-import { roleOptions } from "@/types/common"
+import { roleOptions } from "@/types/common";
 
 const StepRole: React.FC = () => {
   const { setValue, watch } = useFormContext();

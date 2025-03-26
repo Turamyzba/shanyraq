@@ -6,10 +6,8 @@ import ReduxProvider from "@/providers/ReduxProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-      <HeroUIProvider>
-        <ReduxProvider>
-          {children}
-        </ReduxProvider>
-      </HeroUIProvider>
+    <HeroUIProvider>
+      <ReduxProvider>{children}</ReduxProvider>
+    </HeroUIProvider>
   );
 }

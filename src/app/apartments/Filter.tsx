@@ -93,142 +93,139 @@ export default function Filter({ onSubmit, onResetFilter }: FilterProps) {
   const [microDistricts, setMicroDistricts] = useState<AddressType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [moreFilters, setMoreFilters] = useState(false);
-  
+
   const [localRooms, setLocalRooms] = useState<number>(rooms || 1);
 
-const [isToday, setIsToday] = useState(false);
-const [isTomorrow, setIsTomorrow] = useState(false);
+  const [isToday, setIsToday] = useState(false);
+  const [isTomorrow, setIsTomorrow] = useState(false);
 
-useEffect(() => {
-  if (typeof rooms === 'number' && rooms > 0) {
-    setLocalRooms(rooms);
-  } else {
-    setLocalRooms(1);
-    dispatch(setRooms(1));
-  }
-}, [rooms, dispatch]);
-
-const incrementRooms = () => {
-  const newValue = Math.min(localRooms + 1, 10);
-  setLocalRooms(newValue);
-  dispatch(setRooms(newValue));
-};
-
-const decrementRooms = () => {
-  const newValue = Math.max(localRooms - 1, 1);
-  setLocalRooms(newValue);
-  dispatch(setRooms(newValue));
-};
-
-const getCalendarDateValue = (moveInDate: any) => {
-  try {
-    if (!moveInDate) {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      return parseDate(`${year}-${month}-${day}`);
+  useEffect(() => {
+    if (typeof rooms === "number" && rooms > 0) {
+      setLocalRooms(rooms);
+    } else {
+      setLocalRooms(1);
+      dispatch(setRooms(1));
     }
-    
-    if (typeof moveInDate === 'string') {
-      if (moveInDate.includes('T')) {
-        return parseDate(moveInDate.split('T')[0]);
+  }, [rooms, dispatch]);
+
+  const incrementRooms = () => {
+    const newValue = Math.min(localRooms + 1, 10);
+    setLocalRooms(newValue);
+    dispatch(setRooms(newValue));
+  };
+
+  const decrementRooms = () => {
+    const newValue = Math.max(localRooms - 1, 1);
+    setLocalRooms(newValue);
+    dispatch(setRooms(newValue));
+  };
+
+  const getCalendarDateValue = (moveInDate: any) => {
+    try {
+      if (!moveInDate) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        return parseDate(`${year}-${month}-${day}`);
       }
-      return parseDate(moveInDate);
-    }
-    
-    if (moveInDate instanceof Date) {
-      const year = moveInDate.getFullYear();
-      const month = String(moveInDate.getMonth() + 1).padStart(2, '0');
-      const day = String(moveInDate.getDate()).padStart(2, '0');
-      return parseDate(`${year}-${month}-${day}`);
-    }
-    
-    if (typeof moveInDate === 'object' && moveInDate !== null) {
-      return moveInDate;
-    }
-  } catch (e) {
-    console.error("Error parsing date for calendar:", e);
-  }
-  
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return parseDate(`${year}-${month}-${day}`);
-};
 
-const handleDateChange = (date: any) => {
-  if (!date) return;
-  
-  try {
-    setIsToday(false);
-    setIsTomorrow(false);
-    
-    let dateStr;
-    
-    if (typeof date.toDate === 'function') {
-      const jsDate = date.toDate();
-      dateStr = jsDate.toISOString();
-      
+      if (typeof moveInDate === "string") {
+        if (moveInDate.includes("T")) {
+          return parseDate(moveInDate.split("T")[0]);
+        }
+        return parseDate(moveInDate);
+      }
+
+      if (moveInDate instanceof Date) {
+        const year = moveInDate.getFullYear();
+        const month = String(moveInDate.getMonth() + 1).padStart(2, "0");
+        const day = String(moveInDate.getDate()).padStart(2, "0");
+        return parseDate(`${year}-${month}-${day}`);
+      }
+
+      if (typeof moveInDate === "object" && moveInDate !== null) {
+        return moveInDate;
+      }
+    } catch (e) {
+      console.error("Error parsing date for calendar:", e);
+    }
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return parseDate(`${year}-${month}-${day}`);
+  };
+
+  const handleDateChange = (date: any) => {
+    if (!date) return;
+
+    try {
+      setIsToday(false);
+      setIsTomorrow(false);
+
+      let dateStr;
+
+      if (typeof date.toDate === "function") {
+        const jsDate = date.toDate();
+        dateStr = jsDate.toISOString();
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+
+        const selectedDate = new Date(jsDate);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate.getTime() === today.getTime()) {
+          setIsToday(true);
+        } else if (selectedDate.getTime() === tomorrow.getTime()) {
+          setIsTomorrow(true);
+        }
+      } else if (typeof date === "string") {
+        dateStr = new Date(date).toISOString();
+      } else if (date.toString) {
+        dateStr = date.toString();
+      } else {
+        dateStr = new Date().toISOString();
+      }
+
+      dispatch(setMoveInDate(dateStr));
+    } catch (e) {
+      console.error("Error handling date change:", e);
+    }
+  };
+
+  const handleTodayChange = () => {
+    const newIsToday = !isToday;
+    setIsToday(newIsToday);
+
+    if (newIsToday) {
+      setIsTomorrow(false);
+
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
+      dispatch(setMoveInDate(today.toISOString()));
+    } else {
+    }
+  };
+
+  const handleTomorrowChange = () => {
+    const newIsTomorrow = !isTomorrow;
+    setIsTomorrow(newIsTomorrow);
+
+    if (newIsTomorrow) {
+      setIsToday(false);
+
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
-      
-      const selectedDate = new Date(jsDate);
-      selectedDate.setHours(0, 0, 0, 0);
-      
-      if (selectedDate.getTime() === today.getTime()) {
-        setIsToday(true);
-      } else if (selectedDate.getTime() === tomorrow.getTime()) {
-        setIsTomorrow(true);
-      }
-    } 
-    else if (typeof date === 'string') {
-      dateStr = new Date(date).toISOString();
+      dispatch(setMoveInDate(tomorrow.toISOString()));
+    } else {
     }
-    else if (date.toString) {
-      dateStr = date.toString();
-    }
-    else {
-      dateStr = new Date().toISOString();
-    }
-    
-    dispatch(setMoveInDate(dateStr));
-  } catch (e) {
-    console.error("Error handling date change:", e);
-  }
-};
-
-const handleTodayChange = () => {
-  const newIsToday = !isToday;
-  setIsToday(newIsToday);
-  
-  if (newIsToday) {
-    setIsTomorrow(false);
-    
-    const today = new Date();
-    dispatch(setMoveInDate(today.toISOString()));
-  } else {
-  }
-};
-
-const handleTomorrowChange = () => {
-  const newIsTomorrow = !isTomorrow;
-  setIsTomorrow(newIsTomorrow);
-  
-  if (newIsTomorrow) {
-    setIsToday(false);
-    
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    dispatch(setMoveInDate(tomorrow.toISOString()));
-  } else {
-  }
-};
+  };
 
   const genderSelectOptions = genderOptions.map((gender) => ({
     value: gender.code,
@@ -388,16 +385,15 @@ const handleTomorrowChange = () => {
     if (onResetFilter) {
       onResetFilter();
     }
-    
+
     setIsToday(false);
     setIsTomorrow(false);
     setMoreFilters(false);
-    
+
     showToast({
       title: "Фильтры сброшены!",
     });
   };
-
 
   const handleSubmit = () => {
     if (onSubmit) {
@@ -591,18 +587,10 @@ const handleTomorrowChange = () => {
             radius="sm"
           />
           <div className={styles.checkboxFloorGroup}>
-            <Checkbox
-              checked={isToday}
-              onChange={handleTodayChange}
-              aria-label="Сегодня"
-            >
+            <Checkbox checked={isToday} onChange={handleTodayChange} aria-label="Сегодня">
               <p className={styles.label}>Сегодня</p>
             </Checkbox>
-            <Checkbox
-              checked={isTomorrow}
-              onChange={handleTomorrowChange}
-              aria-label="Завтра"
-            >
+            <Checkbox checked={isTomorrow} onChange={handleTomorrowChange} aria-label="Завтра">
               <p className={styles.label}>Завтра</p>
             </Checkbox>
           </div>

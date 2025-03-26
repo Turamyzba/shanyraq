@@ -16,11 +16,8 @@ export const notificationMiddleware: Middleware = (api: MiddlewareAPI) => (next)
         timeout: 5000,
         color: "success",
         classNames: {
-          base: cn([
-            "z-[10000]"
-          ])
+          base: cn(["z-[10000]"]),
         },
-
       });
     }
   }
@@ -36,9 +33,7 @@ export const notificationMiddleware: Middleware = (api: MiddlewareAPI) => (next)
         timeout: 5000,
         color: "danger",
         classNames: {
-          base: cn([
-            "z-[10000]"
-          ])
+          base: cn(["z-[10000]"]),
         },
       });
     }

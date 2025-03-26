@@ -33,7 +33,7 @@ const StepApartmentDetails: React.FC<StepApartmentDetailsProps> = ({
   fetchCities,
   fetchDistricts,
   fetchMicroDistricts,
-  isAddressLoading
+  isAddressLoading,
 }) => {
   const { watch, setValue } = useFormContext();
 
@@ -50,17 +50,15 @@ const StepApartmentDetails: React.FC<StepApartmentDetailsProps> = ({
   console.log("Form values:", {
     region: regionValue,
     district: districtValue,
-    microDistrict: microDistrictValue
+    microDistrict: microDistrictValue,
   });
-  
+
   const regionValueStr = regionValue ? regionValue.toString() : "";
   const districtValueStr = districtValue ? districtValue.toString() : "";
   const microDistrictValueStr = microDistrictValue ? microDistrictValue.toString() : "";
 
   const [moveInDate, setMoveInDate] = useState<CalendarDate>(
-    moveInDateValue 
-      ? parseDate(moveInDateValue) 
-      : parseDate(formatDate(new Date()))
+    moveInDateValue ? parseDate(moveInDateValue) : parseDate(formatDate(new Date()))
   );
 
   useEffect(() => {
@@ -68,29 +66,29 @@ const StepApartmentDetails: React.FC<StepApartmentDetailsProps> = ({
       if (citiesData.length === 0) {
         await fetchCities();
       }
-      
+
       if (regionValue && districtsData.length === 0) {
         await fetchDistricts(Number(regionValue));
       }
-      
+
       if (districtValue && microDistrictsData.length === 0) {
         await fetchMicroDistricts(Number(districtValue));
       }
     };
-    
+
     loadInitialData();
   }, []);
 
   const handleRegionSelect = (value: string) => {
     const selectedRegion = citiesData.find((reg) => reg.id.toString() === value);
-    
+
     setDistrictsData([]);
     setMicroDistrictsData([]);
-    
+
     setValue("region", selectedRegion?.id || null);
     setValue("district", null);
     setValue("microDistrict", null);
-    
+
     if (selectedRegion && selectedRegion.haschild) {
       fetchDistricts(selectedRegion.id);
     }
@@ -98,12 +96,12 @@ const StepApartmentDetails: React.FC<StepApartmentDetailsProps> = ({
 
   const handleDistrictSelect = (value: string) => {
     const selectedDistrict = districtsData.find((dist) => dist.id.toString() === value);
-    
+
     setMicroDistrictsData([]);
-    
+
     setValue("district", selectedDistrict?.id || null);
     setValue("microDistrict", null);
-    
+
     if (selectedDistrict && selectedDistrict.haschild) {
       fetchMicroDistricts(selectedDistrict.id);
     }
@@ -111,7 +109,7 @@ const StepApartmentDetails: React.FC<StepApartmentDetailsProps> = ({
 
   const handleMicroDistrictSelect = (value: string) => {
     const selectedMicroDistrict = microDistrictsData.find((micro) => micro.id.toString() === value);
-    
+
     setValue("microDistrict", selectedMicroDistrict?.id || null);
   };
 
@@ -120,7 +118,7 @@ const StepApartmentDetails: React.FC<StepApartmentDetailsProps> = ({
     setMoveInDate(newDate);
     setValue("moveInDate", formatDate(newDate.toDate("UTC")));
   };
-  
+
   return (
     <div className={styles.container}>
       {/* Region Selection */}

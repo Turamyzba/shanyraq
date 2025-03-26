@@ -144,12 +144,16 @@ const StepApartmentFullDetails: React.FC = () => {
         <div className={styles.propertyTypeContainer}>
           {propertyTypeOptions.map((option) => (
             <div key={option.id} className={styles.radioRow}>
-              <button 
+              <button
                 onClick={() => {
                   setValue("apartmentDetails.propertyType", option.code);
                 }}
               >
-                {propertyType === option.code ? <Images.radioSelected /> : <Images.radioNotSelected />}
+                {propertyType === option.code ? (
+                  <Images.radioSelected />
+                ) : (
+                  <Images.radioNotSelected />
+                )}
               </button>
               <input
                 type="radio"
@@ -247,7 +251,7 @@ const StepApartmentFullDetails: React.FC = () => {
 
       <div className={styles.contactSection}>
         <h2 className={styles.contactTitle}>Контактная информация владельца</h2>
-        
+
         <div className={styles.inputGroup}>
           <label className={styles.secondaryLabel}>Имя владельца</label>
           <MyInput
@@ -289,8 +293,8 @@ const StepApartmentFullDetails: React.FC = () => {
               labelPlacement="outside"
             />
             <div className={styles.addPhoneButtons}>
-              <MyButton 
-                onPress={handleAddOwnerPhone} 
+              <MyButton
+                onPress={handleAddOwnerPhone}
                 className={styles.addButton}
                 isDisabled={!isPhoneValid(newOwnerPhone)}
               >
@@ -449,8 +453,8 @@ const StepApartmentFullDetails: React.FC = () => {
             </div>
 
             <div className={styles.addPhoneButtons}>
-              <MyButton 
-                onPress={handleAddResident} 
+              <MyButton
+                onPress={handleAddResident}
                 className={styles.addButton}
                 isDisabled={!newResidentName || !isPhoneValid(newResidentPhone)}
               >
@@ -484,7 +488,7 @@ const StepApartmentFullDetails: React.FC = () => {
           <span>Добавить контакты жителей</span>
         </MyButton>
       )}
-      
+
       {residents.length >= getMaxResidents() && !showAddResidentForm && (
         <div className={styles.maxResidentsMessage}>
           <p>Достигнуто максимальное количество жителей ({getMaxResidents()})</p>
