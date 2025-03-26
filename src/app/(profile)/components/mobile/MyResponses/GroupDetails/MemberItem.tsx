@@ -38,8 +38,8 @@ const MemberItem: React.FC<MemberItemProps> = ({ member, isPending, canRemove, o
         />
         <div className={styles.memberInfo}>
           <div className={styles.memberName}>
-            {member.name}
             {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
+            {member.name}
           </div>
           {member.email && <div className={styles.memberEmail}>{member.email}</div>}
           {getRoleBadge(member.role)}

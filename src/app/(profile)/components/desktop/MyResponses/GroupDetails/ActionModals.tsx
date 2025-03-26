@@ -25,6 +25,7 @@ const ActionModals: React.FC<ActionModalsProps> = ({ modalConfig, onCancel }) =>
           type="primary"
           onClick={modalConfig.confirmAction}
           className={styles.confirmButton}
+          style={{ backgroundColor: "#1aa683", borderColor: "#1aa683" }}
         >
           {modalConfig.confirmText}
         </Button>,
