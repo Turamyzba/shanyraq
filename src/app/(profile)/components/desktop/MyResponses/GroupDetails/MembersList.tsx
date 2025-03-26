@@ -32,6 +32,8 @@ const MembersList: React.FC<MembersListProps> = ({
   // Limited access for pending or rejected groups
   const limitedAccess = groupStatus !== "accepted";
 
+  // Filter members to only show current user if status is not accepted
+
   const columns = [
     {
       title: "Пользователь",
@@ -49,8 +51,8 @@ const MembersList: React.FC<MembersListProps> = ({
               {member.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
               {member.name}
 
-              {member.role === "admin" && <span className={styles.adminBadge}>Админ группы</span>}
-              {member.role === "owner" && (
+              {!limitedAccess && member.role === "admin" && <span className={styles.adminBadge}>Админ группы</span>}
+              {!limitedAccess && member.role === "owner" && (
                 <span className={styles.ownerBadge}>Создатель объявления</span>
               )}
             </div>

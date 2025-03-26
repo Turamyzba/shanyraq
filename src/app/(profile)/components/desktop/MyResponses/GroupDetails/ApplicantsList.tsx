@@ -22,7 +22,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 }) => {
   if (!applicants.length) return null;
 
-  // Limited access for pending or rejected groups
   const limitedAccess = groupStatus !== "accepted";
 
   const columns = [
@@ -68,21 +67,21 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       title: "Возраст",
       dataIndex: "age",
       key: "age",
-      width: 100,
+      width:  100,
       render: (age: number) => (limitedAccess ? "**" : age),
     },
     {
       title: "Контакты",
       dataIndex: "phone",
       key: "phone",
-      width: 140,
+      width:  140,
       render: (phone: string) => (limitedAccess ? "*** *** ** **" : phone),
     },
     {
       title: "Дата",
       dataIndex: "date",
       key: "date",
-      width: 100,
+      width:  100,
       render: (date: string) => (limitedAccess ? "**/**/****" : date),
     },
     {
@@ -100,7 +99,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       title: "",
       key: "action",
       fixed: "right" as const,
-      width: 100,
+      width: 120,
       render: (applicant: Member) =>
         canManageApplicants && (
           <div className={styles.actions}>

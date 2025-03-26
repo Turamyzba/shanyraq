@@ -71,7 +71,7 @@ const MemberItem: React.FC<MemberItemProps> = ({
         </div>
       </div>
 
-      <div className={styles.memberDetail}>
+      <div className={styles.memberDetail} style={{ width: limitedAccess ? 0 : "auto" }}>
         {limitedAccess ? (
           <span className={styles.detailValue}>**</span>
         ) : (
@@ -79,7 +79,7 @@ const MemberItem: React.FC<MemberItemProps> = ({
         )}
       </div>
 
-      <div className={styles.memberDetail}>
+      <div className={styles.memberDetail} style={{ width: limitedAccess ? 0 : "auto" }}>
         {limitedAccess ? (
           <span className={styles.detailValue}>*** *** ** **</span>
         ) : (
@@ -87,7 +87,7 @@ const MemberItem: React.FC<MemberItemProps> = ({
         )}
       </div>
 
-      <div className={styles.memberDetail}>
+      <div className={styles.memberDetail} style={{ width: limitedAccess ? 0 : "auto" }}>
         {limitedAccess ? (
           <span className={styles.detailValue}>**/**/****</span>
         ) : (
@@ -105,7 +105,7 @@ const MemberItem: React.FC<MemberItemProps> = ({
           <Button
             className={styles.promoteButton}
             onClick={() => onPromoteToAdmin && onPromoteToAdmin(member.id)}
-            icon={<AdminIcon />}
+            icon={<UserPlusIcon />}
             title="Сделать администратором"
           />
         )}
@@ -158,14 +158,19 @@ const TrashIcon = () => (
   </svg>
 );
 
-const AdminIcon = () => (
+const UserPlusIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />
     <path
-      d="M16.6667 5.83333L7.5 15L3.33333 10.8333L4.16667 10L7.5 13.3333L15.8333 5"
+      d="M10 12C7.79086 12 6 13.7909 6 16H14C14 13.7909 12.2091 12 10 12Z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    />
+    <path
+      d="M14 8H16M16 8H18M16 8V6M16 8V10"
       stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
-      strokeLinejoin="round"
     />
   </svg>
 );

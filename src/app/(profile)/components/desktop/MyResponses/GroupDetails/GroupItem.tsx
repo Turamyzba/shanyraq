@@ -153,7 +153,6 @@ const GroupItem: React.FC<GroupItemProps> = ({
           <Button
             onClick={() => onCancelApplication && onCancelApplication(group.id)}
             className={styles.cancelButton}
-            danger
           >
             Отменить
           </Button>
@@ -162,7 +161,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
 
       {isRejected && (
         <div className={styles.leaveGroupSection}>
-          <Button className={styles.cancelButton} danger disabled>
+          <Button className={styles.cancelButton} disabled>
             Отменить
           </Button>
         </div>

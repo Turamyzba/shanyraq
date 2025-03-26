@@ -376,8 +376,8 @@
   display: flex;
   gap: 8px;
 }
-.actions{
-    display: flex;
+.actions {
+  display: flex;
   gap: 8px;
 }
 
@@ -529,8 +529,7 @@
   justify-content: flex-end;
 }
 
-.leaveGroupButton,
-.cancelButton {
+.leaveGroupButton {
   background-color: #ef4444 !important;
   border: none;
   color: white !important;
@@ -541,9 +540,24 @@
   box-shadow: none;
 }
 
-.leaveGroupButton:hover,
-.cancelButton:hover {
+.cancelButton {
+  background-color: #6b7280 !important;
+  border: none;
+  color: white !important;
+  height: 36px;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.leaveGroupButton:hover {
   background-color: #dc2626 !important;
+  color: white !important;
+}
+
+.cancelButton:hover {
+  background-color: #4b5563 !important;
   color: white !important;
 }
 
