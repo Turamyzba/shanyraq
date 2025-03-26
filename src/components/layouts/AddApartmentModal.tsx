@@ -67,7 +67,7 @@ const AddApartmentModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   const methods = useForm({ defaultValues });
   const apiDataTracker = ApiDataTracker.getInstance();
 
-  const [currentStep, setCurrentStep] = useState(5);
+  const [currentStep, setCurrentStep] = useState(1);
   const [announcementId, setAnnouncementId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
