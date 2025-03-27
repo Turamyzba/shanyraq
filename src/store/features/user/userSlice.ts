@@ -13,9 +13,9 @@ interface UserState {
 
 const initialState: UserState = {
   user: null,
-  accessToken: null,
+  accessToken: localStorage.getItem("accessToken") || null,
   isSurveyCompleted: false,
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem("accessToken"),
 };
 
 // Only access localStorage on the client side

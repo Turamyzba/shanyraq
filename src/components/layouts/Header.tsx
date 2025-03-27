@@ -16,12 +16,17 @@ import {
 import type { MenuProps } from "antd";
 import { Dropdown as DropdownAnt } from "antd";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useRestoreAnnouncementMutation } from "@/store/features/myAnnouncements/announcementApi";
+import { logout } from "@/store/features/user/userSlice";
 
 export default function Header({ handleOpenModal }: { handleOpenModal: () => void }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [local, setLocal] = useState("kz");
   const [selectedKeys, setSelectedKeys] = useState(new Set(["astana"]));
   const selectedCity = useMemo(() => Array.from(selectedKeys).join(", "), [selectedKeys]);
+  const userState = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const [isOspan, setIsOspan] = useState(true);
   const router = useRouter();
@@ -41,9 +46,20 @@ export default function Header({ handleOpenModal }: { handleOpenModal: () => voi
     },
     {
       key: "2",
-      label: <Link href="/logout">Выйти</Link>,
+      label: <Link href="/login">Выйти</Link>,
+      onClick: () => {
+        dispatch(logout());
+      },
     },
   ];
+
+  const handleAddSubmit = () => {
+    if (!userState.isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    handleOpenModal();
+  };
 
   return (
     <Container>
@@ -137,16 +153,18 @@ export default function Header({ handleOpenModal }: { handleOpenModal: () => voi
                 </Button>
               )}
 
-              <Button onPress={handleOpenModal} className={styles.createAdButton}>
+              <Button onPress={handleAddSubmit} className={styles.createAdButton}>
                 Подать объявление
                 <Images.Plus size={16} />
               </Button>
 
-              <DropdownAnt menu={{ items }} placement="bottomRight">
-                <Button className={styles.profileIcon} isIconOnly variant="bordered">
-                  <Images.User color="#1aa683" size={20} />
-                </Button>
-              </DropdownAnt>
+              {userState.isAuthenticated && (
+                <DropdownAnt menu={{ items }} placement="bottomRight">
+                  <Button className={styles.profileIcon} isIconOnly variant="bordered">
+                    <Images.User color="#1aa683" size={20} />
+                  </Button>
+                </DropdownAnt>
+              )}
             </div>
           </div>
         </header>
