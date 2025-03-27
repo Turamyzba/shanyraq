@@ -18,6 +18,7 @@ type Props = {
   color?: NextUiColors;
   variant?: "bordered";
   className?: string;
+  style?: string;
 };
 
 const MyPhoneInput = ({
@@ -30,6 +31,7 @@ const MyPhoneInput = ({
   color = "primary",
   variant = "bordered",
   className,
+  style,
   value,
   onChange,
 }: Props) => {

@@ -17,6 +17,7 @@ type Props = {
   variant?: "bordered";
   className?: string;
   startContent?: any;
+  disabled?: boolean;
 };
 
 const MyInput = ({
@@ -33,6 +34,7 @@ const MyInput = ({
   color = "primary",
   className,
   startContent,
+  disabled
 }: Props) => {
   return (
     <NextInput
@@ -41,6 +43,7 @@ const MyInput = ({
       labelPlacement={labelPlacement}
       color={color}
       isRequired={isRequired}
+      disabled={disabled}
       errorMessage={errorMessage}
       placeholder={placeholder}
       startContent={startContent}
@@ -49,7 +52,7 @@ const MyInput = ({
       onChange={onChange}
       variant={variant}
       className={className}
-      classNames={{
+      classNames={className ? {} : {
         inputWrapper: "border-[#EBEBEB] border-1 rounded-[5px]",
         label: "text-foreground",
       }}

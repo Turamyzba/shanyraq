@@ -1,3 +1,27 @@
+// Shared styles
+.loadingContainer {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.customSpin {
+  color: #1AA683 !important;
+  font-size: 24px !important;
+}
+
+.customSpin :global(.ant-spin-dot-item) {
+  background-color: #1AA683 !important;
+}
+
+.phoneInput {
+  width: 100%;
+  height: 54px !important;
+}
+
+// Desktop styles
 .container {
   background-color: #fff;
   border: 1px solid #ebebeb;
@@ -108,23 +132,11 @@
   font-weight: 600 !important;
   margin-bottom: 30px !important;
   color: #32343a !important;
-  margin-bottom: 30px !important;
-  color: #32343a !important;
 }
 
 .passwordField {
   position: relative;
   margin-bottom: 16px;
-}
-
-.inputStyle {
-  font-weight: 400 !important;
-  font-size: 16px !important;
-  border: 1px solid #ebebeb !important;
-  border: 1px solid #ebebeb !important;
-  border-radius: 10px !important;
-  background-color: transparent !important;
-  background: transparent !important;
 }
 
 .passwordToggleIcon {
@@ -135,6 +147,15 @@
   cursor: pointer;
   color: #999;
   font-size: 18px;
+}
+
+.inputStyle {
+  font-weight: 400 !important;
+  font-size: 16px !important;
+  border: 1px solid #ebebeb !important;
+  border-radius: 10px !important;
+  background-color: transparent !important;
+  background: transparent !important;
 }
 
 .modalFooter {
@@ -159,4 +180,110 @@
   color: #252525;
   font-size: 18px !important;
   font-weight: 700;
+}
+
+// Mobile styles
+.mobileContainer {
+  background-color: #fff;
+  border: 1px solid #ebebeb;
+  padding: 16px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.mobileHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.userIcon {
+  font-size: 24px;
+  background-color: #1aa683;
+  color: #fff;
+  padding: 8px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.mobileTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #252525;
+}
+
+.mobileForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobileFormItem {
+  width: 100% !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #25252580 !important;
+  margin: 0 !important;
+}
+
+.mobileInput {
+  border-radius: 10px !important;
+  border: 1px solid #ebebeb !important;
+  padding: 12px !important;
+  font-size: 14px !important;
+}
+
+.mobileSelect {
+  border-radius: 10px !important;
+  height: 45px !important;
+}
+
+.mobileButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.mobileEditBtn {
+  width: 100%;
+  height: 45px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  background-color: #32343a;
+  color: #fff;
+  border: none;
+}
+
+.mobileEditBtn:hover {
+  background-color: #35373e !important;
+  color: #fff !important;
+}
+
+.mobileSaveBtn {
+  width: 100%;
+  height: 45px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  background-color: #1aa683 !important;
+  color: #fff !important;
+  border: none;
+}
+
+.mobileSaveBtn:hover {
+  color: #fff !important;
+}
+
+.mobilePasswordBtn {
+  width: 100%;
+  height: 45px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  background-color: transparent;
+  color: #252525;
+  border: 1px solid #252525;
 }
