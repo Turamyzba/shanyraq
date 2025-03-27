@@ -1,8 +1,10 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/ApplicantsList.tsx
 import React from "react";
 import { Collapse, Table } from "antd";
 import { Member, GroupStatus } from "./types";
 import styles from "./GroupDetails.module.scss";
-import Images from '@/components/common/Images'
+import Images from "@/components/common/Images";
+
 interface ApplicantsListProps {
   applicants: Member[];
   groupStatus: GroupStatus;
@@ -42,6 +44,11 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             <div className={styles.userName}>
               {applicant.isCurrentUser && <span className={styles.currentUserBadge}>Вы</span>}
               {applicant.name}
+              {applicant.groupApplicants && applicant.groupApplicants.length > 0 && (
+                <span className={styles.groupBadge}>
+                  Группа ({applicant.groupApplicants.length + 1})
+                </span>
+              )}
             </div>
             <div className={styles.userEmail}>
               {limitedAccess && !applicant.isCurrentUser ? "******@***.***" : applicant.email}
@@ -129,6 +136,82 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
     },
   ];
 
+  const nestedColumns = [
+    {
+      title: "Пользователь",
+      key: "user",
+      fixed: "left" as const,
+      width: 320,
+      render: (applicant: Member) => (
+        <div className={styles.tableUser}>
+          <div
+            className={styles.userAvatar}
+            style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${applicant.id})` }}
+          ></div>
+          <div>
+            <div className={styles.userName}>{applicant.name}</div>
+            <div className={styles.userEmail}>
+              {limitedAccess && !applicant.isCurrentUser ? "******@***.***" : applicant.email}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Телеграм",
+      key: "telegram",
+      width: 100,
+      render: (applicant: Member) =>
+        limitedAccess && !applicant.isCurrentUser ? (
+          <span>@********</span>
+        ) : (
+          <a
+            href={`https://t.me/${applicant.telegram?.substring(1)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.telegramLink}
+          >
+            {applicant.telegram}
+          </a>
+        ),
+    },
+    {
+      title: "Возраст",
+      dataIndex: "age",
+      key: "age",
+      width: 100,
+      render: (age: number, applicant: Member) =>
+        limitedAccess && !applicant.isCurrentUser ? "**" : age,
+    },
+    {
+      title: "Контакты",
+      dataIndex: "phone",
+      key: "phone",
+      width: 140,
+      render: (phone: string, applicant: Member) =>
+        limitedAccess && !applicant.isCurrentUser ? "*** *** ** **" : phone,
+    },
+    {
+      title: "Дата",
+      dataIndex: "date",
+      key: "date",
+      width: 100,
+      render: (date: string, applicant: Member) =>
+        limitedAccess && !applicant.isCurrentUser ? "**/**/****" : date,
+    },
+    {
+      title: "Действия",
+      key: "actions",
+      width: 260,
+      render: (applicant: Member) => (
+        <div className={styles.actionButtons}>
+          <Button className={styles.actionButton}>Посмотреть анкету</Button>
+          <Button className={styles.actionButton}>Сопроводительное письмо</Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <Collapse
       defaultActiveKey={["applicants"]}
@@ -151,6 +234,23 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
           pagination={false}
           rowKey="id"
           scroll={{ x: "max-content", y: 400 }}
+          expandable={{
+            expandedRowRender: (record) =>
+              record.groupApplicants && record.groupApplicants.length > 0 ? (
+                <div className={styles.groupApplicantsContainer}>
+                  <h4 className={styles.groupApplicantsTitle}>Соседи по группе:</h4>
+                  <Table
+                    className={styles.nestedTable}
+                    columns={nestedColumns}
+                    dataSource={record.groupApplicants}
+                    pagination={false}
+                    rowKey="id"
+                    scroll={{ x: "max-content", y: 400 }}
+                  />
+                </div>
+              ) : null,
+            rowExpandable: (record) => record.groupApplicants?.length > 0,
+          }}
         />
       </Panel>
     </Collapse>
