@@ -18,6 +18,7 @@ type Props = {
   className?: string;
   startContent?: any;
   disabled?: boolean;
+  isInvalid?: boolean;
 };
 
 const MyInput = ({
@@ -34,7 +35,8 @@ const MyInput = ({
   color = "primary",
   className,
   startContent,
-  disabled
+  disabled,
+  isInvalid,
 }: Props) => {
   return (
     <NextInput
@@ -50,12 +52,17 @@ const MyInput = ({
       type={type}
       value={value}
       onChange={onChange}
+      isInvalid={isInvalid}
       variant={variant}
       className={className}
-      classNames={className ? {} : {
-        inputWrapper: "border-[#EBEBEB] border-1 rounded-[5px]",
-        label: "text-foreground",
-      }}
+      classNames={
+        className
+          ? {}
+          : {
+              inputWrapper: "border-[#EBEBEB] border-1 rounded-[5px]",
+              label: "text-foreground",
+            }
+      }
     />
   );
 };

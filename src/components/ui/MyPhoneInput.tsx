@@ -18,6 +18,7 @@ type Props = {
   color?: NextUiColors;
   variant?: "bordered";
   className?: string;
+  isInvalid?: boolean;
   style?: string;
 };
 
@@ -31,6 +32,7 @@ const MyPhoneInput = ({
   color = "primary",
   variant = "bordered",
   className,
+  isInvalid,
   style,
   value,
   onChange,
@@ -109,6 +111,7 @@ const MyPhoneInput = ({
       placeholder={placeholder}
       type="tel"
       value={value}
+      isInvalid={isInvalid}
       onChange={handleInputChange}
       variant={variant}
       color={color}
