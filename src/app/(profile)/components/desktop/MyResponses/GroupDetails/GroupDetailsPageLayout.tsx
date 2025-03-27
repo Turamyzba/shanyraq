@@ -1,3 +1,4 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupDetailsPageLayout.tsx
 import React, { ReactNode } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { Button } from "antd";
@@ -60,6 +61,12 @@ const GroupDetailsPageLayout: React.FC<GroupDetailsPageLayoutProps> = ({
             onClick={() => onTabChange("rejected")}
           >
             Отклоненные
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "residents" ? styles.activeTab : ""}`}
+            onClick={() => onTabChange("residents")}
+          >
+            Жильцы
           </button>
         </div>
       </div>

@@ -1,3 +1,4 @@
+// src/app/(profile)/components/desktop/MyResponses/GroupDetails/GroupItem.tsx
 import React from "react";
 import { Button, Collapse, Tooltip } from "antd";
 import { Group } from "./types";
@@ -28,11 +29,9 @@ const GroupItem: React.FC<GroupItemProps> = ({
 }) => {
   const avatarLimit = 3;
 
-  // For pending and rejected groups, move current user to applicants list
   let displayMembers = [...group.members];
   let displayApplicants = [...(group.applicants || [])];
 
-  // For pending and rejected groups, current user should be in the applicants list
   if ((group.status === "pending" || group.status === "rejected") && group.isUserMember) {
     const currentUser = displayMembers.find((member) => member.isCurrentUser);
     if (currentUser && !group.isUserOwner) {
@@ -46,26 +45,22 @@ const GroupItem: React.FC<GroupItemProps> = ({
   const isPending = group.status === "pending";
   const isRejected = group.status === "rejected";
   const isAccepted = group.status === "accepted";
+  const isResidents = group.status === "residents";
 
-  // Control permissions
   const canRemoveMembers = group.isUserAdmin || group.isUserOwner;
   const canManageAdmins = group.isUserOwner && isAccepted;
   const canManageApplicants = group.isUserAdmin || group.isUserOwner;
 
-  // Users can leave groups if they are accepted groups
   const canLeaveGroup = group.isUserMember && isAccepted;
-
-  // Users can cancel their application if the status is pending
   const canCancelApplication = group.isUserMember && isPending;
 
   const getGroupBorderClass = () => {
     if (group.status === "accepted") return styles.acceptedGroupBorder;
     if (group.status === "pending") return styles.pendingGroupBorder;
     if (group.status === "rejected") return styles.rejectedGroupBorder;
+    if (group.status === "residents") return styles.residentGroupBorder;
     return "";
   };
-
-  const isJointApplication = group.isJointApplication && isPending;
 
   return (
     <div className={`${styles.groupCard} ${getGroupBorderClass()}`}>
@@ -108,12 +103,8 @@ const GroupItem: React.FC<GroupItemProps> = ({
                     : ""}
             </div>
           )}
-          {isJointApplication ? (
-            <Tooltip title="Заявка ещё не отправлена. Чтобы отправить заявку, ваши друзья должны заполнить анкету">
-              <div className={`${styles.groupStatusBadge} ${styles.jointApplicationBadge}`}>
-                Черновик
-              </div>
-            </Tooltip>
+          {isResidents ? (
+            <div className={`${styles.groupStatusBadge} ${styles.residentsStatus}`}>Жильцы</div>
           ) : (
             <div className={`${styles.groupStatusBadge} ${styles[group.status]}`}>
               {group.status === "pending" && "В ожидании"}
@@ -135,8 +126,7 @@ const GroupItem: React.FC<GroupItemProps> = ({
         onDemoteFromAdmin={(memberId) => onDemoteFromAdmin && onDemoteFromAdmin(group.id, memberId)}
       />
 
-      {/* Display applicants list (including current user for pending/rejected groups) */}
-      {displayApplicants.length > 0 && !isJointApplication && (
+      {!isAccepted && !isResidents && displayApplicants.length > 0 && (
         <ApplicantsList
           applicants={displayApplicants}
           groupStatus={group.status}
@@ -150,20 +140,11 @@ const GroupItem: React.FC<GroupItemProps> = ({
         />
       )}
 
-      {isJointApplication && (
-        <div className={styles.jointApplicationActions}>
-          <Button type="primary" className={styles.completeApplicationButton}>
-            Завершить заявку
-          </Button>
-          <Button className={styles.editApplicationButton}>Редактировать</Button>
-        </div>
-      )}
-
       {canCancelApplication && (
         <div className={styles.leaveGroupSection}>
           <Button
             onClick={() => onCancelApplication && onCancelApplication(group.id)}
-            className={styles.cancelButton}
+            className={styles.leaveGroupButton}
           >
             Отменить
           </Button>
@@ -178,7 +159,6 @@ const GroupItem: React.FC<GroupItemProps> = ({
         </div>
       )}
 
-      {/* Add leave group button for accepted groups */}
       {canLeaveGroup && (
         <div className={styles.leaveGroupSection}>
           <Button

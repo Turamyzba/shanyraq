@@ -1,3 +1,4 @@
+// src/app/(profile)/my-responses/[id]/page.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -5,7 +6,6 @@ import { useMediaQuery } from "react-responsive";
 import dynamic from "next/dynamic";
 import GroupDetailsPageLayout from "../../components/desktop/MyResponses/GroupDetails/GroupDetailsPageLayout";
 
-// Dynamic imports for desktop and mobile versions
 const DesktopGroupDetails = dynamic(
   () => import("../../components/desktop/MyResponses/GroupDetails/GroupDetails"),
   { ssr: false }
@@ -16,7 +16,6 @@ const MobileGroupDetails = dynamic(
   { ssr: false }
 );
 
-// Mock apartment details
 const mockApartmentDetails = {
   id: 1,
   title: "Просторная квартира в центре",
@@ -120,28 +119,7 @@ export const mockGroupsData = {
           role: "member",
         },
       ],
-      applicants: [
-        {
-          id: 6,
-          name: "Жанар",
-          email: "zhanar@gmail.com",
-          telegram: "@zhanar",
-          age: 23,
-          phone: "8700 222 33 44",
-          date: "25/11/2024",
-          avatar: "/avatars/user6.jpg",
-        },
-        {
-          id: 7,
-          name: "Асет",
-          email: "aset@mail.ru",
-          telegram: "@aset",
-          age: 27,
-          phone: "8701 333 44 55",
-          date: "24/11/2024",
-          avatar: "/avatars/user7.jpg",
-        },
-      ],
+      applicants: [],
       isUserMember: true,
       isUserAdmin: false,
       isUserSuperAdmin: true,
@@ -217,13 +195,25 @@ export const mockGroupsData = {
       applicants: [
         {
           id: 12,
-          name: "Айгуль",
-          email: "aigul@mail.ru",
-          telegram: "@aigul",
-          age: 23,
-          phone: "8777 888 99 00",
+          name: "Салтанат",
+          email: "saltanat@mail.ru",
+          telegram: "@saltanat",
+          phone: "8700 444 55 66",
           date: "22/11/2024",
           avatar: "/avatars/user12.jpg",
+          age: 23,
+          groupApplicants: [
+            {
+              id: 13,
+              name: "Дарига",
+              email: "dariga@mail.ru",
+              telegram: "@dariga",
+              phone: "8701 555 66 77",
+              date: "22/11/2024",
+              avatar: "/avatars/user13.jpg",
+              age: 24,
+            },
+          ],
         },
         {
           id: 13,
@@ -240,42 +230,6 @@ export const mockGroupsData = {
       isUserAdmin: false,
       isUserSuperAdmin: false,
       isUserOwner: true,
-    },
-    {
-      id: 6,
-      name: "Совместная заявка",
-      status: "pending",
-      members: [
-        {
-          id: 16,
-          name: "Азат",
-          email: "azat@gmail.com",
-          telegram: "@azat",
-          age: 24,
-          phone: "8700 111 22 33",
-          date: "20/11/2024",
-          avatar: "/avatars/user16.jpg",
-          role: "owner",
-          isCurrentUser: true,
-        },
-      ],
-      applicants: [
-        {
-          id: 17,
-          name: "Карина",
-          email: "karina@mail.ru",
-          telegram: "@karina",
-          age: 22,
-          phone: "8777 123 45 67",
-          date: "20/11/2024",
-          avatar: "/avatars/user17.jpg",
-        },
-      ],
-      isUserMember: true,
-      isUserAdmin: false,
-      isUserSuperAdmin: false,
-      isUserOwner: true,
-      isJointApplication: true,
     },
   ],
   rejected: [
@@ -316,7 +270,44 @@ export const mockGroupsData = {
       isUserOwner: false,
     },
   ],
+  residents: [
+    {
+      id: 6,
+      name: "Постоянные жильцы",
+      status: "residents",
+      members: [
+        {
+          id: 16,
+          name: "Ержан",
+          email: "yerzhan@gmail.com",
+          telegram: "@yerzhan",
+          age: 30,
+          phone: "8707 888 99 00",
+          date: "10/10/2024",
+          avatar: "/avatars/user16.jpg",
+          role: "owner",
+        },
+        {
+          id: 17,
+          name: "Алия",
+          email: "aliya@mail.ru",
+          telegram: "@aliya",
+          age: 27,
+          phone: "8700 777 88 99",
+          date: "10/10/2024",
+          avatar: "/avatars/user17.jpg",
+          role: "member",
+        },
+      ],
+      applicants: [],
+      isUserMember: false,
+      isUserAdmin: false,
+      isUserSuperAdmin: false,
+      isUserOwner: false,
+    },
+  ],
 };
+
 export default function ResponseGroupsPage() {
   const params = useParams();
   const router = useRouter();
@@ -331,15 +322,27 @@ export default function ResponseGroupsPage() {
   const getGroupsByTab = () => {
     switch (activeTab) {
       case "all":
-        return [...mockGroupsData.accepted, ...mockGroupsData.pending, ...mockGroupsData.rejected];
+        return [
+          ...mockGroupsData.accepted,
+          ...mockGroupsData.pending,
+          ...mockGroupsData.rejected,
+          ...mockGroupsData.residents,
+        ];
       case "accepted":
         return mockGroupsData.accepted;
       case "pending":
         return mockGroupsData.pending;
       case "rejected":
         return mockGroupsData.rejected;
+      case "residents":
+        return mockGroupsData.residents;
       default:
-        return [...mockGroupsData.accepted, ...mockGroupsData.pending, ...mockGroupsData.rejected];
+        return [
+          ...mockGroupsData.accepted,
+          ...mockGroupsData.pending,
+          ...mockGroupsData.rejected,
+          ...mockGroupsData.residents,
+        ];
     }
   };
 
