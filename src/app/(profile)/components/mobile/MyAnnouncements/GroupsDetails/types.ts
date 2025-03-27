@@ -1,5 +1,4 @@
-// components/desktop/MyAnnouncements/GroupsDetails/types.ts
-// and components/mobile/MyAnnouncements/GroupsDetails/types.ts
+// components/mobile/MyAnnouncements/GroupsDetails/types.ts
 
 export interface Questionnaire {
   answers: {

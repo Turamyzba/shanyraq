@@ -1,7 +1,7 @@
 // components/mobile/MyAnnouncements/GroupsDetails/GroupsList.tsx
 
 import React, { useState } from "react";
-import { Button, Collapse } from "antd";
+import { Button } from "antd";
 import { Group, User } from "./types";
 import styles from "./GroupsDetails.module.scss";
 
@@ -11,8 +11,6 @@ interface GroupsListProps {
   onShowQuestionnaire: (user: User) => void;
   onShowCoverLetter: (user: User) => void;
 }
-
-const { Panel } = Collapse;
 
 const GroupsList: React.FC<GroupsListProps> = ({
   groups,

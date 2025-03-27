@@ -47,7 +47,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
             <div className={styles.userInfo}>
               <div className={styles.userName}>
                 {application.username}
-                {application.groupApplicants && (
+                {application.groupApplicants && application.groupApplicants.length > 0 && (
                   <span className={styles.applicationBadge}>
                     Группа ({application.groupApplicants.length + 1})
                   </span>

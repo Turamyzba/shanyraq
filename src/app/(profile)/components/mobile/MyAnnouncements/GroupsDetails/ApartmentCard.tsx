@@ -29,11 +29,11 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment }) => {
             <span className={styles.infoValue}>{apartment.city}</span>
           </div>
           <div className={styles.infoRow}>
-            <span className={styles.infoLabel}>Информация</span>
+            <span className={styles.infoLabel}>Комнаты</span>
             <span className={styles.infoValue}>{apartment.rooms}</span>
           </div>
           <div className={styles.infoRow}>
-            <span className={styles.infoLabel}>Дата заезда</span>
+            <span className={styles.infoLabel}>Заезд с</span>
             <span className={styles.infoValue}>{apartment.moveInDate}</span>
           </div>
           <div className={styles.infoRow}>
@@ -45,7 +45,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment }) => {
             <span className={styles.infoValue}>{apartment.description}</span>
           </div>
           <div className={styles.infoRow}>
-            <span className={styles.infoLabel}>Кол-во заявок</span>
+            <span className={styles.infoLabel}>Заявки</span>
             <span className={styles.infoValue}>{apartment.applicationsCount}</span>
           </div>
         </div>

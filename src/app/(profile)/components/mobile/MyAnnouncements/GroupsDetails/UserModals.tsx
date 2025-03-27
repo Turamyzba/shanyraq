@@ -40,7 +40,7 @@ const UserModals: React.FC<UserModalsProps> = ({
         width="90%"
       >
         {selectedUser?.questionnaire && (
-          <div className={styles.questionnaireModal}>
+          <div>
             <div className={styles.userHeaderInfo}>
               <div
                 className={styles.userAvatarLarge}
@@ -71,7 +71,7 @@ const UserModals: React.FC<UserModalsProps> = ({
         width="90%"
       >
         {selectedUser && (
-          <div className={styles.coverLetterModal}>
+          <div>
             <div className={styles.userHeaderInfo}>
               <div
                 className={styles.userAvatarLarge}
@@ -95,7 +95,7 @@ const UserModals: React.FC<UserModalsProps> = ({
         ]}
         width="90%"
       >
-        <div className={styles.actionModalContent}>
+        <div>
           <p>{actionModalContent.message}</p>
         </div>
       </Modal>

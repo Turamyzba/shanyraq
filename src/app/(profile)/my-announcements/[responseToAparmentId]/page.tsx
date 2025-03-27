@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 import dynamic from "next/dynamic";
+import { useGetAnnouncementResponsesQuery } from "@/store/features/myAnnouncements/myAnnouncementResponces/myAnnouncementResponceApi";
 
 const DesktopGroupsDetails = dynamic(
   () => import("../../components/desktop/MyAnnouncements/GroupsDetails"),
@@ -16,21 +17,35 @@ const MobileGroupsDetails = dynamic(
   { ssr: false }
 );
 
-const ApartmentResponsesPage = () => {
+const ApartmentResponsesPage: React.FC = () => {
   const params = useParams();
-  const responseToApartmentId = params.responseToAparmentId as string;
+  const responseToApartmentId = parseInt(params.responseToAparmentId as string, 10);
   const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  
+  const { data: responsesData, isLoading, error } = useGetAnnouncementResponsesQuery(responseToApartmentId);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) {
+  if (!isMounted || isLoading) {
     return <div className="loading-placeholder">Загрузка...</div>;
   }
 
-  return <>{isMobile ? <MobileGroupsDetails /> : <DesktopGroupsDetails />}</>;
+  if (error || !responsesData) {
+    return <div className="error-placeholder">Ошибка при загрузке данных</div>;
+  }
+
+  return (
+    <>
+      {isMobile ? (
+        <MobileGroupsDetails responseData={responsesData} />
+      ) : (
+        <DesktopGroupsDetails responseData={responsesData} />
+      )}
+    </>
+  );
 };
 
 export default ApartmentResponsesPage;
