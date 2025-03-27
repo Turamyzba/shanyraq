@@ -1,8 +1,11 @@
+// components/desktop/MyAnnouncements/AnnouncementsList.tsx
+
 import React from "react";
 import { Tabs } from "antd";
 import AnnouncementCard from "../../common/AnnouncementCard/AnnouncementCard";
 import styles from "./AnnouncementsList.module.scss";
 import "./AnnouncementsList.scss";
+
 interface Announcement {
   id: number;
   title: string;
@@ -14,6 +17,7 @@ interface Announcement {
   price: number;
   image: string;
   applicationCount: number;
+  animationClass?: string;
 }
 
 interface AnnouncementsListProps {
@@ -21,7 +25,8 @@ interface AnnouncementsListProps {
   activeTab: "active" | "archived";
   onTabChange: (tab: "active" | "archived") => void;
   onArchive: (id: number) => void;
-  onUnarchive: (id: number) => void;
+  onRestore: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 const DesktopAnnouncementsList: React.FC<AnnouncementsListProps> = ({
@@ -29,7 +34,8 @@ const DesktopAnnouncementsList: React.FC<AnnouncementsListProps> = ({
   activeTab,
   onTabChange,
   onArchive,
-  onUnarchive,
+  onRestore,
+  onDelete,
 }) => {
   return (
     <div className={styles.container}>
@@ -45,11 +51,18 @@ const DesktopAnnouncementsList: React.FC<AnnouncementsListProps> = ({
               <div className={styles.announcementsGrid}>
                 {announcements.length > 0 ? (
                   announcements.map((announcement) => (
-                    <AnnouncementCard
-                      key={announcement.id}
-                      announcement={announcement}
-                      onArchive={() => onArchive(announcement.id)}
-                    />
+                    <div 
+                      key={announcement.id} 
+                      className={`${styles.cardWrapper} ${announcement.animationClass ? styles[announcement.animationClass] : ""}`}
+                    >
+                      <AnnouncementCard
+                        announcement={announcement}
+                        isArchived={false}
+                        onArchive={() => onArchive(announcement.id)}
+                        onRestore={() => {}} // Not used for active announcements
+                        onDelete={() => {}} // Not used for active announcements
+                      />
+                    </div>
                   ))
                 ) : (
                   <div className={styles.emptyState}>
@@ -66,11 +79,18 @@ const DesktopAnnouncementsList: React.FC<AnnouncementsListProps> = ({
               <div className={styles.announcementsGrid}>
                 {announcements.length > 0 ? (
                   announcements.map((announcement) => (
-                    <AnnouncementCard
-                      key={announcement.id}
-                      announcement={announcement}
-                      onArchive={() => onUnarchive(announcement.id)}
-                    />
+                    <div 
+                      key={announcement.id} 
+                      className={`${styles.cardWrapper} ${announcement.animationClass ? styles[announcement.animationClass] : ""}`}
+                    >
+                      <AnnouncementCard
+                        announcement={announcement}
+                        isArchived={true}
+                        onArchive={() => {}} // Not used for archived announcements
+                        onRestore={() => onRestore(announcement.id)}
+                        onDelete={() => onDelete(announcement.id)}
+                      />
+                    </div>
                   ))
                 ) : (
                   <div className={styles.emptyState}>

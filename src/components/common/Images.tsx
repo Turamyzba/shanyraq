@@ -35,6 +35,9 @@ import {
   CircleCheckBig,
   UserPlus,
   UserMinus,
+  SquarePen,
+  Mars,
+  Venus
 } from "lucide-react";
 
 const whatsappIcon = () => (
@@ -164,6 +167,9 @@ const Images = {
   Finish: CircleCheckBig,
   AddAdmin: UserPlus,
   RemoveAdmin: UserMinus,
+  Edit: SquarePen,
+  GenderMale: Mars,
+  GenderFemale: Venus
 };
 
 export default Images;

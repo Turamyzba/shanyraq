@@ -1,168 +1,145 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-import dynamic from "next/dynamic";
+import React, { useState, useEffect } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { message } from 'antd';
+import { useArchiveAnnouncementMutation, useDeleteAnnouncementMutation, useGetMyActiveAnnouncementsQuery, useGetMyArchivedAnnouncementsQuery, useRestoreAnnouncementMutation } from '@/store/features/myAnnouncements/announcementApi';
+import { MyAnnouncementsListResponse } from '@/types/response/myAnnouncementResponses';
+import DesktopAnnouncementsList from '../components/desktop/MyAnnouncements/AnnouncementsList';
+import MobileAnnouncementsList from '../components/mobile/MyAnnouncements/AnnouncementsList';
 
-const DesktopAnnouncementsList = dynamic(
-  () => import("../components/desktop/MyAnnouncements/AnnouncementsList"),
-  { ssr: false }
-);
-const MobileAnnouncementsList = dynamic(
-  () => import("../components/mobile/MyAnnouncements/AnnouncementsList"),
-  { ssr: false }
-);
+const MyAnnouncements: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
+  const [activeAnnouncements, setActiveAnnouncements] = useState<any[]>([]);
+  const [archivedAnnouncements, setArchivedAnnouncements] = useState<any[]>([]);
+  const [animatingItemId, setAnimatingItemId] = useState<number | null>(null);
+  
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  
+  // Fetch active and archived announcements
+  const { data: activeData, isLoading: activeLoading } = useGetMyActiveAnnouncementsQuery();
+  const { data: archivedData, isLoading: archivedLoading } = useGetMyArchivedAnnouncementsQuery();
+  
+  // Mutations for managing announcements
+  const [archiveAnnouncement] = useArchiveAnnouncementMutation();
+  const [restoreAnnouncement] = useRestoreAnnouncementMutation();
+  const [deleteAnnouncement] = useDeleteAnnouncementMutation();
 
-const mockAnnouncements = [
-  {
-    id: 1,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment1.jpg",
-    applicationCount: 50,
-  },
-  {
-    id: 4,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment1.jpg",
-    applicationCount: 50,
-  },
-  {
-    id: 2,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment2.jpg",
-    applicationCount: 50,
-  },
-  {
-    id: 3,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment3.jpg",
-    applicationCount: 50,
-  },
-  {
-    id: 5,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment1.jpg",
-    applicationCount: 50,
-  },
-  {
-    id: 6,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment1.jpg",
-    applicationCount: 50,
-  },
-  {
-    id: 7,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment2.jpg",
-    applicationCount: 50,
-  },
-  {
-    id: 8,
-    title: "Ищем 2 девушек",
-    address: "Республика 1/3а",
-    date: "01/09/2024",
-    roomCount: 1,
-    genderRestriction: "Любой",
-    roommatesCount: 2,
-    price: 150000,
-    image: "/apartments/apartment3.jpg",
-    applicationCount: 50,
-  },
-];
+  // Format data for the components
+  const formatAnnouncements = (data: MyAnnouncementsListResponse | undefined): any[] => {
+    if (!data) return [];
+    
+    return data.map(announcement => ({
+      id: announcement.announcementId,
+      title: announcement.title,
+      address: announcement.address,
+      date: announcement.arriveDate,
+      roomCount: parseInt(announcement.roomCount),
+      genderRestriction: announcement.selectedGender,
+      roommatesCount: announcement.roommates,
+      price: announcement.cost,
+      image: announcement.image,
+      applicationCount: announcement.applicationCount || 0,
+    }));
+  };
 
-export default function MyAnnouncementsPage() {
-  const [activeAnnouncements, setActiveAnnouncements] = useState(mockAnnouncements);
-  const [archivedAnnouncements, setArchivedAnnouncements] = useState<typeof mockAnnouncements>([]);
-  const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
-  const [isMounted, setIsMounted] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  // Update local state when API data changes
+  useEffect(() => {
+    if (activeData?.data) {
+      setActiveAnnouncements(formatAnnouncements(activeData.data));
+    }
+  }, [activeData]);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    if (archivedData?.data) {
+      setArchivedAnnouncements(formatAnnouncements(archivedData.data));
+    }
+  }, [archivedData]);
 
-  const handleArchive = (id: number) => {
-    const announcement = activeAnnouncements.find((item) => item.id === id);
-    if (announcement) {
-      setActiveAnnouncements(activeAnnouncements.filter((item) => item.id !== id));
-      setArchivedAnnouncements([...archivedAnnouncements, announcement]);
+  const handleTabChange = (tab: 'active' | 'archived') => {
+    setActiveTab(tab);
+  };
+
+  const handleArchive = async (id: number) => {
+    try {
+      // Call the API first
+      await archiveAnnouncement(id).unwrap();
+      
+      // Only update UI after successful API call
+      // Find the announcement to move
+      const announcementToArchive = activeAnnouncements.find(a => a.id === id);
+      
+      // Update local state
+      setActiveAnnouncements(prev => prev.filter(a => a.id !== id));
+      
+      if (announcementToArchive) {
+        setArchivedAnnouncements(prev => [announcementToArchive, ...prev]);
+      }
+      
+      message.success('Объявление успешно архивировано');
+    } catch (error) {
+      console.error('Failed to archive announcement:', error);
+      message.error('Не удалось архивировать объявление');
     }
   };
 
-  const handleUnarchive = (id: number) => {
-    const announcement = archivedAnnouncements.find((item) => item.id === id);
-    if (announcement) {
-      setArchivedAnnouncements(archivedAnnouncements.filter((item) => item.id !== id));
-      setActiveAnnouncements([...activeAnnouncements, announcement]);
+  const handleRestore = async (id: number) => {
+    try {
+      // Call the API first
+      await restoreAnnouncement(id).unwrap();
+      
+      // Only update UI after successful API call
+      // Find the announcement to move
+      const announcementToRestore = archivedAnnouncements.find(a => a.id === id);
+      
+      // Update local state
+      setArchivedAnnouncements(prev => prev.filter(a => a.id !== id));
+      
+      if (announcementToRestore) {
+        setActiveAnnouncements(prev => [announcementToRestore, ...prev]);
+      }
+      
+      message.success('Объявление успешно восстановлено');
+    } catch (error) {
+      console.error('Failed to restore announcement:', error);
+      message.error('Не удалось восстановить объявление');
     }
   };
 
-  if (!isMounted) {
-    return <div className="loading-placeholder">Загрузка...</div>;
-  }
+  const handleDelete = async (id: number) => {
+    try {
+      // Call the API first
+      await deleteAnnouncement(id).unwrap();
+      
+      // Only update UI after successful API call
+      setArchivedAnnouncements(prev => prev.filter(a => a.id !== id));
+      message.success('Объявление успешно удалено');
+    } catch (error) {
+      console.error('Failed to delete announcement:', error);
+      message.error('Не удалось удалить объявление');
+    }
+  };
 
-  const currentAnnouncements = activeTab === "active" ? activeAnnouncements : archivedAnnouncements;
+  const announcements = activeTab === 'active' ? activeAnnouncements : archivedAnnouncements;
+  const isLoading = activeTab === 'active' ? activeLoading : archivedLoading;
+
+  const AnnouncementsList = isDesktop ? DesktopAnnouncementsList : MobileAnnouncementsList;
 
   return (
     <>
-      {isMobile ? (
-        <MobileAnnouncementsList
-          announcements={currentAnnouncements}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onArchive={handleArchive}
-          onUnarchive={handleUnarchive}
-        />
+      {isLoading ? (
+        <div>Загрузка...</div>
       ) : (
-        <DesktopAnnouncementsList
-          announcements={currentAnnouncements}
+        <AnnouncementsList
+          announcements={announcements}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
           onArchive={handleArchive}
-          onUnarchive={handleUnarchive}
+          onRestore={handleRestore}
+          onDelete={handleDelete}
         />
       )}
     </>
   );
-}
+};
+
+export default MyAnnouncements;

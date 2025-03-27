@@ -33,26 +33,27 @@
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
+  justify-content: flex-start;
 }
 
 .emptyState {
-  grid-column: 1 / -1;
+  width: 100%;
   text-align: center;
   color: #6b7280;
   font-size: 16px;
+  padding: 40px 0;
+}
+
+.cardWrapper {
+  width: auto;
 }
 
 @media (max-width: 768px) {
   .container {
     padding: 16px;
   }
-
+  
   .announcementsGrid {
-    grid-template-columns: 1fr;
     gap: 16px;
   }
-}
-.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: #1aa683;
-  text-shadow: 0 0 0.25px #111;
 }

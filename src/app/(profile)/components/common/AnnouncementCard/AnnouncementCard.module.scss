@@ -11,6 +11,11 @@
   padding: 20px 16px 30px;
 }
 
+.archivedCard {
+  background-color: #f9f9f9;
+  border: 1px solid #e5e7eb;
+}
+
 .imageContainer {
   position: relative;
   height: 130px;
@@ -33,7 +38,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #252525;
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,9 +48,24 @@
   cursor: pointer;
   z-index: 10;
 }
+
 .editButton svg {
   width: 17px;
 }
+
+.archivedBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #6b7280;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 10;
+}
+
 .content {
   padding-top: 16px;
   display: flex;
@@ -58,6 +78,13 @@
   font-weight: 700;
   margin: 0;
   color: #252525;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3em; /* Approximately 2 lines of text */
+  line-height: 1.2;
 }
 
 .location {
@@ -68,9 +95,11 @@
   font-size: 14px;
   color: #6b7280;
 }
+
 .location svg {
   width: 15px;
 }
+
 .details {
   display: flex;
   justify-content: space-around;
@@ -84,12 +113,14 @@
   font-size: 14px;
   color: #252525;
 }
+
 .detailItem span {
   font-size: 10px;
   font-weight: 400;
   color: #252525;
   opacity: 0.5;
 }
+
 .price {
   font-size: 24px;
   font-weight: 700;
@@ -108,7 +139,9 @@
   gap: 10px;
 }
 
-.archiveButton {
+.archiveButton, 
+.restoreButton,
+.deleteButton {
   border: 1px solid #252525;
   color: #252525;
   height: 40px;
@@ -116,6 +149,23 @@
   border-radius: 5px;
   font-weight: 700;
   font-size: 12px;
+}
+
+.archiveButton:hover,
+.restoreButton:hover {
+  border: 1px solid #252525 !important;
+  color: #252525 !important;
+}
+
+.deleteButton {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.deleteButton:hover {
+  border-color: #ef4444 !important;
+  color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.05) !important;
 }
 
 .applicationsButton {
@@ -129,14 +179,12 @@
   width: 100%;
   box-shadow: none;
 }
-.archiveButton:hover {
-  border: 1px solid #252525 !important;
-  color: #252525 !important;
-}
+
 .applicationsButton:hover {
   background-color: #252525 !important;
   color: #fff !important;
 }
+
 .applicationCount {
   background-color: white;
   color: #252525;
@@ -156,16 +204,64 @@
   width: 48%;
 }
 
-// Mobile styles
+.restoreButton {
+  color: #1aa683;
+  border-color: #1aa683;
+}
+
+.restoreButton:hover {
+  color: #1aa683 !important;
+  border-color: #1aa683 !important;
+}
+
+/* Mobile styles */
 .mobile {
   margin-bottom: 16px;
+  width: 100%;
 
   .actions {
     flex-direction: column;
   }
 
   .archiveButton,
-  .applicationsButton {
+  .restoreButton,
+  .deleteButton,
+  .applicationsLink {
     width: 100%;
   }
+}
+
+/* Animation for adding/removing cards */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.cardWrapper {
+  width: auto;
+}
+
+.cardWrapper.fadeIn {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.cardWrapper.fadeOut {
+  animation: fadeOut 0.3s ease forwards;
 }

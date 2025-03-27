@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import AnnouncementCard from "../../common/AnnouncementCard/AnnouncementCard";
 import styles from "./AnnouncementsList.module.scss";
@@ -13,6 +14,7 @@ interface Announcement {
   price: number;
   image: string;
   applicationCount: number;
+  animationClass?: string;
 }
 
 interface AnnouncementsListProps {
@@ -20,7 +22,8 @@ interface AnnouncementsListProps {
   activeTab: "active" | "archived";
   onTabChange: (tab: "active" | "archived") => void;
   onArchive: (id: number) => void;
-  onUnarchive: (id: number) => void;
+  onRestore: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 const MobileAnnouncementsList: React.FC<AnnouncementsListProps> = ({
@@ -28,7 +31,8 @@ const MobileAnnouncementsList: React.FC<AnnouncementsListProps> = ({
   activeTab,
   onTabChange,
   onArchive,
-  onUnarchive,
+  onRestore,
+  onDelete,
 }) => {
   return (
     <div className={styles.container}>
@@ -50,16 +54,19 @@ const MobileAnnouncementsList: React.FC<AnnouncementsListProps> = ({
       <div className={styles.announcementsList}>
         {announcements.length > 0 ? (
           announcements.map((announcement) => (
-            <AnnouncementCard
-              key={announcement.id}
-              announcement={announcement}
-              onArchive={
-                activeTab === "active"
-                  ? () => onArchive(announcement.id)
-                  : () => onUnarchive(announcement.id)
-              }
-              isMobile={true}
-            />
+            <div 
+              key={announcement.id} 
+              className={`${styles.cardWrapper} ${announcement.animationClass ? styles[announcement.animationClass] : ""}`}
+            >
+              <AnnouncementCard
+                announcement={announcement}
+                isArchived={activeTab === "archived"}
+                onArchive={() => onArchive(announcement.id)}
+                onRestore={() => onRestore(announcement.id)}
+                onDelete={() => onDelete(announcement.id)}
+                isMobile={true}
+              />
+            </div>
           ))
         ) : (
           <div className={styles.emptyState}>
