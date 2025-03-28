@@ -1,5 +1,4 @@
-// components/desktop/MyAnnouncements/GroupsDetails/index.tsx
-
+"use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "antd";
@@ -10,22 +9,12 @@ import GroupsList from "./GroupsList";
 import UserModals from "./UserModals";
 import styles from "./GroupsDetails.module.scss";
 import "./GroupsDetails.scss";
-// Mock apartment data
-const mockApartmentData: ApartmentDetails = {
-  id: 1,
-  address: "Ул. Раймбека 181/23",
-  district: "Мкр. Акцент 14",
-  city: "Алматы г.",
-  rooms: "2 комнаты - 30 кв. м - 2/13 этаж",
-  moveInDate: "21.11.2024",
-  deposit: "50.000тг",
-  description: "Ищем 2 девушек на подселение",
-  price: 150000,
-  image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
-  applicationsCount: 12,
-};
 
-const GroupsDetails: React.FC = () => {
+interface GroupsDetailsProps {
+  data?: any;
+}
+
+const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
   const router = useRouter();
   const [groups, setGroups] = useState<Group[]>([]);
   const [newApplications, setNewApplications] = useState<User[]>([]);
@@ -37,432 +26,96 @@ const GroupsDetails: React.FC = () => {
     message: "",
   });
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [apartmentDetails, setApartmentDetails] = useState<ApartmentDetails | null>(null);
 
-  // Fetch data on component mount
   useEffect(() => {
-    // In a real app, you would fetch this data from an API
-    // For now, we'll simulate loading with a setTimeout
-    const fetchData = async () => {
-      try {
-        // Mock API call
-        setTimeout(() => {
-          setGroups([
-            {
-              id: 1,
-              name: "Группа 1",
-              members: [
-                {
-                  id: 1,
-                  username: "Батырхан",
-                  email: "amantay11@gmail.com",
-                  telegram: "@batyr_k",
-                  phone: "8777 777 77 77",
-                  date: "27/11/2024",
-                  age: 24,
-                  isAdmin: true,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer:
-                          "Я провожу весь день дома, работаю/учусь дистанционно. Мне важно иметь спокойную обстановку дома.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer:
-                          "Я соблюдаю религиозные практики и традиции. Хотел бы, чтобы мой сожитель с уважением относился к этому.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer:
-                          "Я спокойно отношусь к курению и алкоголю, но хотел бы, чтобы это не происходило в общих зонах",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Я хочу снять эту квартиру, потому что она находится рядом с моей работой. Я ответственный съемщик и всегда вовремя плачу за аренду.",
-                },
-                {
-                  id: 2,
-                  username: "Ерасыл",
-                  email: "erasyl.m@mail.ru",
-                  telegram: "@erasyl",
-                  phone: "8777 545 74 78",
-                  date: "27/11/2024",
-                  age: 18,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer:
-                          "Я постоянно в разъездах, по сути, у меня учеба весь день. Мне не принципиально, что происходит дома в мое отсутствие.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer:
-                          "Я не соблюдаю, но мне важно, чтобы это не мешало соседям, и чтобы мои соседи не навязывали мне свои традиции.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer:
-                          "Я не курю и не пью, и хотел бы, чтобы со мной жили люди с похожими привычками.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Ищу жилье на длительный срок. Чистоплотный, аккуратный, почти все время на учебе.",
-                },
-                {
-                  id: 3,
-                  username: "Айбол",
-                  email: "aibol.qazaq@gmail.com",
-                  telegram: "@aibol",
-                  phone: "8701 577 77 78",
-                  date: "27/11/2024",
-                  age: 19,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer:
-                          "Я провожу весь день дома, работаю дистанционно. Мне важно иметь спокойную обстановку дома.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer:
-                          "Я соблюдаю религиозные практики. Хотел бы, чтобы мой сожитель с уважением относился к этому.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer:
-                          "Я не курю и не пью, и хотел бы, чтобы со мной жили люди с похожими привычками.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Ищу жилье недалеко от центра. Работаю удаленно, нужна тихая обстановка для работы.",
-                },
-              ],
-              newApplications: [
-                {
-                  id: 4,
-                  username: "Марат",
-                  email: "marat@gmail.com",
-                  telegram: "@marat",
-                  phone: "8707 111 22 33",
-                  date: "27/11/2024",
-                  age: 25,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer:
-                          "Я студент, учусь по утрам, вечером бываю дома. Приоритеты: учеба и спорт.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "Уважаю любые традиции, сам не практикую.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Не курю, алкоголь - только по праздникам и в меру.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Студент 3 курса, ищу жилье рядом с университетом. Спокойный, неконфликтный.",
-                },
-                {
-                  id: 5,
-                  username: "Даулет",
-                  email: "daulet@mail.ru",
-                  telegram: "@daulet",
-                  phone: "8777 999 88 77",
-                  date: "27/11/2024",
-                  age: 23,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer:
-                          "Работаю с 9 до 6, в будни редко бываю дома. На выходных люблю отдыхать и встречаться с друзьями.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "Нейтрально отношусь, важно взаимное уважение.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Курю только на балконе, алкоголь - умеренно.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Молодой специалист, ищу жилье рядом с офисом. Аккуратный, вовремя плачу за аренду.",
-                },
-              ],
-            },
-            {
-              id: 2,
-              name: "Группа 2",
-              members: [
-                {
-                  id: 6,
-                  username: "Алмас",
-                  email: "almas@gmail.com",
-                  telegram: "@almas",
-                  phone: "8700 123 45 67",
-                  date: "27/11/2024",
-                  age: 26,
-                  isAdmin: true,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer: "Работаю удаленно, весь день дома. Ценю тишину и порядок.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "С уважением отношусь к любым традициям.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Не курю, не пью. Предпочитаю здоровый образ жизни.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Ищу долгосрочную аренду. Тихий, чистоплотный, без вредных привычек.",
-                },
-                {
-                  id: 7,
-                  username: "Арман",
-                  email: "arman@mail.ru",
-                  telegram: "@arman",
-                  phone: "8747 765 43 21",
-                  date: "27/11/2024",
-                  age: 22,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer: "Работаю 5/2, вечера и выходные провожу дома. Ценю комфорт и уют.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "Нейтрально, главное - взаимное уважение.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Не курю, алкоголь только по особым случаям.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Ищу комнату в тихом районе. Работаю в офисе, дома бываю вечером и на выходных.",
-                },
-                {
-                  id: 8,
-                  username: "Асель",
-                  email: "assel@gmail.com",
-                  telegram: "@assel",
-                  phone: "8777 111 22 33",
-                  date: "27/11/2024",
-                  age: 24,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer:
-                          "Работаю удаленно, днем обычно дома. Важно иметь спокойное место для работы.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "Уважаю разные традиции, сама не практикую.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Не курю, алкоголь очень редко и в меру.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Ищу квартиру с хорошим интернетом для удаленной работы. Спокойная, аккуратная.",
-                },
-              ],
-              newApplications: [
-                {
-                  id: 9,
-                  username: "Санжар",
-                  email: "sanzhar@gmail.com",
-                  telegram: "@sanzhar",
-                  phone: "8701 222 33 44",
-                  date: "27/11/2024",
-                  age: 21,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer:
-                          "Учусь днем, вечером подрабатываю. Дома в основном ночую и на выходных.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "Уважительно отношусь ко всем традициям.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Не курю, иногда могу выпить на праздники.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Студент, ищу недорогое жилье рядом с университетом. Готов к совместному проживанию.",
-                },
-                {
-                  id: 10,
-                  username: "Динара",
-                  email: "dinara@mail.ru",
-                  telegram: "@dinara",
-                  phone: "8700 987 65 43",
-                  date: "27/11/2024",
-                  age: 25,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer: "Работаю в офисе, дома бываю вечером. Ценю чистоту и порядок.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "С уважением отношусь к любым традициям.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Не курю, алкоголь только по праздникам.",
-                      },
-                    ],
-                  },
-                  coverLetter:
-                    "Молодой специалист, ищу жилье в хорошем районе. Ответственная, пунктуальная, без вредных привычек.",
-                },
-              ],
-            },
-          ]);
+    if (data) {
+      // Map API data to component state
+      mapApiDataToState(data);
+    }
+  }, [data]);
 
-          setNewApplications([
-            {
-              id: 11,
-              username: "Азат",
-              email: "azat@gmail.com",
-              telegram: "@azat",
-              phone: "8777 333 22 11",
-              date: "27/11/2024",
-              age: 27,
-              wantsToCreateNewGroup: false,
-              questionnaire: {
-                answers: [
-                  {
-                    question:
-                      "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                    answer: "Работаю в смену, график 2/2. Ценю тишину в свои выходные.",
-                  },
-                  {
-                    question: "Как вы относитесь к религиозным практикам и традициям?",
-                    answer: "Отношусь с пониманием, главное - взаимоуважение.",
-                  },
-                  {
-                    question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                    answer: "Не курю дома, алкоголь только в компании и не часто.",
-                  },
-                ],
-              },
-              coverLetter:
-                "Ищу квартиру недалеко от работы. Спокойный, аккуратный, без проблем с соседями.",
-            },
-            {
-              id: 12,
-              username: "Салтанат",
-              email: "saltanat@mail.ru",
-              telegram: "@saltanat",
-              phone: "8700 444 55 66",
-              date: "27/11/2024",
-              age: 23,
-              wantsToCreateNewGroup: true,
-              groupApplicants: [
-                {
-                  id: 13,
-                  username: "Дарига",
-                  email: "dariga@mail.ru",
-                  telegram: "@dariga",
-                  phone: "8701 555 66 77",
-                  date: "27/11/2024",
-                  age: 24,
-                  questionnaire: {
-                    answers: [
-                      {
-                        question:
-                          "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                        answer: "Учусь и работаю. Дома бываю вечерами. Ценю чистоту и порядок.",
-                      },
-                      {
-                        question: "Как вы относитесь к религиозным практикам и традициям?",
-                        answer: "Уважаю все традиции, важно взаимное уважение.",
-                      },
-                      {
-                        question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                        answer: "Не курю, алкоголь очень редко.",
-                      },
-                    ],
-                  },
-                  coverLetter: "Ищу жилье с подругой. Мы обе аккуратные и ответственные.",
-                },
-              ],
-              questionnaire: {
-                answers: [
-                  {
-                    question:
-                      "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
-                    answer:
-                      "Учусь в магистратуре, большую часть дня в университете. Приоритеты: учеба и саморазвитие.",
-                  },
-                  {
-                    question: "Как вы относитесь к религиозным практикам и традициям?",
-                    answer: "Уважаю все традиции, важно взаимное уважение.",
-                  },
-                  {
-                    question: "Какое у вас отношение к курению и алкогольным напиткам?",
-                    answer: "Не курю, не пью. Предпочитаю здоровый образ жизни.",
-                  },
-                ],
-              },
-              coverLetter:
-                "Магистрантка, ищу тихое место для учебы и проживания вместе с подругой. Чистоплотные, организованные, без вредных привычек.",
-            },
-          ]);
-        }, 500);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+  const mapApiDataToState = (apiData: any) => {
+    // Map apartment details
+    const apartmentInfo = {
+      id: 1,
+      address: apiData.address || "",
+      district: apiData.districtText || "",
+      city: apiData.regionText || "",
+      rooms: `${apiData.quantityOfRooms} комнаты - ${apiData.areaOfTheApartment} кв. м - ${apiData.numberOfFloor}/${apiData.maxFloorInTheBuilding} этаж`,
+      moveInDate: new Date().toLocaleDateString('ru-RU'),
+      deposit: `${apiData.deposit} ₸`,
+      description: apiData.title || "Описание квартиры",
+      price: apiData.cost || 0,
+      image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg", // Default image
+      applicationsCount: (apiData.newApplications?.length || 0) + (apiData.groups?.reduce((acc: number, group: any) => acc + (group.newApplications?.length || 0), 0) || 0),
     };
+    
+    setApartmentDetails(apartmentInfo);
+    
+    // Map group data
+    if (apiData.groups && Array.isArray(apiData.groups)) {
+      const mappedGroups = apiData.groups.map((group: any, index: number) => {
+        return {
+          id: group.groupId || index + 1,
+          name: `Группа ${index + 1}`,
+          members: (group.groupMembers || []).map((member: any) => mapUserData(member)),
+          newApplications: (group.newApplicationsWithPeople || []).flatMap((batch: any) => 
+            (batch.people || []).map((person: any) => mapUserData(person))
+          ),
+        };
+      });
+      
+      setGroups(mappedGroups);
+    }
+    
+    // Map new applications
+    if (apiData.newApplicationsWithPeople && Array.isArray(apiData.newApplicationsWithPeople)) {
+      const mappedApplications = apiData.newApplicationsWithPeople.flatMap((batch: any) => 
+        (batch.people || []).map((person: any) => ({
+          ...mapUserData(person),
+          wantsToCreateNewGroup: true,
+          groupApplicants: batch.people.filter((p: any) => p.id !== person.id).map((p: any) => mapUserData(p))
+        }))
+      );
+      
+      setNewApplications(mappedApplications);
+    }
+  };
 
-    fetchData();
-  }, []);
+  const mapUserData = (userData: any): User => {
+    return {
+      id: userData.id || Math.floor(Math.random() * 1000),
+      username: userData.name || "Пользователь",
+      email: "user@example.com", // Default email if not provided
+      telegram: userData.phoneNumbers?.[0] || "@user",
+      phone: userData.phoneNumbers?.[0] || "Нет номера",
+      date: userData.appliedDate ? new Date(userData.appliedDate).toLocaleDateString('ru-RU') : new Date().toLocaleDateString('ru-RU'),
+      isAdmin: userData.permissionStatus === "SUPERADMIN",
+      age: userData.age || 25,
+      questionnaire: {
+        answers: [
+          {
+            question: "Какой ваш обычный распорядок дня и каковы ваши жизненные приоритеты?",
+            answer: "Данные не предоставлены",
+          },
+          {
+            question: "Как вы относитесь к религиозным практикам и традициям?",
+            answer: "Данные не предоставлены",
+          },
+          {
+            question: "Какое у вас отношение к курению и алкогольным напиткам?",
+            answer: "Данные не предоставлены",
+          }
+        ]
+      },
+      coverLetter: userData.coverLetter || "Сопроводительное письмо не предоставлено",
+    };
+  };
 
   const handleAcceptApplication = (applicationId: number) => {
     const application = newApplications.find((app) => app.id === applicationId);
     if (application) {
-      // Create message based on application type
       const message = application.wantsToCreateNewGroup
         ? `${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} хотят создать новую группу и жить в этой квартире.`
         : `${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} хотят присоединиться к Группе 1.`;
@@ -473,19 +126,15 @@ const GroupsDetails: React.FC = () => {
       });
       setIsActionModalVisible(true);
 
-      // Add main applicant and all group members to the group
       setGroups((prevGroups) => {
         const updatedGroups = [...prevGroups];
         if (updatedGroups.length > 0) {
-          // Add main applicant
           const newMembers = [application];
 
-          // Add all group applicants if they exist
           if (application.groupApplicants?.length) {
             newMembers.push(...application.groupApplicants);
           }
 
-          // If they want to create a new group, create one
           if (application.wantsToCreateNewGroup) {
             const newGroup = {
               id: updatedGroups.length + 1,
@@ -495,7 +144,6 @@ const GroupsDetails: React.FC = () => {
             };
             return [...updatedGroups, newGroup];
           } else {
-            // Otherwise add them to group 1
             updatedGroups[0] = {
               ...updatedGroups[0],
               members: [...updatedGroups[0].members, ...newMembers],
@@ -506,7 +154,6 @@ const GroupsDetails: React.FC = () => {
         return updatedGroups;
       });
 
-      // Remove from applications
       setNewApplications((prevApps) => prevApps.filter((app) => app.id !== applicationId));
     }
   };
@@ -514,7 +161,6 @@ const GroupsDetails: React.FC = () => {
   const handleRejectApplication = (applicationId: number) => {
     const application = newApplications.find((app) => app.id === applicationId);
     if (application) {
-      // Create message based on application type
       const message = application.wantsToCreateNewGroup
         ? `Вы отклонили заявку ${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} на создание новой группы.`
         : `Вы отклонили заявку ${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} на присоединение к Группе 1.`;
@@ -525,7 +171,6 @@ const GroupsDetails: React.FC = () => {
       });
       setIsActionModalVisible(true);
 
-      // Remove from applications
       setNewApplications((prevApps) => prevApps.filter((app) => app.id !== applicationId));
     }
   };
@@ -579,7 +224,7 @@ const GroupsDetails: React.FC = () => {
         <h1 className={styles.title}>Заявки на объявление</h1>
       </div>
 
-      <ApartmentCard apartment={mockApartmentData} />
+      {apartmentDetails && <ApartmentCard apartment={apartmentDetails} />}
 
       <ApplicationsList
         applications={newApplications}

@@ -1,13 +1,10 @@
 "use client";
 
-import type React from "react";
-
 import { useState, useEffect } from "react";
 import { Form, InputOtp } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MyInput from "@/components/ui/MyInput";
 import MyButton from "@/components/ui/MyButton";
-import { addToast } from "@heroui/react";
 import styles from "./Verification.module.scss";
 import { useMediaQuery } from "react-responsive";
 import {
@@ -72,8 +69,11 @@ export default function VerificationPage() {
       setVerificationType("reset");
     }
 
-    setCountdown(30);
-    setCanResend(false);
+    // Start countdown for resend button
+    if (emailParam) {
+      setCountdown(30);
+      setCanResend(false);
+    }
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -97,14 +97,21 @@ export default function VerificationPage() {
       return;
     }
 
-    if (verificationType === "reset") {
-      verifyCode({ email, code }).then((res) => {
+    try {
+      if (verificationType === "reset") {
+        await verifyCode({ email, code }).unwrap();
         router.push(`/reset-password?email=${encodeURIComponent(email)}&token=${code}`);
-      });
-    } else {
-      verifyEmail({ email, code }).then((res) => {
+      } else {
+        await verifyEmail({ email, code }).unwrap();
+        showToast({
+          title: "Успешно",
+          description: "Email успешно подтвержден. Теперь вы можете войти в систему.",
+          color: "success",
+        });
         router.push("/login");
-      });
+      }
+    } catch (error) {
+      // Error is handled by middleware
     }
   };
 
@@ -118,18 +125,18 @@ export default function VerificationPage() {
       return;
     }
 
-    resendCode({ email })
-      .then((res) => {
-        setCountdown(30);
-        setCanResend(false);
-      })
-      .catch((err) => {
-        showToast({
-          title: "Ошибка",
-          description: err?.data?.message || err.message || "Ошибка при повторной отправке кода",
-          color: "danger",
-        });
+    try {
+      await resendCode({ email }).unwrap();
+      setCountdown(30);
+      setCanResend(false);
+      showToast({
+        title: "Успешно",
+        description: "Код успешно отправлен повторно на ваш email",
+        color: "success",
       });
+    } catch (error) {
+      // Error is handled by middleware
+    }
   };
 
   const handleUpdateEmail = async () => {
@@ -154,13 +161,15 @@ export default function VerificationPage() {
     }
 
     if (firstName && lastName && password && newEmail !== email) {
-      setEditingEmail(true);
-      register({
-        firstName,
-        lastName,
-        email: newEmail,
-        password,
-      }).then((res) => {
+      try {
+        await register({
+          firstName,
+          lastName,
+          email: newEmail,
+          password,
+        }).unwrap();
+
+        // Update URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set("email", newEmail);
         window.history.pushState({}, "", `${window.location.pathname}?${urlParams.toString()}`);
@@ -168,7 +177,19 @@ export default function VerificationPage() {
         setEmail(newEmail);
         setCode("");
         setEditingEmail(false);
-      });
+        setCountdown(30);
+        setCanResend(false);
+
+        showToast({
+          title: "Успешно",
+          description: "Email успешно изменен. Код подтверждения отправлен на новый адрес.",
+          color: "success",
+        });
+      } catch (error) {
+        // Error is handled by middleware
+      }
+    } else {
+      setEditingEmail(false);
     }
   };
 

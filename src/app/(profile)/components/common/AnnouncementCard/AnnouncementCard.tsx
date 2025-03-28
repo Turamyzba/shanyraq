@@ -57,12 +57,25 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
     setIsDeleteModalOpen(false);
   };
 
+  // Функция для безопасного форматирования цены
+  const formatPrice = (price: number | null | undefined) => {
+    if (price === null || price === undefined) {
+      return "0";
+    }
+    return price.toLocaleString();
+  };
+
   return (
-    <div className={`${styles.card} ${isArchived ? styles.archivedCard : ""} ${isMobile ? styles.mobile : ""}`}>
+    <div
+      className={`${styles.card} ${isArchived ? styles.archivedCard : ""} ${isMobile ? styles.mobile : ""}`}
+    >
       <div className={styles.imageContainer}>
         <div className={styles.imageWrapper}>
           <Image
-            src={announcement.image || "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"}
+            src={
+              announcement.image ||
+              "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg"
+            }
             alt={announcement.title}
             width={240}
             height={130}
@@ -73,12 +86,8 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
         <Link href={`/edit-apartment/${announcement.id}`} className={styles.editButton}>
           <Images.Edit />
         </Link>
-        
-        {isArchived && (
-          <div className={styles.archivedBadge}>
-            Архивировано
-          </div>
-        )}
+
+        {isArchived && <div className={styles.archivedBadge}>Архивировано</div>}
       </div>
 
       <div className={styles.content}>
@@ -108,7 +117,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
         </div>
 
         <p className={styles.price}>
-          {announcement.price.toLocaleString()} <span className={styles.currency}>₸</span>
+          {formatPrice(announcement.price)} <span className={styles.currency}>₸</span>
         </p>
 
         <div className={styles.actions}>
@@ -126,7 +135,10 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
               <Button onClick={handleArchiveClick} className={styles.archiveButton}>
                 Архивировать
               </Button>
-              <Link href={`/my-announcements/${announcement.id}`} className={styles.applicationsLink}>
+              <Link
+                href={`/my-announcements/${announcement.id}`}
+                className={styles.applicationsLink}
+              >
                 <Button className={styles.applicationsButton}>
                   Заявки{" "}
                   <span className={styles.applicationCount}>{announcement.applicationCount}</span>
