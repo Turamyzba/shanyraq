@@ -16,7 +16,7 @@ loginMiddleware.startListening({
       dispatch(
         setCredentials({
           accessToken: action.payload.data.accessToken,
-          isSurveyCompleted: action.payload.data.isSurveyCompleted,
+          isSurveyCompleted: action.payload.data.isSurveyCompleted || false,
         })
       );
 
@@ -33,5 +33,14 @@ loginMiddleware.startListening({
     if (action.payload.data) {
       dispatch(setUser(action.payload.data));
     }
+  },
+});
+
+// Listen for logout to clear any stored state
+loginMiddleware.startListening({
+  matcher: authApi.endpoints.logout.matchFulfilled,
+  effect: async (action, { dispatch }) => {
+    // No additional action needed as the logout reducer in userSlice
+    // already handles cleaning up the state and cookies
   },
 });

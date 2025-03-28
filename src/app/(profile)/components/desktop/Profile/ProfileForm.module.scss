@@ -8,12 +8,12 @@
 }
 
 .customSpin {
-  color: #1AA683 !important;
+  color: #1aa683 !important;
   font-size: 24px !important;
 }
 
 .customSpin :global(.ant-spin-dot-item) {
-  background-color: #1AA683 !important;
+  background-color: #1aa683 !important;
 }
 
 .phoneInput {
@@ -29,6 +29,12 @@
   border-radius: 10px;
   width: 100%;
   height: 750px !important;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    height: auto !important;
+    min-height: 500px;
+  }
 }
 
 .wrapper {
@@ -47,6 +53,15 @@
 .formRow {
   display: flex;
   gap: 20px;
+
+  @media (max-width: 992px) {
+    gap: 15px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .formItem {
@@ -56,16 +71,28 @@
   color: #25252580 !important;
   line-height: 18px !important;
   margin: 0 !important;
+
+  @media (max-width: 992px) {
+    width: 100% !important;
+  }
 }
 
 .formInput {
   border-radius: 10px !important;
   border: 1px solid #ebebeb !important;
   padding: 15px 16px !important;
+
+  @media (max-width: 768px) {
+    padding: 12px 14px !important;
+  }
 }
 
 .formSelect {
   height: 54px !important;
+
+  @media (max-width: 768px) {
+    height: 45px !important;
+  }
 }
 
 .btnRow {
@@ -73,6 +100,11 @@
   display: flex;
   gap: 12px;
   justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-top: 20px;
+  }
 }
 
 .editBtn {
@@ -84,6 +116,10 @@
   font-size: 14px;
   color: #fff;
   width: 175px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .editBtn:hover {
@@ -100,6 +136,10 @@
   font-size: 14px;
   color: #fff !important;
   width: 175px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .saveBtn:hover {
@@ -115,12 +155,27 @@
   font-weight: 700;
   font-size: 14px;
   width: 175px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    order: 2;
+  }
 }
 
 .modalPassword {
   border-radius: 10px !important;
   padding: 30px !important;
   width: 600px !important;
+
+  @media (max-width: 768px) {
+    width: 90% !important;
+    padding: 20px !important;
+  }
+
+  @media (max-width: 480px) {
+    width: 95% !important;
+    padding: 15px !important;
+  }
 }
 
 .modalBodyPassword {
@@ -132,6 +187,11 @@
   font-weight: 600 !important;
   margin-bottom: 30px !important;
   color: #32343a !important;
+
+  @media (max-width: 768px) {
+    margin-bottom: 20px !important;
+    font-size: 18px !important;
+  }
 }
 
 .passwordField {
@@ -156,6 +216,10 @@
   border-radius: 10px !important;
   background-color: transparent !important;
   background: transparent !important;
+
+  @media (max-width: 768px) {
+    font-size: 14px !important;
+  }
 }
 
 .modalFooter {
@@ -171,6 +235,11 @@
   font-size: 18px !important;
   font-weight: 700;
   margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    height: 50px;
+    font-size: 16px !important;
+  }
 }
 
 .cancelPassword {
@@ -180,9 +249,14 @@
   color: #252525;
   font-size: 18px !important;
   font-weight: 700;
+
+  @media (max-width: 768px) {
+    height: 50px;
+    font-size: 16px !important;
+  }
 }
 
-// Mobile styles
+// Mobile styles - keeping these for reference but adding responsive adaptations above
 .mobileContainer {
   background-color: #fff;
   border: 1px solid #ebebeb;

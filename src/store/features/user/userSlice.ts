@@ -3,6 +3,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { UserProfile } from "../../../types/response/authResponses";
 import { authApi } from "../auth/authApi";
+import { setCookie, destroyCookie, parseCookies } from "nookies";
 
 interface UserState {
   user: UserProfile | null;
@@ -11,25 +12,29 @@ interface UserState {
   isAuthenticated: boolean;
 }
 
-const initialState: UserState = {
-  user: null,
-  accessToken: null,
-  isSurveyCompleted: false,
-  isAuthenticated: false,
-};
+// Initialize state from cookies if available (works for both client and SSR)
+const getInitialState = (): UserState => {
+  let accessToken = null;
+  let isAuthenticated = false;
 
-// Only access localStorage on the client side
-if (typeof window !== "undefined") {
-  const storedToken = localStorage.getItem("accessToken");
-  if (storedToken) {
-    initialState.accessToken = storedToken;
-    initialState.isAuthenticated = true;
+  // Only run this client-side
+  if (typeof window !== "undefined") {
+    const cookies = parseCookies();
+    accessToken = cookies.accessToken || null;
+    isAuthenticated = !!accessToken;
   }
-}
+
+  return {
+    user: null,
+    accessToken,
+    isSurveyCompleted: false,
+    isAuthenticated,
+  };
+};
 
 const userSlice = createSlice({
   name: "user",
-  initialState,
+  initialState: getInitialState(),
   reducers: {
     setCredentials: (
       state,
@@ -38,7 +43,14 @@ const userSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.isSurveyCompleted = action.payload.isSurveyCompleted;
       state.isAuthenticated = true;
-      localStorage.setItem("accessToken", action.payload.accessToken);
+
+      // Store token in cookies (works better with SSR than localStorage)
+      setCookie(null, "accessToken", action.payload.accessToken, {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
     },
     setUser: (state, action: PayloadAction<UserProfile>) => {
       state.user = action.payload;
@@ -48,26 +60,18 @@ const userSlice = createSlice({
       state.accessToken = null;
       state.isSurveyCompleted = false;
       state.isAuthenticated = false;
-      localStorage.removeItem("accessToken");
+
+      // Remove cookies
+      destroyCookie(null, "accessToken", { path: "/" });
     },
   },
   extraReducers: (builder) =>
     builder.addMatcher(authApi.endpoints.login.matchFulfilled, (state, action) => {
-      state.accessToken = action.payload.data.accessToken;
-      state.isAuthenticated = true;
+      if (action.payload.data) {
+        state.accessToken = action.payload.data.accessToken;
+        state.isAuthenticated = true;
+      }
     }),
-  // .addMatcher(userApi.endpoints.currentUser.matchFulfilled, (state, action) => {
-  //   state.currentUser = action.payload.result.user;
-  //   state.isAuthenticated = true;
-  // })
-  // .addMatcher(authApi.endpoints.refreshToken.matchFulfilled, (state, action) => {
-  //   localStorage.setItem("token", action.payload.result.token);
-  //   state.token = action.payload.result.token;
-  //   state.isAuthenticated = true;
-  // })
-  // .addMatcher(userApi.endpoints.getUserById.matchFulfilled, (state, action) => {
-  //   state.user = action.payload.result.user;
-  // }),
 });
 
 export const { setCredentials, setUser, logout } = userSlice.actions;

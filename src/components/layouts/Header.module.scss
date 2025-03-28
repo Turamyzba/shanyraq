@@ -1,159 +1,236 @@
 .navbar {
+  width: 100%;
   padding: 0;
-  header {
-    padding: 0;
-  }
 }
 
 .header {
   width: 100%;
-  background-color: #fff;
-  border-bottom: 1px solid #ebebeb;
-  padding: 15px 0 !important;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
 }
 
 .topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  width: 100%;
+  padding-bottom: 10px;
 
-  .location {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    padding: 0;
-    cursor: pointer;
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 10px;
   }
+}
 
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
-    .themeToggle {
-      width: auto !important;
-      padding: 0 !important;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .languageSwitch {
-      display: flex;
-      gap: 5px;
-
-      button {
-        // width: auto !important;
-        height: auto;
-        padding: 5px 10px !important;
-        border: 1px solid #b5b7c0;
-        background: none;
-        cursor: pointer;
-        font-size: 14px;
-        color: #555;
-        border-radius: 5px;
-        min-width: unset !important;
-        min-height: unset !important;
-
-        &.activeLang {
-          border-color: #1aa683;
-          color: #1aa683;
-        }
-      }
-    }
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: flex-start;
   }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+.themeToggle {
+  background: transparent;
+}
+
+.languageSwitch {
+  display: flex;
+  align-items: center;
+}
+
+.activeLang,
+.inactiveLang {
+  min-width: 40px;
+  height: 30px;
+  padding: 0 8px;
+}
+
+.activeLang {
+  background-color: #1aa683;
+  color: white;
+}
+
+.inactiveLang {
+  background-color: transparent;
+  color: #1aa683;
 }
 
 .mainNav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  margin-top: 10px;
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #252525;
-    text-decoration: none;
-
-    .logoIcon {
-      width: 50px;
-      height: 50px;
-    }
+  @media (max-width: 1024px) {
+    flex-wrap: wrap;
+    gap: 15px;
   }
 
-  .searchBar {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 7 10px;
-    border-radius: 5px;
-    gap: 15px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+
+  @media (max-width: 768px) {
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin: 0;
+    color: #1aa683;
+  }
+}
+
+.logoIcon {
+  height: 30px;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 5px;
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    margin: 0;
+    order: 3;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 8px;
+  }
+
+  @media (max-width: 480px) {
     .searchItem {
-      padding: 5px 15px;
-      border-right: 1px solid #ccc;
-      cursor: pointer;
-      font-size: 14px;
-      white-space: nowrap;
-
-      &:last-child {
-        border-right: none;
-      }
+      width: calc(50% - 5px);
     }
 
     .searchButton {
-      background: #1aa683;
-      color: #fff;
-      border: none;
-      padding: 8px;
-      border-radius: 5px;
-      cursor: pointer;
-      min-width: unset !important;
+      margin-left: auto;
     }
   }
+}
 
-  .profileActions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+.searchItem {
+  padding: 5px 10px;
+  border-right: 1px solid #e0e0e0;
 
-    .loginButton {
-      background: none;
-      min-width: unset !important;
-      border: 1px solid #1aa683;
-      padding: 12px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      font-size: 14px;
+  @media (max-width: 768px) {
+    border-right: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    margin: 2px;
+  }
+
+  p {
+    margin: 0;
+    white-space: nowrap;
+
+    @media (max-width: 480px) {
+      font-size: 12px;
     }
+  }
+}
 
-    .createAdButton {
-      background: #1aa683;
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-    }
+.searchButton {
+  margin-left: auto;
+  background-color: #1aa683;
+  color: white;
 
-    .profileIcon {
-      background: none;
-      min-width: unset !important;
-      border: 1px solid #1aa683;
-      padding: 8px 10px;
-      cursor: pointer;
-    }
+  @media (max-width: 768px) {
+    height: 36px;
+    width: 36px;
+    min-width: 36px;
+    padding: 0;
+  }
+}
+
+.profileActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  @media (max-width: 1024px) {
+    margin-left: auto;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+.loginButton {
+  border-color: #1aa683;
+  color: #1aa683;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    height: 36px;
+    padding: 0 12px;
+  }
+}
+
+.createAdButton {
+  background-color: #1aa683;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    height: 36px;
+    padding: 0 12px;
+    flex-grow: 1;
+  }
+}
+
+.profileIcon {
+  border-color: #1aa683;
+
+  @media (max-width: 480px) {
+    height: 36px;
+    width: 36px;
+    min-width: 36px;
   }
 }
