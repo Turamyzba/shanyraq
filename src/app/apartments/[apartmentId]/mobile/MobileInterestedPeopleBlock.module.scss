@@ -1,0 +1,392 @@
+.mobileInterestedPeopleBlock {
+  margin-bottom: 40px;
+}
+
+.interestedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.interestedText {
+  font-size: 14px;
+  color: #777;
+  margin: 0;
+}
+
+.interestedCount {
+  display: block;
+  font-weight: 600;
+  color: #252525;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.groupCount {
+  font-size: 14px;
+  color: #1aa683;
+  text-decoration: none;
+}
+
+.noGroups {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.noGroupsText {
+  color: #777;
+  font-size: 14px;
+  margin: 0;
+}
+
+.groupsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.groupContainer {
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.groupHeader {
+  padding: 12px 16px;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: space-between;
+}
+
+.groupInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupInfoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.groupName {
+  font-weight: 600;
+  margin: 0;
+  font-size: 16px;
+}
+
+.maxPeople {
+  font-size: 12px;
+  color: #777;
+  white-space: nowrap;
+}
+
+.expandButton {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.groupMembers {
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.memberRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.memberDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.memberName {
+  font-weight: 500;
+  margin: 0;
+  font-size: 14px;
+}
+
+.memberRole {
+  color: #777;
+  font-size: 12px;
+  margin: 0;
+}
+
+.viewProfileButton {
+  min-width: 120px;
+  font-size: 12px;
+  white-space: normal;
+  height: auto;
+  padding: 6px 8px;
+  text-align: center;
+}
+.viewProfileButton:active {
+  color: #1aa683 !important;
+  border: 1px solid #1aa683 !important;
+}
+
+.applyButton, .createGroupButton, .submitButton {
+  margin-top: 12px;
+  background-color: #1aa683 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 10px !important;
+  font-weight: 600 !important;
+  min-height: 40px;
+  border-radius: 8px;
+}
+
+.createGroupButton {
+  background-color: #32343a !important;
+}
+
+/* Drawer Styles */
+.mobileDrawer {
+  :global(.ant-drawer-body) {
+    padding: 0;
+    background-color: #f9f9f9;
+  }
+  
+  :global(.ant-drawer-content) {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    overflow: hidden;
+  }
+  
+  :global(.ant-drawer-header) {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 16px;
+    text-align: center;
+  }
+  
+  :global(.ant-drawer-close) {
+    right: 50%;
+    top: 10px;
+    transform: translateX(50%);
+    color: #999;
+  }
+  
+  :global(.ant-drawer-title) {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.drawerHeader {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 0 40px;
+}
+
+.drawerContent {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  max-height: calc(90vh - 60px);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+  }
+}
+
+.counterContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.counterLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  margin: 0;
+}
+
+.counterRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.counterButton {
+  padding: 6px;
+  border-radius: 50%;
+}
+
+.counterValue {
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}
+
+.closeButton {
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  padding: 12px !important;
+  min-height: 40px;
+  margin-top: 16px;
+}
+
+.submitButton {
+  margin-top: 24px;
+  font-size: 16px !important;
+  padding: 12px !important;
+}
+
+/* Profile View Styles */
+.profileHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.profileName {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 8px 0 0 0;
+}
+
+.profileRole {
+  font-size: 14px;
+  color: #777;
+  margin: 0;
+}
+
+.questionItem {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+}
+
+.questionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.questionAnswer {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Additional Member Section */
+.additionalMemberSection {
+  padding: 16px 0;
+}
+
+.memberDivider {
+  margin: 12px 0;
+}
+
+.memberTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+/* Capacity Toggle Section */
+.capacityToggle {
+  padding-top: 8px;
+}
+
+.toggleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 374px) {
+  .groupHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .expandButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .memberInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .drawerContent {
+    padding: 16px 12px;
+  }
+  
+  .counterRow {
+    gap: 12px;
+    padding: 6px 12px;
+  }
+  
+  .formGroup label {
+    font-size: 13px;
+  }
+}
+
+/* Drawer transition animations */
+:global(.ant-drawer) {
+  transition: all 0.3s ease-in-out;
+}
+
+:global(.ant-drawer-content-wrapper) {
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+:global(.ant-drawer-mask) {
+  backdrop-filter: blur(2px);
+}

@@ -25,10 +25,6 @@
   background-color: #1aa683;
   color: white;
 
-  &:hover {
-    background-color: darken(#1aa683, 10%);
-  }
-
   &:disabled {
     opacity: 0.6;
   }

@@ -187,3 +187,103 @@
   color: #fff !important;
   border: none !important;
 }
+
+  .createGroupButton {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .groupDetails {
+    padding: 0 16px 16px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .tableWrapper {
+    margin-top: 16px;
+  }
+
+  .avatarGroup {
+    margin-left: auto;
+  }
+
+  // Modal styles
+  .modalContent {
+    margin-bottom: 20px;
+  }
+
+  .modalSubText {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 12px;
+  }
+
+  .counterRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .formGroup {
+    margin-bottom: 16px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #333;
+    }
+  }
+
+  .additionalMemberSection {
+    margin-top: 8px;
+  }
+
+  .memberDivider {
+    margin: 16px 0;
+  }
+
+  .memberTitle {
+    margin: 12px 0;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .capacityToggle {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+  }
+
+  .viewProfileButton {
+    min-width: 120px;
+    font-size: 12px;
+    white-space: normal;
+    height: auto;
+    padding: 12px 16px;
+    text-align: center;
+    border-radius: 12px;
+  }
+  .viewProfileButton:active {
+    color: #1aa683 !important;
+    border: 1px solid #1aa683 !important;
+  }
+
+  .toggleWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .closeButton, .confirmButton {
+    min-width: 100px;
+  }
+
+  .modalAnswer {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }

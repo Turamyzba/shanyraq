@@ -222,10 +222,6 @@
   padding: 10px 20px;
   min-width: 200px;
 
-  &:hover {
-    background-color: darken(#1aa683, 10%);
-  }
-
   &:disabled {
     opacity: 0.6;
   }
