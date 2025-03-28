@@ -1,12 +1,10 @@
 "use client";
 
-import type React from "react";
 import { useState, useEffect } from "react";
 import { Form } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MyPasswordInput } from "@/components/ui/MyPasswordInput";
 import MyButton from "@/components/ui/MyButton";
-import { addToast } from "@heroui/react";
 import styles from "./ResetPassword.module.scss";
 import { useUpdatePasswordMutation } from "@/store/features/auth/authApi";
 import { showToast } from "@/utils/notification";
@@ -19,7 +17,7 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  // Get email from URL parameters
+  // Get required parameters from URL
   const email = searchParams.get("email") || "";
   const token = searchParams.get("token") || "";
 
@@ -78,12 +76,23 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    updatePassword({
-      email: email,
-      password: password,
-    }).then((res) => {
+    try {
+      await updatePassword({
+        email: email,
+        password: password,
+        token: token,
+      }).unwrap();
+
+      showToast({
+        title: "Успешно",
+        description: "Пароль успешно изменен. Теперь вы можете войти с новыми данными.",
+        color: "success",
+      });
+
       router.push("/login");
-    });
+    } catch (error) {
+      // Error handling is done by middleware
+    }
   };
 
   return (

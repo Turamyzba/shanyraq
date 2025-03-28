@@ -51,8 +51,8 @@ const DesktopAnnouncementsList: React.FC<AnnouncementsListProps> = ({
               <div className={styles.announcementsGrid}>
                 {announcements.length > 0 ? (
                   announcements.map((announcement) => (
-                    <div 
-                      key={announcement.id} 
+                    <div
+                      key={announcement.id}
                       className={`${styles.cardWrapper} ${announcement.animationClass ? styles[announcement.animationClass] : ""}`}
                     >
                       <AnnouncementCard
@@ -79,8 +79,8 @@ const DesktopAnnouncementsList: React.FC<AnnouncementsListProps> = ({
               <div className={styles.announcementsGrid}>
                 {announcements.length > 0 ? (
                   announcements.map((announcement) => (
-                    <div 
-                      key={announcement.id} 
+                    <div
+                      key={announcement.id}
                       className={`${styles.cardWrapper} ${announcement.animationClass ? styles[announcement.animationClass] : ""}`}
                     >
                       <AnnouncementCard

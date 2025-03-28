@@ -1,15 +1,25 @@
-import { fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import type { RootState } from "./store";
-import { logout, setCredentials } from "./features/user/userSlice";
-import type { LoginResponse } from "../types/response/authResponses";
-import type { Response } from "../types/response/response";
+"use client";
 
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { RootState } from "./store";
+import { parseCookies } from 'nookies';
+
+// Базовый запрос с проверкой токена
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).user.accessToken;
+    // Попробуем получить токен из Redux
+    let token;
+    try {
+      token = (getState() as RootState)?.user?.accessToken;
+    } catch (e) {
+      // Если не получилось, проверим куки
+      if (typeof window !== 'undefined') {
+        const cookies = parseCookies();
+        token = cookies.accessToken;
+      }
+    }
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -19,48 +29,7 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-// const baseQueryWithRetry = retry(baseQuery, { maxRetries: 0 });
-
-// const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
-//   let result = await baseQueryWithRetry(args, api, extraOptions);
-
-//   if (result.error && result.error.status === 401) {
-//     // Try to get a new token
-//     try {
-//       const refreshResult = await baseQuery(
-//         {
-//           url: "auth/refresh",
-//           method: "POST",
-//         },
-//         api,
-//         extraOptions
-//       );
-
-//       const refreshData = refreshResult.data as Response<LoginResponse>;
-
-//       if (refreshData && refreshData.data?.accessToken) {
-//         // Store the new token
-//         api.dispatch(
-//           setCredentials({
-//             accessToken: refreshData.data.accessToken,
-//             isSurveyCompleted: refreshData.data.isSurveyCompleted,
-//           })
-//         );
-
-//         // Retry the original query with new access token
-//         result = await baseQueryWithRetry(args, api, extraOptions);
-//       } else {
-//         api.dispatch(logout());
-//       }
-//     } catch (error) {
-//       console.error("Error refreshing token:", error);
-//       api.dispatch(logout());
-//     }
-//   }
-
-//   return result;
-// };
-
+// Создаем API
 export const api = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQuery,

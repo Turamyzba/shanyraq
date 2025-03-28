@@ -12,7 +12,12 @@ export const myAnnouncementApi = api.injectEndpoints({
         method: "GET",
       }),
     }),
-
+    getAnnouncementResponses: build.query<Response<any>, number>({
+      query: (id) => ({
+        url: `response/all/${id}`,
+        method: "GET",
+      }),
+    }),
     getMyArchivedAnnouncements: build.query<Response<MyAnnouncementsListResponse>, void>({
       query: () => ({
         url: "announcement/my-archive-announcements",
@@ -35,12 +40,11 @@ export const myAnnouncementApi = api.injectEndpoints({
     }),
 
     deleteAnnouncement: build.mutation<Response<MyAnnouncementsListResponse>, number>({
-        query: (id) => ({
-            url: `announcement/delete-announcement/${id}`,
-            method: "DELETE",
-        }),
+      query: (id) => ({
+        url: `announcement/delete-announcement/${id}`,
+        method: "DELETE",
+      }),
     }),
-  
   }),
 });
 
@@ -49,5 +53,6 @@ export const {
   useGetMyArchivedAnnouncementsQuery,
   useArchiveAnnouncementMutation,
   useRestoreAnnouncementMutation,
-  useDeleteAnnouncementMutation
+  useDeleteAnnouncementMutation,
+  useGetAnnouncementResponsesQuery,
 } = myAnnouncementApi;

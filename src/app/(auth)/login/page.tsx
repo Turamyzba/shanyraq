@@ -1,21 +1,15 @@
 "use client";
 
-import type React from "react";
-
 import { useState } from "react";
-import { Checkbox, Form, useSelect } from "@heroui/react";
+import { Checkbox, Form } from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import MyInput from "@/components/ui/MyInput";
 import MyButton from "@/components/ui/MyButton";
 import { MyPasswordInput } from "@/components/ui/MyPasswordInput";
-import { addToast } from "@heroui/react";
 import styles from "./Login.module.scss";
 import { useLoginMutation } from "@/store/features/auth/authApi";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "@/store/features/user/userSlice";
-import { RootState, useAppSelector } from "@/store/store";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { showToast } from "@/utils/notification";
 
 export default function LoginPage() {
@@ -26,10 +20,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-
-  const state = useAppSelector((state) => state.user);
-
-  console.log(state);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,9 +33,15 @@ export default function LoginPage() {
       return;
     }
 
-    login({ email, password }).then((res) => {
-      router.push("/apartments");
-    });
+    try {
+      const result = await login({ email, password }).unwrap();
+
+      if (result.data) {
+        router.push("/apartments");
+      }
+    } catch (error) {
+      // Error is handled by middleware
+    }
   };
 
   return (

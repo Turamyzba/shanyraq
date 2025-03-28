@@ -4,7 +4,7 @@ import Link from "next/link";
 import Container from "./Container";
 import Images from "../common/Images";
 import styles from "./Header.module.scss";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react"; // Добавлен useEffect
 import {
   Navbar,
   Button,
@@ -28,8 +28,16 @@ export default function Header({ handleOpenModal }: { handleOpenModal: () => voi
   const userState = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const [isOspan, setIsOspan] = useState(true);
+  // Изменим подход к isOspan - это уже не нужно, так как мы используем userState.isAuthenticated
   const router = useRouter();
+
+  // Предотвращаем гидратацию, используя useEffect для клиентского рендеринга
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Этот код будет выполнен только на клиенте после монтирования компонента
+    setIsClient(true);
+  }, []);
 
   const cities = [
     { key: "astana", label: "Астана" },
@@ -147,7 +155,8 @@ export default function Header({ handleOpenModal }: { handleOpenModal: () => voi
             </div>
 
             <div className={styles.profileActions}>
-              {!isOspan && (
+              {/* Показываем кнопку "Войти" только на клиенте и если пользователь не аутентифицирован */}
+              {isClient && !userState.isAuthenticated && (
                 <Button className={styles.loginButton} as={Link} href="/login" variant="bordered">
                   Войти
                 </Button>
@@ -158,7 +167,8 @@ export default function Header({ handleOpenModal }: { handleOpenModal: () => voi
                 <Images.Plus size={16} />
               </Button>
 
-              {userState.isAuthenticated && (
+              {/* Показываем меню профиля только на клиенте и если пользователь аутентифицирован */}
+              {isClient && userState.isAuthenticated && (
                 <DropdownAnt menu={{ items }} placement="bottomRight">
                   <Button className={styles.profileIcon} isIconOnly variant="bordered">
                     <Images.User color="#1aa683" size={20} />
