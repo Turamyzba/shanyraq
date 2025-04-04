@@ -1,5 +1,3 @@
-// components/desktop/MyAnnouncements/GroupsDetails/ApplicationsList.tsx
-
 import React from "react";
 import { Button, Collapse, Table } from "antd";
 import { User } from "./types";
@@ -30,7 +28,11 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
         <div className={styles.tableUser}>
           <div
             className={styles.userAvatar}
-            style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${user.id})` }}
+            style={{
+              backgroundImage: user.profilePhoto
+                ? `url(${user.profilePhoto})`
+                : `url(https://i.pravatar.cc/150?u=${user.id})`,
+            }}
           ></div>
           <div>
             <div className={styles.userName}>{user.username}</div>
@@ -99,7 +101,11 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
         <div className={styles.tableUser}>
           <div
             className={styles.userAvatar}
-            style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${user.id})` }}
+            style={{
+              backgroundImage: user.profilePhoto
+                ? `url(${user.profilePhoto})`
+                : `url(https://i.pravatar.cc/150?u=${user.id})`,
+            }}
           ></div>
           <div>
             <div className={styles.userName}>
@@ -109,12 +115,15 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
                   Группа ({user.groupApplicants.length + 1})
                 </span>
               )}
+              {user.isGroupLead && <span className={styles.adminBadge}>Создатель группы</span>}
             </div>
             <div className={styles.userEmail}>{user.email}</div>
-            {user.wantsToCreateNewGroup ? (
+            {user.forWhat && <div className={styles.groupRequest}>{user.forWhat}</div>}
+            {!user.forWhat && user.wantsToCreateNewGroup && (
               <div className={styles.groupRequest}>Хочет создать новую группу</div>
-            ) : (
-              <div className={styles.groupRequest}>Хочет присоединиться к Группе 1</div>
+            )}
+            {!user.forWhat && !user.wantsToCreateNewGroup && (
+              <div className={styles.groupRequest}>Хочет присоединиться</div>
             )}
           </div>
         </div>
@@ -191,6 +200,10 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
       ),
     },
   ];
+
+  if (applications.length === 0) {
+    return null;
+  }
 
   return (
     <Collapse

@@ -1,6 +1,3 @@
-// components/desktop/MyAnnouncements/GroupsDetails/types.ts
-// and components/mobile/MyAnnouncements/GroupsDetails/types.ts
-
 export interface Questionnaire {
   answers: {
     question: string;
@@ -17,10 +14,14 @@ export interface User {
   date: string;
   isAdmin?: boolean;
   age: number;
+  profilePhoto?: string | null;
   questionnaire?: Questionnaire;
   coverLetter?: string;
   groupApplicants?: User[];
   wantsToCreateNewGroup?: boolean;
+  forWhat?: string;
+  isGroupLead?: boolean;
+  batchId?: string;
 }
 
 export interface Group {
@@ -28,6 +29,9 @@ export interface Group {
   name: string;
   members: User[];
   newApplications: User[];
+  status: string;
+  capacityOfGroup: number;
+  freeSlots: number;
 }
 
 export interface ApartmentDetails {
@@ -47,4 +51,10 @@ export interface ApartmentDetails {
 export interface ActionModalContent {
   action: "accept" | "reject";
   message: string;
+}
+
+export interface BatchApplication {
+  batchId: string;
+  primaryApplicant: User;
+  coapplicants: User[];
 }

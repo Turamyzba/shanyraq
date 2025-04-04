@@ -18,6 +18,7 @@ const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
   const router = useRouter();
   const [groups, setGroups] = useState<Group[]>([]);
   const [newApplications, setNewApplications] = useState<User[]>([]);
+  const [batchApplications, setBatchApplications] = useState<any[]>([]);
   const [isQuestionnaireModalVisible, setIsQuestionnaireModalVisible] = useState(false);
   const [isCoverLetterModalVisible, setIsCoverLetterModalVisible] = useState(false);
   const [isActionModalVisible, setIsActionModalVisible] = useState(false);
@@ -30,7 +31,6 @@ const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
 
   useEffect(() => {
     if (data) {
-      // Map API data to component state
       mapApiDataToState(data);
     }
   }, [data]);
@@ -47,52 +47,94 @@ const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
       deposit: `${apiData.deposit} ₸`,
       description: apiData.title || "Описание квартиры",
       price: apiData.cost || 0,
-      image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg", // Default image
-      applicationsCount: (apiData.newApplications?.length || 0) + (apiData.groups?.reduce((acc: number, group: any) => acc + (group.newApplications?.length || 0), 0) || 0),
+      image: "https://i.pinimg.com/736x/d4/69/ba/d469ba356d6954808a91b661a42bcc77.jpg",
+      applicationsCount: countAllApplications(apiData),
     };
     
     setApartmentDetails(apartmentInfo);
     
-    // Map group data
+    // Map groups data
     if (apiData.groups && Array.isArray(apiData.groups)) {
-      const mappedGroups = apiData.groups.map((group: any, index: number) => {
+      const mappedGroups = apiData.groups.map((group: any) => {
         return {
-          id: group.groupId || index + 1,
-          name: `Группа ${index + 1}`,
+          id: group.groupId,
+          name: group.groupName || `Группа ${group.groupId}`,
           members: (group.groupMembers || []).map((member: any) => mapUserData(member)),
-          newApplications: (group.newApplicationsWithPeople || []).flatMap((batch: any) => 
-            (batch.people || []).map((person: any) => mapUserData(person))
-          ),
+          newApplications: (group.newApplications || []).map((app: any) => mapUserData(app)),
+          status: group.status,
+          capacityOfGroup: group.capacityOfGroup,
+          freeSlots: group.freeSlots,
         };
       });
       
       setGroups(mappedGroups);
     }
     
-    // Map new applications
-    if (apiData.newApplicationsWithPeople && Array.isArray(apiData.newApplicationsWithPeople)) {
-      const mappedApplications = apiData.newApplicationsWithPeople.flatMap((batch: any) => 
-        (batch.people || []).map((person: any) => ({
-          ...mapUserData(person),
-          wantsToCreateNewGroup: true,
-          groupApplicants: batch.people.filter((p: any) => p.id !== person.id).map((p: any) => mapUserData(p))
-        }))
-      );
+    // Map individual applications
+    if (apiData.newApplications && Array.isArray(apiData.newApplications)) {
+      const individualApps = apiData.newApplications.map((app: any) => ({
+        ...mapUserData(app),
+        forWhat: app.forWhat
+      }));
       
-      setNewApplications(mappedApplications);
+      setNewApplications(individualApps);
     }
+    
+    // Map batch applications (people applying together)
+    if (apiData.newApplicationsWithPeople && Array.isArray(apiData.newApplicationsWithPeople)) {
+      const batchApps = apiData.newApplicationsWithPeople.map((batch: any) => {
+        const primaryApplicant = batch.people[0];
+        const otherApplicants = batch.people.slice(1);
+        
+        return {
+          batchId: batch.applicationBatchId,
+          primaryApplicant: {
+            ...mapUserData(primaryApplicant),
+            forWhat: primaryApplicant.forWhat,
+            isGroupLead: true
+          },
+          coapplicants: otherApplicants.map((person: any) => ({
+            ...mapUserData(person),
+            forWhat: person.forWhat
+          }))
+        };
+      });
+      
+      setBatchApplications(batchApps);
+      
+      // Convert batch applications to the format expected by ApplicationsList
+      const batchAsUsers = batchApps.map(batch => ({
+        ...batch.primaryApplicant,
+        groupApplicants: batch.coapplicants,
+        wantsToCreateNewGroup: false,
+        batchId: batch.batchId
+      }));
+      
+      setNewApplications(prev => [...prev, ...batchAsUsers]);
+    }
+  };
+
+  const countAllApplications = (apiData: any): number => {
+    const individualApps = apiData.newApplications?.length || 0;
+    const groupApps = apiData.groups?.reduce((acc: number, group: any) => 
+      acc + (group.newApplications?.length || 0), 0) || 0;
+    const batchApps = apiData.newApplicationsWithPeople?.reduce((acc: number, batch: any) => 
+      acc + (batch.people?.length || 0), 0) || 0;
+    
+    return individualApps + groupApps + batchApps;
   };
 
   const mapUserData = (userData: any): User => {
     return {
       id: userData.id || Math.floor(Math.random() * 1000),
       username: userData.name || "Пользователь",
-      email: "user@example.com", // Default email if not provided
+      email: userData.email || "user@example.com",
       telegram: userData.phoneNumbers?.[0] || "@user",
       phone: userData.phoneNumbers?.[0] || "Нет номера",
       date: userData.appliedDate ? new Date(userData.appliedDate).toLocaleDateString('ru-RU') : new Date().toLocaleDateString('ru-RU'),
       isAdmin: userData.permissionStatus === "SUPERADMIN",
       age: userData.age || 25,
+      profilePhoto: userData.profilePhoto,
       questionnaire: {
         answers: [
           {
@@ -116,9 +158,13 @@ const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
   const handleAcceptApplication = (applicationId: number) => {
     const application = newApplications.find((app) => app.id === applicationId);
     if (application) {
-      const message = application.wantsToCreateNewGroup
-        ? `${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} хотят создать новую группу и жить в этой квартире.`
-        : `${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} хотят присоединиться к Группе 1.`;
+      // Check if this is a batch application
+      const isBatchApp = application.groupApplicants && application.groupApplicants.length > 0;
+      
+      // Create appropriate message
+      const message = isBatchApp
+        ? `${application.username} и ${application.groupApplicants.length} соседей хотят ${application.forWhat || "присоединиться к группе"}.`
+        : `${application.username} хочет ${application.forWhat || "присоединиться к группе"}.`;
 
       setActionModalContent({
         action: "accept",
@@ -126,44 +172,58 @@ const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
       });
       setIsActionModalVisible(true);
 
-      setGroups((prevGroups) => {
-        const updatedGroups = [...prevGroups];
-        if (updatedGroups.length > 0) {
-          const newMembers = [application];
-
-          if (application.groupApplicants?.length) {
-            newMembers.push(...application.groupApplicants);
-          }
-
-          if (application.wantsToCreateNewGroup) {
-            const newGroup = {
-              id: updatedGroups.length + 1,
-              name: `Группа ${updatedGroups.length + 1}`,
-              members: [{ ...application, isAdmin: true }, ...(application.groupApplicants || [])],
-              newApplications: [],
-            };
-            return [...updatedGroups, newGroup];
-          } else {
-            updatedGroups[0] = {
-              ...updatedGroups[0],
-              members: [...updatedGroups[0].members, ...newMembers],
-            };
-            return updatedGroups;
-          }
+      // Handle the state update to move the application to the appropriate group
+      if (application.forWhat && application.forWhat.includes("присоединиться к")) {
+        const groupName = application.forWhat.split("присоединиться к ")[1];
+        const targetGroup = groups.find(g => g.name === groupName);
+        
+        if (targetGroup) {
+          setGroups(prevGroups => {
+            return prevGroups.map(group => {
+              if (group.id === targetGroup.id) {
+                const newMembers = isBatchApp 
+                  ? [application, ...application.groupApplicants]
+                  : [application];
+                  
+                return {
+                  ...group,
+                  members: [...group.members, ...newMembers]
+                };
+              }
+              return group;
+            });
+          });
         }
-        return updatedGroups;
-      });
+      } else {
+        // If no specific group mentioned or wants to create a new group
+        const newGroup = {
+          id: groups.length + 1,
+          name: `Группа ${groups.length + 1}`,
+          members: isBatchApp 
+            ? [{ ...application, isAdmin: true }, ...application.groupApplicants]
+            : [{ ...application, isAdmin: true }],
+          newApplications: [],
+          status: "PENDING",
+          capacityOfGroup: isBatchApp ? application.groupApplicants.length + 1 : 1,
+          freeSlots: 0
+        };
+        
+        setGroups(prevGroups => [...prevGroups, newGroup]);
+      }
 
-      setNewApplications((prevApps) => prevApps.filter((app) => app.id !== applicationId));
+      // Remove the application from newApplications
+      setNewApplications(prevApps => prevApps.filter(app => app.id !== applicationId));
     }
   };
 
   const handleRejectApplication = (applicationId: number) => {
     const application = newApplications.find((app) => app.id === applicationId);
     if (application) {
-      const message = application.wantsToCreateNewGroup
-        ? `Вы отклонили заявку ${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} на создание новой группы.`
-        : `Вы отклонили заявку ${application.username}${application.groupApplicants?.length ? ` и ${application.groupApplicants.length} соседей` : ""} на присоединение к Группе 1.`;
+      const isBatchApp = application.groupApplicants && application.groupApplicants.length > 0;
+      
+      const message = isBatchApp
+        ? `Вы отклонили заявку ${application.username} и ${application.groupApplicants.length} соседей.`
+        : `Вы отклонили заявку ${application.username}.`;
 
       setActionModalContent({
         action: "reject",
@@ -171,7 +231,7 @@ const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
       });
       setIsActionModalVisible(true);
 
-      setNewApplications((prevApps) => prevApps.filter((app) => app.id !== applicationId));
+      setNewApplications(prevApps => prevApps.filter(app => app.id !== applicationId));
     }
   };
 
@@ -181,7 +241,7 @@ const GroupsDetails: React.FC<GroupsDetailsProps> = ({ data }) => {
         if (group.id === groupId) {
           return {
             ...group,
-            members: group.members.filter((member) => member.id !== memberId),
+            members: group.members.filter(member => member.id !== memberId),
           };
         }
         return group;
