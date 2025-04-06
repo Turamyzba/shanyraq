@@ -1,0 +1,266 @@
+.drawerContainer {
+  padding: 20px 16px 36px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  background-color: #dadada;
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+
+.drawerTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #252525;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.drawerSubtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 16px 0;
+}
+
+.radioGroup {
+  margin-top: 16px;
+}
+
+.radioGroup label {
+  font-size: 16px;
+  color: #252525;
+  margin-bottom: 8px;
+  padding: 12px 0;
+}
+
+// Photo Edit Drawer
+.photoPreview {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-around;
+}
+
+.photoButton,
+.deleteButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none !important;
+  border: none !important;
+  gap: 6px;
+  min-width: auto !important;
+  padding: 12px !important;
+  font-size: 14px;
+}
+
+.photoButton {
+  color: #1aa683 !important;
+}
+
+.deleteButton {
+  color: #ef4444 !important;
+}
+
+.buttonIcon {
+  font-size: 24px;
+}
+
+// Password Drawer
+.passwordFields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.passwordField {
+  position: relative;
+}
+
+.passwordInput {
+  width: 100%;
+  border: 1px solid #ebebeb !important;
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+}
+
+.passwordToggleIcon {
+  cursor: pointer;
+  color: #999;
+  font-size: 18px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.confirmButton,
+.cancelButton {
+  width: 100%;
+  height: 48px;
+  font-size: 16px !important;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.confirmButton {
+  background-color: #1aa683 !important;
+  color: white !important;
+}
+
+.cancelButton {
+  background-color: transparent !important;
+  color: #252525 !important;
+}
+
+// Settings Drawer
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  color: #252525;
+  margin: 24px 0 16px;
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #ebebeb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.selected {
+  border-color: #1aa683;
+  background-color: rgba(26, 166, 131, 0.05);
+}
+
+.flagIcon,
+.themeIcon {
+  font-size: 20px;
+}
+
+// Saved Filter Drawer
+.filterItems {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.filterItem {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.filterIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+.icon {
+  color: #1aa683;
+}
+
+.filterContent {
+  flex: 1;
+}
+
+.filterLabel {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.filterValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: #252525;
+}
+
+// Profile Info Drawer
+.profileDrawerContainer {
+  padding: 16px 16px 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profileForm {
+  margin-top: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.profileButtons {
+  display: flex;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.editButton,
+.saveButton {
+  width: 100%;
+  height: 48px;
+  font-size: 16px !important;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.editButton {
+  background-color: #32343a !important;
+  color: white !important;
+}
+
+.saveButton {
+  background-color: #1aa683 !important;
+  color: white !important;
+}

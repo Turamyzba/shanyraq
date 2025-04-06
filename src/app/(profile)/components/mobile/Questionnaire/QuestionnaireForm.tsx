@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, ChangeEvent } from "react";
-import { Button, Modal } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button } from "antd";
 import { ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { RadioGroup, Radio } from "@heroui/react";
 import styles from "./QuestionnaireForm.module.scss";
-import "./QuestionnaireForm.scss";
+
 // Questions data
 const questions = [
   {
@@ -72,11 +72,16 @@ const questions = [
     ],
   },
 ];
-
-// User data
-const userData = {
+// Mock user data to simulate a completed questionnaire
+const mockUserData = {
   name: "Айсултан",
   avatarUrl: "https://via.placeholder.com/60?text=User",
+  isQuestionnaireCompleted: true,
+  answers: {
+    1: "Я провожу весь день дома, работаю/учусь дистанционно. Мне важно иметь спокойную обстановку дома.",
+    2: "Я соблюдаю религиозные практики и традиции. Хотел бы, чтобы мои соседи уважительно относились к этому.",
+    3: "Я спокойно отношусь к курению и алкоголю, но хотел бы, чтобы это не происходило в общих зонах",
+  }
 };
 
 export default function MobileQuestionnaireForm() {
@@ -84,18 +89,30 @@ export default function MobileQuestionnaireForm() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [viewModalOpen, setViewModalOpen] = useState<boolean>(false);
+  const [questionnaireFilled, setQuestionnaireFilled] = useState(mockUserData.isQuestionnaireCompleted);
+
+  useEffect(() => {
+    if (questionnaireFilled) {
+      setAnswers(mockUserData.answers);
+    }
+  }, [questionnaireFilled]);
 
   const handleStartQuestionnaire = () => setIsModalOpen(false);
-  const handleNext = () => setStep(step + 1);
-  const handleBack = () => setStep(step - 1);
+  const handleNext = () => setStep(2);
+  const handleBack = () => setStep(1);
   const handleSubmit = () => {
     console.log("Ответы пользователя:", answers);
-    setStep(99); // Complete state
+    setQuestionnaireFilled(true);
   };
   const handleCancel = () => setIsModalOpen(true);
   const handleRetake = () => {
     setStep(1);
     setAnswers({});
+    setIsModalOpen(false);
+    setQuestionnaireFilled(false);
+  };
+  const handleEdit = () => {
+    setStep(1);
     setIsModalOpen(false);
   };
   const openViewModal = () => setViewModalOpen(true);
@@ -107,15 +124,62 @@ export default function MobileQuestionnaireForm() {
   const startIndex = (step - 1) * questionsPerPage;
   const currentQuestions =
     step <= totalPages ? questions.slice(startIndex, startIndex + questionsPerPage) : [];
-  const isCompletePage = step > totalPages;
 
   const handleAnswerChange = (questionId: number, answer: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
   };
 
+  if (questionnaireFilled) {
+    return (
+      <div className={styles.questionnaireContainer}>
+        <div className={styles.successContainer}>
+          <CheckCircleOutlined className={styles.successIcon} />
+          <h2>Вы заполнили анкету!</h2>
+          <p>Ваши данные успешно отправлены на сервер.</p>
+          <div className={styles.successButtons}>
+            <Button className={styles.editButton} onClick={handleEdit}>
+              Редактировать
+            </Button>
+            <Button className={styles.viewButton} type="primary" onClick={openViewModal}>
+              Посмотреть
+            </Button>
+          </div>
+        </div>
+
+        {viewModalOpen && (
+          <div className={styles.viewModal}>
+            <div className={styles.viewModalHeader}>
+              <Button 
+                icon={<BackIcon />} 
+                onClick={closeViewModal}
+                className={styles.backButton}
+              />
+              <h3>Ваши ответы</h3>
+            </div>
+            <div className={styles.answersContainer}>
+              <div className={styles.userInfo}>
+                <img src={mockUserData.avatarUrl} alt="avatar" className={styles.userAvatar} />
+                <h3 className={styles.userName}>{mockUserData.name}</h3>
+              </div>
+              {Object.keys(answers).map((questionId) => {
+                const question = questions.find((q) => q.id === Number(questionId));
+                return question ? (
+                  <div key={question.id} className={styles.answerBlock}>
+                    <p className={styles.questionText}>{question.text}</p>
+                    <p className={styles.answerText}>{answers[question.id]}</p>
+                  </div>
+                ) : null;
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className={styles.questionnaireContainer}>
-      {isModalOpen && !isCompletePage && (
+      {isModalOpen && (
         <div className={styles.overlay}>
           <div className={styles.modalBox}>
             <ExclamationCircleOutlined
@@ -130,100 +194,71 @@ export default function MobileQuestionnaireForm() {
         </div>
       )}
 
-      {!isCompletePage ? (
-        <>
-          <div className={styles.progressIndicator}>
-            <div className={styles.progressText}>
-              Шаг {step} из {totalPages}
-            </div>
-            <div className={styles.progressBar}>
-              <div
-                className={styles.progressFill}
-                style={{ width: `${(step / totalPages) * 100}%` }}
-              />
-            </div>
+      <>
+        <div className={styles.progressIndicator}>
+          <div className={styles.progressText}>
+            Шаг {step} из {totalPages}
           </div>
-
-          {currentQuestions.map((q) => (
-            <div className={styles.questionBlock} key={q.id}>
-              <p className={styles.question}>{q.text}</p>
-              <RadioGroup
-                value={answers[q.id] || ""}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleAnswerChange(q.id, e.target.value)
-                }
-                className={styles.radioGroup}
-              >
-                {q.answers.map((answer, idx) => (
-                  <Radio key={idx} value={answer} className={styles.radioItem}>
-                    <p className={styles.label}>{answer}</p>
-                  </Radio>
-                ))}
-              </RadioGroup>
-            </div>
-          ))}
-
-          <div className={styles.btnRow}>
-            {step === 1 ? (
-              <Button className={styles.cancelBtn} onClick={handleCancel}>
-                Отменить
-              </Button>
-            ) : (
-              <Button className={styles.backBtn} onClick={handleBack}>
-                Назад
-              </Button>
-            )}
-
-            {step < totalPages ? (
-              <Button className={styles.nextBtn} type="primary" onClick={handleNext}>
-                Далее
-              </Button>
-            ) : (
-              <Button className={styles.submitBtn} type="primary" onClick={handleSubmit}>
-                Готово
-              </Button>
-            )}
-          </div>
-        </>
-      ) : (
-        <div className={styles.successContainer}>
-          <CheckCircleOutlined className={styles.successIcon} />
-          <h2>Вы заполнили анкету!</h2>
-          <p>Ваши данные успешно отправлены на сервер.</p>
-          <div className={styles.successButtons}>
-            <Button className={styles.retakeBtn} onClick={handleRetake}>
-              Заполнить заново
-            </Button>
-            <Button className={styles.viewBtn} type="primary" onClick={openViewModal}>
-              Посмотреть
-            </Button>
+          <div className={styles.progressBar}>
+            <div
+              className={styles.progressFill}
+              style={{ width: `${(step / totalPages) * 100}%` }}
+            />
           </div>
         </div>
-      )}
 
-      <Modal
-        open={viewModalOpen}
-        onCancel={closeViewModal}
-        footer={null}
-        title="Ваши ответы"
-        className={styles.viewModal}
-      >
-        <div className={styles.answersContainer}>
-          <div className={styles.userInfo}>
-            <img src={userData.avatarUrl} alt="avatar" className={styles.userAvatar} />
-            <h3 className={styles.userName}>{userData.name}</h3>
+        {currentQuestions.map((q) => (
+          <div className={styles.questionBlock} key={q.id}>
+            <p className={styles.question}>{q.text}</p>
+            <RadioGroup
+              value={answers[q.id] || ""}
+              onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+              className={styles.radioGroup}
+            >
+              {q.answers.map((answer, idx) => (
+                <Radio key={idx} value={answer} className={styles.radioItem}>
+                  <p className={styles.label}>{answer}</p>
+                </Radio>
+              ))}
+            </RadioGroup>
           </div>
-          {Object.keys(answers).map((questionId) => {
-            const question = questions.find((q) => q.id === Number(questionId));
-            return question ? (
-              <div key={question.id} className={styles.answerBlock}>
-                <p className={styles.questionText}>{question.text}</p>
-                <p className={styles.answerText}>{answers[question.id]}</p>
-              </div>
-            ) : null;
-          })}
+        ))}
+
+        <div className={styles.btnRow}>
+          {step === 1 ? (
+            <Button className={styles.cancelBtn} onClick={handleCancel}>
+              Отменить
+            </Button>
+          ) : (
+            <Button className={styles.backBtn} onClick={handleBack}>
+              Назад
+            </Button>
+          )}
+
+          {step < totalPages ? (
+            <Button className={styles.nextBtn} type="primary" onClick={handleNext}>
+              Далее
+            </Button>
+          ) : (
+            <Button className={styles.submitBtn} type="primary" onClick={handleSubmit}>
+              Готово
+            </Button>
+          )}
         </div>
-      </Modal>
+      </>
     </div>
   );
 }
+
+const BackIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12.5 16.6L6.66666 10.7667L12.5 4.93335"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);

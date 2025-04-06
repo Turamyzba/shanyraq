@@ -5,6 +5,7 @@ import { Button as HeroButton } from "@heroui/react";
 import {
   UserOutlined,
   FormOutlined,
+  FileTextOutlined,
   SearchOutlined,
   SettingOutlined,
   LockOutlined,
@@ -16,87 +17,30 @@ import ProgressBar from "../common/ProgressBar";
 import UserAvatar from "../common/UserAvatar";
 import { StatusKey } from "../common/StatusLabels";
 
-// Import modals
-import MobileProfileMenu from "./Modals/MobileProfileMenu";
-import StatusModal from "./Modals/StatusModal";
-import PhotoEditModal from "./Modals/PhotoEditModal";
-import PasswordModal from "./Modals/PasswordModal";
-import SettingsModal from "./Modals/SettingsModal";
-import SavedFilterModal from "./Modals/SavedFilterModal";
+// Modals and Drawers
+import StatusDrawer from "./Drawers/StatusDrawer";
+import PhotoEditDrawer from "./Drawers/PhotoEditDrawer";
+import PasswordDrawer from "./Drawers/PasswordDrawer";
+import SettingsDrawer from "./Drawers/SettingsDrawer";
+import SavedFilterDrawer from "./Drawers/SavedFilterDrawer";
+import ProfileInfoDrawer from "./Drawers/ProfileInfoDrawer";
 
 const MobileLayout = ({ children }: { children: React.ReactNode }) => {
-  // State for all modals
-  const [statusModalOpen, setStatusModalOpen] = useState(false);
-  const [photoModalOpen, setPhotoModalOpen] = useState(false);
-  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
-  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
-  const [savedFilterModalOpen, setSavedFilterModalOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // State for all drawers
+  const [statusDrawerOpen, setStatusDrawerOpen] = useState(false);
+  const [photoDrawerOpen, setPhotoDrawerOpen] = useState(false);
+  const [passwordDrawerOpen, setPasswordDrawerOpen] = useState(false);
+  const [settingsDrawerOpen, setSettingsDrawerOpen] = useState(false);
+  const [savedFilterDrawerOpen, setSavedFilterDrawerOpen] = useState(false);
+  const [profileInfoDrawerOpen, setProfileInfoDrawerOpen] = useState(false);
   const [status, setStatus] = useState<StatusKey>("findingApartment");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  // Event handlers
-  function handleOpenStatusModal() {
-    setStatusModalOpen(true);
-    setMobileMenuOpen(false);
-  }
-
-  function closeStatusModal() {
-    setStatusModalOpen(false);
-  }
-
-  function handleOpenPhotoModal() {
-    setPhotoModalOpen(true);
-    setMobileMenuOpen(false);
-  }
-
-  function closePhotoModal() {
-    setPhotoModalOpen(false);
-  }
-
-  function handleOpenPasswordModal() {
-    setPasswordModalOpen(true);
-    setMobileMenuOpen(false);
-  }
-
-  function closePasswordModal() {
-    setPasswordModalOpen(false);
-  }
-
-  function handleOpenSettingsModal() {
-    setSettingsModalOpen(true);
-    setMobileMenuOpen(false);
-  }
-
-  function closeSettingsModal() {
-    setSettingsModalOpen(false);
-  }
-
-  function handleOpenSavedFilterModal() {
-    setSavedFilterModalOpen(true);
-    setMobileMenuOpen(false);
-  }
-
-  function closeSavedFilterModal() {
-    setSavedFilterModalOpen(false);
-  }
-
-  function handleAddPhoto() {
-    if (fileInputRef.current) fileInputRef.current.click();
-  }
-
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      console.log("Выбрали файл:", file);
-    }
-  }
-
-  function toggleMobileMenu() {
-    setMobileMenuOpen(!mobileMenuOpen);
-  }
+  const goToPage = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <Container>
@@ -107,11 +51,15 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <div className={styles.profileSection}>
-            <div className={styles.profilePhoto} onClick={toggleMobileMenu}>
-              <UserAvatar status={status} />
+            <div className={styles.profilePhoto}>
+              <UserAvatar
+                status={status}
+                showEditIcon
+                onEditClick={() => setPhotoDrawerOpen(true)}
+              />
             </div>
             <h2 className={styles.userName}>Алихан Оспанов</h2>
-            <div className={styles.statusButton} onClick={handleOpenStatusModal}>
+            <div className={styles.statusButton} onClick={() => setStatusDrawerOpen(true)}>
               <div className={styles.statusIcon}>
                 <HeroButton className={styles.statusIconButton}>
                   <CheckCircleIcon />
@@ -126,27 +74,37 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         <div className={styles.mobileMenuItems}>
-          <div className={styles.menuItem} onClick={handleOpenSavedFilterModal}>
+          <div className={styles.menuItem} onClick={() => setSavedFilterDrawerOpen(true)}>
             <SearchOutlined className={styles.menuIcon} />
             <span className={styles.menuText}>Сохраненный фильтр</span>
           </div>
 
-          <div className={styles.menuItem} onClick={() => router.push("/questionnaire")}>
+          <div className={styles.menuItem} onClick={() => goToPage("/questionnaire")}>
             <FormOutlined className={styles.menuIcon} />
             <span className={styles.menuText}>Анкета</span>
           </div>
 
-          <div className={styles.menuItem} onClick={toggleMobileMenu}>
+          <div className={styles.menuItem} onClick={() => setProfileInfoDrawerOpen(true)}>
             <UserOutlined className={styles.menuIcon} />
             <span className={styles.menuText}>Информация</span>
           </div>
 
-          <div className={styles.menuItem} onClick={handleOpenPasswordModal}>
+          <div className={styles.menuItem} onClick={() => setPasswordDrawerOpen(true)}>
             <LockOutlined className={styles.menuIcon} />
             <span className={styles.menuText}>Пароль и безопастность</span>
           </div>
 
-          <div className={styles.menuItem} onClick={handleOpenSettingsModal}>
+          <div className={styles.menuItem} onClick={() => goToPage("/my-responses")}>
+            <FileTextOutlined className={styles.menuIcon} />
+            <span className={styles.menuText}>Мои отклики</span>
+          </div>
+
+          <div className={styles.menuItem} onClick={() => goToPage("/my-announcements")}>
+            <FileTextOutlined className={styles.menuIcon} />
+            <span className={styles.menuText}>Мои объявления</span>
+          </div>
+
+          <div className={styles.menuItem} onClick={() => setSettingsDrawerOpen(true)}>
             <SettingOutlined className={styles.menuIcon} />
             <span className={styles.menuText}>Настройки</span>
           </div>
@@ -159,35 +117,46 @@ const MobileLayout = ({ children }: { children: React.ReactNode }) => {
 
         {children}
 
-        {/* Mobile Modals */}
-        <MobileProfileMenu
-          isOpen={mobileMenuOpen}
-          onClose={() => setMobileMenuOpen(false)}
-          onEditPhoto={handleOpenPhotoModal}
-          onDeletePhoto={() => console.log("Удалить фото")}
-          onChangeStatus={handleOpenStatusModal}
-        />
-
-        <StatusModal
-          isOpen={statusModalOpen}
-          onClose={closeStatusModal}
+        {/* Drawers */}
+        <StatusDrawer
+          isOpen={statusDrawerOpen}
+          onClose={() => setStatusDrawerOpen(false)}
           status={status}
           onStatusChange={(val) => setStatus(val as StatusKey)}
         />
 
-        <PhotoEditModal
-          isOpen={photoModalOpen}
-          onClose={closePhotoModal}
-          onAddPhoto={handleAddPhoto}
-          fileInputRef={fileInputRef}
-          handleFileChange={handleFileChange}
+        <PhotoEditDrawer
+          isOpen={photoDrawerOpen}
+          onClose={() => setPhotoDrawerOpen(false)}
+          onAddPhoto={() => fileInputRef.current?.click()}
+          onDeletePhoto={() => console.log("Delete photo")}
         />
 
-        <PasswordModal isOpen={passwordModalOpen} onClose={closePasswordModal} />
+        <PasswordDrawer isOpen={passwordDrawerOpen} onClose={() => setPasswordDrawerOpen(false)} />
 
-        <SettingsModal isOpen={settingsModalOpen} onClose={closeSettingsModal} />
+        <SettingsDrawer isOpen={settingsDrawerOpen} onClose={() => setSettingsDrawerOpen(false)} />
 
-        <SavedFilterModal isOpen={savedFilterModalOpen} onClose={closeSavedFilterModal} />
+        <SavedFilterDrawer
+          isOpen={savedFilterDrawerOpen}
+          onClose={() => setSavedFilterDrawerOpen(false)}
+        />
+
+        <ProfileInfoDrawer
+          isOpen={profileInfoDrawerOpen}
+          onClose={() => setProfileInfoDrawerOpen(false)}
+        />
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            if (e.target.files?.[0]) {
+              console.log("File selected:", e.target.files[0]);
+            }
+          }}
+          accept="image/*"
+        />
       </div>
     </Container>
   );
