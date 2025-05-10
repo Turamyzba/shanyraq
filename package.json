@@ -14,7 +14,7 @@
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@heroicons/react": "^2.2.0",
+    "@herocons/react": "^2.2.0",
     "@heroui/react": "^2.7.4",
     "@mapbox/mapbox-gl-draw": "^1.5.0",
     "@mui/material": "^6.4.7",
